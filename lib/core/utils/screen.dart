@@ -14,7 +14,7 @@ Route _createRoute({required Widget nextPage, bool? isFromBottom}) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => nextPage,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = isFromBottom != null && isFromBottom? Offset(0.0, 1.0): const Offset(1.0, 0.0);
+      var begin = isFromBottom != null && isFromBottom? const Offset(0.0, 1.0): const Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.easeOut;
 

@@ -36,7 +36,7 @@ class _PhoneRegisterSignInState extends State<PhoneRegisterSignIn> {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
           child: Column(
             children: [
-              Align(
+              const Align(
                 alignment: Alignment.topLeft,
                 child: BackWidget()
               ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jocco/core/utils/path.dart';
 import 'package:jocco/core/utils/screen.dart';
 import 'package:jocco/views/onboarding/steps/first_step.dart';
+import 'package:jocco/views/onboarding/steps/fourth_step.dart';
 import 'package:jocco/views/onboarding/steps/second_step.dart';
 import 'package:jocco/views/onboarding/steps/third_step.dart';
 import 'package:jocco/views/providers/step_provider.dart';
@@ -35,6 +36,8 @@ class Onboarding extends StatelessWidget {
                       return const SecondStep();
                     case StepJ.third:
                       return const ThirdStep();
+                    case StepJ.fourth:
+                      return const FourthStep();
                     default:
                       return const SizedBox();
                   }

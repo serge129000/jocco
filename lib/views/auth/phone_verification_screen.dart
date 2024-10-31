@@ -36,7 +36,7 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Align(alignment: Alignment.topLeft, child: BackWidget()),
+              const Align(alignment: Alignment.topLeft, child: BackWidget()),
               Padding(
                 padding: const EdgeInsets.only(top: 30),
                 child: Text(
@@ -100,7 +100,7 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
               const Spacer(),
               Btn(
                 function: () {
-                  kReplaceToPage(context, page: Onboarding());
+                  kReplaceToPage(context, page: const Onboarding());
                 },
                 isTransparent: false,
                 anotherColor: PrimaryColors.first,

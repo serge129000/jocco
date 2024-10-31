@@ -57,7 +57,7 @@ class ThirdStep extends StatelessWidget {
                     .bodyLarge!
                     .copyWith(height: 0, fontWeight: FontWeight.w600),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               ...Gender.values

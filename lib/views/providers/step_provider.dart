@@ -9,6 +9,8 @@ class StepProvider with ChangeNotifier {
   Gender? get selectedGender => _selectedGender;
   Gender? _choosenGender;
   Gender? get choosenGender => _choosenGender;
+  List<String> _selectedTraits = [];
+  List<String> get selectedTraits => _selectedTraits;
 
   void nextStep() {
     _currentStep = StepJ.stepFromValue(step: _currentStep.value + 1);
@@ -27,6 +29,16 @@ class StepProvider with ChangeNotifier {
 
   void chooseGender({required Gender gender}) {
     _choosenGender = gender;
+    notifyListeners();
+  }
+
+  void addTraits({required String trait}) {
+    _selectedTraits.add(trait);
+    notifyListeners();
+  }
+
+  void deleteTrait({required String trait}) {
+    _selectedTraits.removeWhere((e) => e == trait);
     notifyListeners();
   }
 }

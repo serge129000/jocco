@@ -36,7 +36,7 @@ class Themes {
       ),
       textTheme: const TextTheme(
         bodySmall: TextStyle(fontFamily: 'Branding', fontSize: 18),
-        bodyLarge: TextStyle(fontFamily: 'Branding', fontSize: 35),
+        bodyLarge: TextStyle(fontFamily: 'Branding', fontSize: 32),
         bodyMedium: TextStyle(fontFamily: 'Branding', fontSize: 28),       
         labelLarge: TextStyle(fontFamily: 'Branding', fontSize: 17),
         labelMedium: TextStyle(fontFamily: 'Branding', fontSize: 17),

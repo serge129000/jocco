@@ -36,7 +36,7 @@ class StepLinearProgress extends StatelessWidget {
                           : PrimaryColors.first,
                       gradient:
                           constraint.maxWidth > size(context: context).width/2
-                              ? LinearGradient(colors: [
+                              ? const LinearGradient(colors: [
                                   PrimaryColors.first,
                                   PrimaryColors.gradientF
                                 ])

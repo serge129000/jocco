@@ -61,8 +61,8 @@ class _FirstStepState extends State<FirstStep> {
                   .bodyLarge!
                   .copyWith(height: 0, fontWeight: FontWeight.w600),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 20),
               child: CustomTextfield(
                 hintText: AllText.firstnameLabel,
               ),
