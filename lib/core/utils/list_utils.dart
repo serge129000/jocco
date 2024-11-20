@@ -23,3 +23,8 @@ List<String> centresDInteret = [
   'Cuisine',
   'Cinéma & Séries'
 ];
+
+ const List<String> projectTypes = [
+  'Oui, j\'ai un projet défini',
+  'Non, je cherche encore'
+];

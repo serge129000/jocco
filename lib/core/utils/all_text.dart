@@ -1,12 +1,13 @@
 class AllText {
-  static const splashText = ' À deux, rendez vos projets plus beaux';
+  static const splashText = 'À deux, rendez vos projets plus beaux';
   static const openAccount = 'Créer un compte';
   static const logIn = 'Se connecter';
-  static const registerPhone = 'Sign in with Phone Number';
-  static const registerApple = 'Sign in with Apple';
-  static const registerFb = 'Sign in with Facebook';
+  static const registerPhone = 'Se connecter avec un numéro';
+  static const registerApple = 'Se connecter avec Apple';
+  static const registerFb = 'Se connecter avec Facebook';
   static const enterEmail = 'Entrez votre numéro pour continuer.';
-  static const exampleMail = 'Example@gmail.com';
+  static const exampleMail = 'Exemple@gmail.com';
+  static const iam = 'Je suis un(e)';
   static const enterPhoneSub =
       'Nous allons vous envoyer un code de vérification par SMS. Veuillez entrer ce code pour confirmer votre numéro.';
   static const next = 'Suivant';
@@ -14,7 +15,7 @@ class AllText {
   static const verificationCodeSub =
       'Un code de vérification a été envoyé à votre numéro. Veuillez entrer le code ci-dessous pour continuer.';
   static const resend = 'Renvoyer le code';
-  static const enterFistname = 'Entrer votre prénom pour continuer.';
+  static const enterFistname = 'Entrez votre prénom pour continuer.';
   static const firstnameLabel = 'Comment vous appelez-vous ?';
   static const enterBirthDay = 'Quelle est votre date de naissance ?';
   static const genderAsk = 'Quel est votre genre ?';
@@ -24,4 +25,9 @@ class AllText {
   static const searchingFor = 'Que recherchez-vous ?';
   static const physictraits =
       'Quels sont vos traits de personnalité dominants ?';
+  static const interestCenters = 'Quels sont vos centres d\'intérêt ?';
+  static const hasProject = 'Avez-vous un projet de\n vie ?';
+  static const selectDepartment = 'Sélectionnez votre département';
+  static const hasChild = 'Avez-vous des enfants ?';
+  static const showBestFace = 'Montrez-nous votre plus beau sourire ';
 }

@@ -15,4 +15,7 @@ class PrimaryColors {
 Color borderColor = const Color(0xffD8DADC);
 Color greyColor = const Color(0xff8b9197);
 Color selectedBorderColor = const Color(0xff00AAAA);
-Color filledSelectedBorder = const Color(0xfff0ffff);
+Color filledSelectedBorder = const Color(0xff016465);
+Color inDeepGreenGrey = const Color(0xff80acac);
+Color whiteInClearGreen = const Color(0xffE0EBEB);
+Color pickerBorder = const Color(0xffbbe2e2);

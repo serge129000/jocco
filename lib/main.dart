@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jocco/core/utils/theme_data.dart';
-import 'package:jocco/views/providers/step_provider.dart';
-import 'package:jocco/views/splash_screen.dart';
+import 'package:jocco/core/views/providers/step_provider.dart';
+import 'package:jocco/core/views/splash_screen.dart';
 import 'package:provider/provider.dart';
 
 void main(List<String> args) {

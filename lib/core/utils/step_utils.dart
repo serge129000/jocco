@@ -1,3 +1,4 @@
+
 enum StepJ {
   first(name: 'first', value: 1),
   second(name: 'second', value: 2),
@@ -17,5 +18,15 @@ enum StepJ {
   final int value;
   final String name;
 
-  static StepJ stepFromValue({required int step}) => StepJ.values.where((stp) => stp.value == step).single;
+  static StepJ stepFromValue({required int step}) =>
+      StepJ.values.where((stp) => stp.value == step).single;
+}
+
+enum IfProject {
+  yes(value: true, name: 'Oui, j\'ai un projet défini'),
+  no(value: false, name: 'Non, je cherche encore');
+
+  final bool value;
+  final String name;
+  const IfProject({required this.value, required this.name});
 }
