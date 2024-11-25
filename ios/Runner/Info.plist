@@ -16,6 +16,12 @@
 	<string>jocco</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>Cette application a besoin d'accéder à votre bibliothèque photo pour permettre l'importation d'images dans votre profil ou vos publications.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Cette application a besoin d'accéder à votre caméra pour vous permettre de capturer des photos ou des vidéos directement depuis l'application.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Cette application a besoin d'accéder à votre microphone pour enregistrer l'audio lors de la capture de vidéos.</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
