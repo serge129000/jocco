@@ -24,9 +24,6 @@ class LandingScreen extends StatelessWidget {
       child: Container(
         height: double.infinity,
         width: double.infinity,
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage(kAssetPath(imageName: 'Layer_1.png')))),
         child: Column(
           children: [
             SizedBox(

@@ -54,11 +54,11 @@ class Onboarding extends StatelessWidget {
                       child: StepLinearProgress(
                           value:
                               context.watch<StepProvider>().currentStep.value /
-                                  13)),
+                                  6)),
                 ),
-                Positioned(
+               /*  Positioned(
                   top: size(context: context).height / 9,
-                  left: 20,
+                  left: 15,
                   child: BackWidget(
                     onCondtion: () {
                       if (Provider.of<StepProvider>(context, listen: false).currentStep !=
@@ -69,7 +69,7 @@ class Onboarding extends StatelessWidget {
                       }
                     },
                   ),
-                )
+                ) */
               ],
             )));
   }

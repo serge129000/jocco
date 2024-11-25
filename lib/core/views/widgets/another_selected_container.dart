@@ -15,8 +15,8 @@ class AnotherSelectedContainer extends StatelessWidget {
         horizontal: 15
       ),
       decoration: BoxDecoration(
-        color: isSelected? filledSelectedBorder: null,
-          border: Border.all(color: isSelected? selectedBorderColor: borderColor),
+        color: isSelected? selectedBorderColor: filledSelectedBorder,
+          border: Border.all(color: isSelected? selectedColor: borderColor),
           borderRadius: BorderRadius.circular(16)),
       child: child,
     );

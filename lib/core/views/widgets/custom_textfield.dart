@@ -12,6 +12,7 @@ class CustomTextfield extends StatelessWidget {
   final String? hintText;
   final TextInputType? keyboardType;
   final bool hasGreenColor;
+  final bool isActivate;
   const CustomTextfield(
       {super.key,
       this.onChanged,
@@ -21,7 +22,8 @@ class CustomTextfield extends StatelessWidget {
       this.validator,
       this.keyboardType,
       this.focusNode,
-      this.hintText, this.hasGreenColor = false});
+      this.hintText,
+      this.hasGreenColor = false, this.isActivate = true});
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +53,7 @@ class CustomTextfield extends StatelessWidget {
               ),
             ]),
         child: TextFormField(
+          enabled: isActivate,
           keyboardType: keyboardType,
           onChanged: onChanged,
           focusNode: focusNode,
@@ -59,13 +62,12 @@ class CustomTextfield extends StatelessWidget {
           onSaved: onSaved,
           validator: validator,
           decoration: InputDecoration(
-            filled: hasGreenColor? true: null,
-            fillColor: hasGreenColor? filledSelectedBorder: null,
-            enabledBorder: hasGreenColor? OutlineInputBorder(
-              borderSide: BorderSide(
-                color: filledSelectedBorder
-              )
-            ): null,
+              filled: hasGreenColor ? true : null,
+              fillColor: hasGreenColor ? filledSelectedBorder : null,
+              enabledBorder: hasGreenColor
+                  ? OutlineInputBorder(
+                      borderSide: BorderSide(color: filledSelectedBorder))
+                  : null,
               hintText: hintText,
               hintStyle: Theme.of(context)
                   .textTheme
@@ -74,10 +76,11 @@ class CustomTextfield extends StatelessWidget {
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
               contentPadding: const EdgeInsets.symmetric(horizontal: 5)),
-          cursorColor: hasGreenColor? inDeepGreenGrey: PrimaryColors.first,
-          style: Theme.of(context).textTheme.labelMedium!.copyWith(
-            color: inDeepGreenGrey
-          ),
+          cursorColor: hasGreenColor ? inDeepGreenGrey : PrimaryColors.first,
+          style: Theme.of(context)
+              .textTheme
+              .labelMedium!
+              .copyWith(color: inDeepGreenGrey),
         ),
       ),
     );

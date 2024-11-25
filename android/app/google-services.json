@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "716188506806",
+    "project_id": "jocco-d3377",
+    "storage_bucket": "jocco-d3377.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:716188506806:android:3231d0376058dafb94a417",
+        "android_client_info": {
+          "package_name": "com.appstronaute.jocco"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpTHVr5yO7JOGIN6-OZXNiM-qUBt4_zMk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:716188506806:android:e449faa3fafe431594a417",
+        "android_client_info": {
+          "package_name": "com.appstronaute.joccoapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpTHVr5yO7JOGIN6-OZXNiM-qUBt4_zMk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

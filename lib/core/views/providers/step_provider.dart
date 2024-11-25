@@ -15,8 +15,12 @@ class StepProvider with ChangeNotifier {
   List<String> get selectedInterest => _selectedInterest;
   IfProject? _selectedIfProject;
   IfProject? get selectedIfProject => _selectedIfProject;
+  LeaveAll _leaveAll = LeaveAll.yes;
+  LeaveAll get leaveAll => _leaveAll;
   bool _hasChildren = false;
   bool get hasChildren => _hasChildren;
+  String? _projectCat;
+  String? get projectCat => _projectCat;
 
   void nextStep() {
     _currentStep = StepJ.stepFromValue(step: _currentStep.value + 1);
@@ -63,8 +67,18 @@ class StepProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void setSelectedLeavingAll({required LeaveAll leaveAlls}) {
+    _leaveAll = leaveAlls;
+    notifyListeners();
+  }
+
   void changeHasChildrenState(bool hs) {
     _hasChildren = hs;
+    notifyListeners();
+  }
+
+  void addProjectCat({required String category}) {
+    _projectCat = category;
     notifyListeners();
   }
 }

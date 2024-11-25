@@ -30,4 +30,11 @@ class AllText {
   static const selectDepartment = 'Sélectionnez votre département';
   static const hasChild = 'Avez-vous des enfants ?';
   static const showBestFace = 'Montrez-nous votre plus beau sourire ';
+  static const projectCategory =
+      'Choisissez la catégorie  correspondant  à votre  projet de vie';
+  static const describeProject = 'Décrivez votre projet de vie';
+  static const titleProject = 'Titre du projet';
+  static const specifyTitleProject = 'Spécifiez votre projet';
+  static const projectTimes = 'Dans combien de temps ?';
+  static const leaveAll = 'Prêt(e) à tout quitter ?';
 }

@@ -6,7 +6,12 @@ import 'package:jocco/core/views/widgets/selectable_container.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/color.dart';
+import '../../../utils/list_utils.dart';
 import '../../../utils/path.dart';
+import '../../../utils/screen.dart';
+import '../../../utils/step_utils.dart';
+import '../../widgets/another_selected_container.dart';
+import '../../widgets/back_widget.dart';
 import '../../widgets/button.dart';
 
 class ThirdStep extends StatelessWidget {
@@ -15,104 +20,84 @@ class ThirdStep extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<StepProvider>(builder: (context, stepProvider, widgets) {
-      return Container(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage(kAssetPath(imageName: 'Vector 1.png')),
-                alignment: Alignment.topCenter)),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 90,
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(
+              height: 110,
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: BackWidget(
+                onCondtion: () {
+                  if (Provider.of<StepProvider>(context, listen: false)
+                          .currentStep !=
+                      StepJ.first) {
+                    Provider.of<StepProvider>(context, listen: false)
+                        .backStep();
+                  } else {
+                    kPopPage(context);
+                  }
+                },
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    //BackWidget(),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 25),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Image.asset(
-                          kAssetPath(imageName: 'Magnifying_glass.png'),
-                          height: 248.19,
-                          width: 160,
-                        ),
-                      ),
-                    ),
-                    Image.asset(kAssetPath(imageName: 'Vector-2.png'))
-                  ],
-                ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 30),
+              child: Text(
+                AllText.physictraits,
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    height: 0,
+                    fontWeight: FontWeight.w600,
+                    color: PrimaryColors.white),
               ),
-              Text(
-                AllText.searchingFor,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge!
-                    .copyWith(height: 0, fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              ...Gender.values.map((e) => Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: GestureDetector(
+            ),
+            Wrap(
+              runSpacing: 10,
+              spacing: 12,
+              children: [
+                ...traitsDePersonnalite.map((e) => GestureDetector(
                       onTap: () {
-                        stepProvider.chooseGender(gender: e);
+                        if (stepProvider.selectedTraits.contains(e)) {
+                          stepProvider.deleteTrait(trait: e);
+                        } else {
+                          stepProvider.addTraits(trait: e);
+                        }
                       },
-                      child: SelectableContainer(
-                          isSelected: stepProvider.choosenGender == e,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              if (e.correspondingImage != null)
-                                Image.asset(
-                                  kIconAssetPath(
-                                      imageName: e.correspondingImage!),
-                                  height: 21.94,
-                                  width: 13.65,
-                                ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                                child: Text(
-                                  e.name,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall!
-                                      .copyWith(fontWeight: FontWeight.w500),
-                                ),
-                              )
-                            ],
+                      child: AnotherSelectedContainer(
+                          isSelected: stepProvider.selectedTraits.contains(e),
+                          child: Text(
+                            e,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall!
+                                .copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color: PrimaryColors.white,
+                                    fontSize: 14),
                           )),
-                    ),
-                  )),
-              const Spacer(),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: Btn(
-                  function: () {
-                    context.read<StepProvider>().nextStep();
-                  },
-                  isTransparent: false,
-                  anotherColor: PrimaryColors.first,
-                  child: Text(
-                    AllText.next,
-                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                        color: PrimaryColors.white,
-                        fontWeight: FontWeight.w600),
-                  ),
+                    ))
+              ],
+            ),
+            const Spacer(),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Btn(
+                function: () {
+                  context.read<StepProvider>().nextStep();
+                },
+                isTransparent: false,
+                anotherColor: PrimaryColors.white,
+                child: Text(
+                  AllText.next,
+                  style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                      color: PrimaryColors.first,
+                      fontWeight: FontWeight.w600),
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       );
     });

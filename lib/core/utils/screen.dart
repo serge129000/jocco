@@ -27,3 +27,6 @@ Route _createRoute({required Widget nextPage, bool? isFromBottom}) {
     },
   );
 } 
+
+bool isKeyBoardActivated({required BuildContext context}) =>
+    MediaQuery.of(context).viewInsets.bottom > 0.0;

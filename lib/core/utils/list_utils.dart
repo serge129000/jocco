@@ -28,3 +28,20 @@ List<String> centresDInteret = [
   'Oui, j\'ai un projet défini',
   'Non, je cherche encore'
 ];
+
+List<Map<String, String?>> categories = [
+  {"title": "Rencontre avec projet enfant", "icon": "Chronometer.png"},
+  {"title": "Rencontre sans projet enfant", "icon": "Chronometer-2.png"},
+  {"title": "Hébergement", "icon": "Chronometer-3.png"},
+  {"title": "Restauration / commerces de bouche", "icon": "Chronometer-4.png"},
+  {"title": "Commerces", "icon": "Chronometer-5.png"},
+  {"title": "Voyage / Départ à l'étranger", "icon": "Chronometer-6.png"},
+  {"title": "Bien-être / médecine douce", "icon": "Chronometer-7.png"},
+  {"title": "Immobilier / architecture", "icon": "Chronometer-8.png"},
+  {"title": "Sport / diététique", "icon": "Chronometer-9.png"},
+  {"title": "Esthétique", "icon": "Chronometer-10.png"},
+  {"title": "Technologie", "icon": "Chronometer-11.png"},
+  {"title": "Art", "icon": "Chronometer-12.png"},
+  {"title": "Nature / Animalier", "icon": "Chronometer-7.png"},
+  {"title": "Autre", "icon": null},
+];

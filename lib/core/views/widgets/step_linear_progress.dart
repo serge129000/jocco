@@ -26,9 +26,9 @@ class StepLinearProgress extends StatelessWidget {
               child: LayoutBuilder(builder: (context, constraint) {
                 /* print(constraint.maxWidth);
                 print((size(context: context) / 13).width); */
-                return AnimatedContainer(
+                return Container(/* 
                   curve: Curves.decelerate,
-                  duration: const Duration(milliseconds: 200),
+                  duration: const Duration(milliseconds: 200), */
                   height: 07.31,
                   decoration: BoxDecoration(
                       color: constraint.maxWidth > size(context: context).width/2

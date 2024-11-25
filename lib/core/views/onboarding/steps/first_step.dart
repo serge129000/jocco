@@ -8,6 +8,9 @@ import 'package:jocco/core/views/widgets/department_selector.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/color.dart';
+import '../../../utils/screen.dart';
+import '../../../utils/step_utils.dart';
+import '../../widgets/back_widget.dart';
 import '../../widgets/button.dart';
 
 class FirstStep extends StatefulWidget {
@@ -23,13 +26,25 @@ class _FirstStepState extends State<FirstStep> {
   Widget build(BuildContext context) {
     return Consumer<StepProvider>(builder: (context, stepProvider, widgets) {
       return ListView(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 20
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         //crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(
             height: 110,
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: BackWidget(
+              onCondtion: () {
+                if (Provider.of<StepProvider>(context, listen: false)
+                        .currentStep !=
+                    StepJ.first) {
+                  Provider.of<StepProvider>(context, listen: false).backStep();
+                } else {
+                  kPopPage(context);
+                }
+              },
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20),
@@ -40,9 +55,7 @@ class _FirstStepState extends State<FirstStep> {
                     color: PrimaryColors.white)),
           ),
           Padding(
-            padding: const EdgeInsets.only(
-              bottom: 25
-            ),
+            padding: const EdgeInsets.only(bottom: 25),
             child: Row(
               children: [
                 ...Gender.values
@@ -93,9 +106,10 @@ class _FirstStepState extends State<FirstStep> {
                 color: PrimaryColors.white),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: DepartmentSelector(onChanged: (v ) {  },)
-          ),
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: DepartmentSelector(
+                onChanged: (v) {},
+              )),
           Text(
             AllText.enterBirthDay,
             style: Theme.of(context).textTheme.bodyMedium!.copyWith(
@@ -123,34 +137,32 @@ class _FirstStepState extends State<FirstStep> {
                 fontWeight: FontWeight.w600,
                 color: PrimaryColors.white),
           ),
-          Padding(padding: const EdgeInsets.symmetric(
-            vertical: 20
-          ),
-          child: Row(
-            children: [
-              ...[true, false].map((e)=> Row(
-                          children: [
-                            Radio<bool>(
-                                activeColor: PrimaryColors.white,
-                                fillColor: const WidgetStatePropertyAll(
-                                    PrimaryColors.white),
-                                value:
-                                    stepProvider.hasChildren,
-                                groupValue: e,
-                                onChanged: (v) {
-                                  stepProvider.changeHasChildrenState(e);
-                                }),
-                            Text(
-                              e? 'Oui': 'Non',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .copyWith(color: PrimaryColors.white),
-                            )
-                          ],
-                        )),
-            ],
-          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Row(
+              children: [
+                ...[true, false].map((e) => Row(
+                      children: [
+                        Radio<bool>(
+                            activeColor: PrimaryColors.white,
+                            fillColor: const WidgetStatePropertyAll(
+                                PrimaryColors.white),
+                            value: stepProvider.hasChildren,
+                            groupValue: e,
+                            onChanged: (v) {
+                              stepProvider.changeHasChildrenState(e);
+                            }),
+                        Text(
+                          e ? 'Oui' : 'Non',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .copyWith(color: PrimaryColors.white),
+                        )
+                      ],
+                    )),
+              ],
+            ),
           ),
           Text(
             AllText.searchingFor,
@@ -160,9 +172,7 @@ class _FirstStepState extends State<FirstStep> {
                 color: PrimaryColors.white),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 20
-            ),
+            padding: const EdgeInsets.symmetric(vertical: 20),
             child: Row(
               children: [
                 ...Gender.values
@@ -192,9 +202,7 @@ class _FirstStepState extends State<FirstStep> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(
-              bottom: 30
-            ),
+            padding: const EdgeInsets.only(bottom: 30),
             child: Btn(
               function: () {
                 context.read<StepProvider>().nextStep();

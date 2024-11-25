@@ -1,4 +1,3 @@
-
 enum StepJ {
   first(name: 'first', value: 1),
   second(name: 'second', value: 2),
@@ -23,10 +22,29 @@ enum StepJ {
 }
 
 enum IfProject {
-  yes(value: true, name: 'Oui, j\'ai un projet défini'),
-  no(value: false, name: 'Non, je cherche encore');
+  yes(value: true, name: 'Oui'),
+  no(value: false, name: 'Non');
 
   final bool value;
   final String name;
   const IfProject({required this.value, required this.name});
+}
+
+enum ProjectTimes {
+  immediately(name: 'Immediatement'),
+  sixMonth(name: 'Dans 6 mois'),
+  yearAndMore(name: 'Dans 1 ans et plus');
+
+  final String name;
+
+  const ProjectTimes({required this.name});
+}
+
+enum LeaveAll{
+  yes(value: true, name: 'Oui'),
+  no(value: false, name: 'Non');
+
+  final bool value;
+  final String name;
+  const LeaveAll({required this.value, required this.name});
 }
