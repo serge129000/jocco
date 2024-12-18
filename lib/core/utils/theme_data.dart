@@ -4,6 +4,10 @@ import 'package:jocco/core/utils/color.dart';
 class Themes {
   static ThemeData appTheme = ThemeData(
       useMaterial3: true,
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.transparent,
+        elevation: 0
+      ),
       inputDecorationTheme: InputDecorationTheme(
         focusedBorder: const OutlineInputBorder(
           //gapPadding: 5.67,

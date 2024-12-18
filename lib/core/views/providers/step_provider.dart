@@ -21,6 +21,8 @@ class StepProvider with ChangeNotifier {
   bool get hasChildren => _hasChildren;
   String? _projectCat;
   String? get projectCat => _projectCat;
+  Map<int, String> _selectedImages = {};
+  Map<int, String> get selectedImages => _selectedImages;
 
   void nextStep() {
     _currentStep = StepJ.stepFromValue(step: _currentStep.value + 1);
@@ -79,6 +81,20 @@ class StepProvider with ChangeNotifier {
 
   void addProjectCat({required String category}) {
     _projectCat = category;
+    notifyListeners();
+  }
+
+  void addImage({required int key, required String imagePath}) {
+    try {
+      _selectedImages[key] = imagePath;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    notifyListeners();
+  }
+
+  void removeImage({required int key}) {
+    _selectedImages.removeWhere((e, v) => e == key);
     notifyListeners();
   }
 }

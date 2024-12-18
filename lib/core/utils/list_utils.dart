@@ -24,7 +24,7 @@ List<String> centresDInteret = [
   'Cinéma & Séries'
 ];
 
- const List<String> projectTypes = [
+const List<String> projectTypes = [
   'Oui, j\'ai un projet défini',
   'Non, je cherche encore'
 ];
@@ -45,3 +45,19 @@ List<Map<String, String?>> categories = [
   {"title": "Nature / Animalier", "icon": "Chronometer-7.png"},
   {"title": "Autre", "icon": null},
 ];
+
+Map<String, dynamic> firstPremiumData = {
+  'title': 'Boostez vos likes!',
+  'icon': 'boost_like.png',
+  'sub':  'Accedez a votre historique de likes sur 48h avec l\'abonnement premium',
+  'data': {
+    'title': 'Boost de 2 jours',
+    'sub': 'Profitezde 48h de visibilite maximale',
+    'details': [
+      '25 likes supplementaires',
+      'Visibilite accrue pour votre profil' ,
+      'Historique des likes sur 48h',
+      'Disponible pour les membres premium'
+    ]
+  }
+};

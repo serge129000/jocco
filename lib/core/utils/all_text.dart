@@ -37,4 +37,21 @@ class AllText {
   static const specifyTitleProject = 'Spécifiez votre projet';
   static const projectTimes = 'Dans combien de temps ?';
   static const leaveAll = 'Prêt(e) à tout quitter ?';
+  static const appName = 'Jocco';
+  static const findHereMatched =
+      'Retrouvez ici tous les profils avec lesquels vous avez matché.';
+  static const matched = 'Profils matchés';
+  static const liked = 'Likes récents';
+  static const abort = 'Annuler';
+  static const filtrProfil = 'Filtrer les profils';
+  static const finish = 'Termine';
+  static const distance = 'Distance';
+  static const activateOrDesactivateDistance =
+      'Activer/desactiver le filtre de distance';
+  static const age = 'Age';
+  static const gender = 'Genre';
+  static const catProject = 'Categories de Projets de Vie';
+  static const interestCat = 'Categories d\'interet';
+  static const personalityType = 'Types de Personnalite';
+  static const projectTimeDebut = 'Lancement du projet';
 }

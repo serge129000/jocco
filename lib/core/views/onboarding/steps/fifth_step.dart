@@ -21,6 +21,7 @@ class FifthStep extends StatefulWidget {
 class _FifthStepState extends State<FifthStep> {
   FocusNode anotherPFocus = FocusNode();
   String? anotherProject;
+  String? selectedProjectIcon;
   @override
   Widget build(BuildContext context) {
     return Consumer<StepProvider>(builder: (context, stepProvider, widgets) {
@@ -34,19 +35,20 @@ class _FifthStepState extends State<FifthStep> {
                 height: 110,
               ),
               Align(
-            alignment: Alignment.centerLeft,
-            child: BackWidget(
-              onCondtion: () {
-                if (Provider.of<StepProvider>(context, listen: false)
-                        .currentStep !=
-                    StepJ.first) {
-                  Provider.of<StepProvider>(context, listen: false).backStep();
-                } else {
-                  kPopPage(context);
-                }
-              },
-            ),
-          ),
+                alignment: Alignment.centerLeft,
+                child: BackWidget(
+                  onCondtion: () {
+                    if (Provider.of<StepProvider>(context, listen: false)
+                            .currentStep !=
+                        StepJ.first) {
+                      Provider.of<StepProvider>(context, listen: false)
+                          .backStep();
+                    } else {
+                      kPopPage(context);
+                    }
+                  },
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 30),
                 child: Text(
@@ -67,6 +69,8 @@ class _FifthStepState extends State<FifthStep> {
                       ...categories.map((e) => GestureDetector(
                             onTap: () {
                               stepProvider.addProjectCat(category: e['title']!);
+                              selectedProjectIcon = e['icon'];
+                              setState(() {});
                               if (e['icon'] == null) {
                                 anotherPFocus.requestFocus();
                                 showModalBottomSheet(
@@ -95,7 +99,8 @@ class _FifthStepState extends State<FifthStep> {
                                                     .textTheme
                                                     .labelMedium!
                                                     .copyWith(
-                                                        color: PrimaryColors.black),
+                                                        color: PrimaryColors
+                                                            .black),
                                                 cursorColor: greyColor,
                                                 decoration: InputDecoration(
                                                   focusedBorder:
@@ -167,7 +172,10 @@ class _FifthStepState extends State<FifthStep> {
                                           width: 54,
                                         ),
                                       Text(
-                                       e['icon'] == null && anotherProject != null? anotherProject!: e['title'] ?? '',
+                                        e['icon'] == null &&
+                                                anotherProject != null
+                                            ? anotherProject!
+                                            : e['title'] ?? '',
                                         textAlign: TextAlign.center,
                                         style: Theme.of(context)
                                             .textTheme
@@ -204,7 +212,26 @@ class _FifthStepState extends State<FifthStep> {
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 child: Btn(
                   function: () {
-                    context.read<StepProvider>().nextStep();
+                    if (stepProvider.projectCat == null) {
+                      showSnackbar(
+                          context: context,
+                          isError: true,
+                          content: Text(
+                            'Choisissez une categorie',
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelSmall!
+                                .copyWith(color: PrimaryColors.white),
+                          ));
+                    } else {
+                      showDialog(
+                          context: context,
+                          builder: (context) => confirmCategoryWidget(
+                              context: context,
+                              projectIcon: selectedProjectIcon,
+                              anotherProject: anotherProject,
+                              projectTitle: stepProvider.projectCat ?? ''));
+                    }
                   },
                   isTransparent: false,
                   anotherColor: PrimaryColors.white,
@@ -223,3 +250,98 @@ class _FifthStepState extends State<FifthStep> {
     });
   }
 }
+
+Widget confirmCategoryWidget(
+        {required String? projectIcon,
+        required String projectTitle,
+        String? anotherProject,
+        required BuildContext context}) =>
+    AlertDialog(
+      backgroundColor: PrimaryColors.first,
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Confirmation',
+            style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                color: PrimaryColors.white, fontWeight: FontWeight.bold),
+          ),
+          if (projectIcon != null)
+            Image.asset(
+              kIconAssetPath(imageName: projectIcon),
+              height: 162,
+              width: 162,
+            ),
+          Text(
+            'Confirmez-vous la sélection de la catgorie $projectTitle ?',
+            textAlign: TextAlign.center,
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall!
+                .copyWith(color: PrimaryColors.white, fontSize: 16),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Image.asset(
+              kIconAssetPath(imageName: 'info.png'),
+              height: 62,
+              width: 62,
+            ),
+          ),
+          Text(
+            'Ce choix déterminera la catgorie des profils avec lesquels vous pourrez matcher, il ne sera possible de la changer qu’aprés 10 jours d’utilisation',
+            textAlign: TextAlign.center,
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall!
+                .copyWith(color: PrimaryColors.white, fontSize: 16),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 20),
+            child: Row(
+              children: [
+                SizedBox(
+                    width: size(context: context).width / 3.6,
+                    child: Btn(
+                        isTransparent: true,
+                        function: () {
+                          kPopPage(context);
+                        },
+                        child: Text(
+                          'Annuler',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .copyWith(
+                                  color: PrimaryColors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16),
+                        ))),
+                const SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                    child: Btn(
+                        isTransparent: false,
+                        function: () {
+                          context.read<StepProvider>().nextStep();
+                          kPopPage(context);
+                        },
+                        child: Text(
+                          'Confirmer',
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .copyWith(
+                                  color: PrimaryColors.first,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16),
+                        )))
+              ],
+            ),
+          )
+        ],
+      ),
+    );

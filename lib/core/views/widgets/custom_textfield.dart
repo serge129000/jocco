@@ -73,6 +73,9 @@ class CustomTextfield extends StatelessWidget {
                   .textTheme
                   .bodySmall!
                   .copyWith(color: inDeepGreenGrey),
+              errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(
+                color: Colors.red
+              )),
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
               contentPadding: const EdgeInsets.symmetric(horizontal: 5)),

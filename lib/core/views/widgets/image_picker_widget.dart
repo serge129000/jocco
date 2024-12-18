@@ -6,7 +6,8 @@ import 'package:jocco/core/utils/color.dart';
 import 'package:jocco/core/utils/path.dart';
 
 class ImagePickerWidget extends StatefulWidget {
-  const ImagePickerWidget({super.key});
+  final Function(String?) onImageChanged;
+  const ImagePickerWidget({super.key, required this.onImageChanged});
 
   @override
   State<ImagePickerWidget> createState() => _ImagePickerWidgetState();
@@ -26,6 +27,7 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                 .then((imgPath) {
               imagePath = imgPath?.path;
               setState(() {});
+              widget.onImageChanged(imgPath?.path);
             });
           },
           child: Container(
@@ -33,7 +35,10 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
             height: 137.97,
             width: 109.62,
             decoration: BoxDecoration(
-              image: imagePath == null? null: DecorationImage(image: FileImage(File(imagePath!)), fit: BoxFit.cover),
+                image: imagePath == null
+                    ? null
+                    : DecorationImage(
+                        image: FileImage(File(imagePath!)), fit: BoxFit.cover),
                 color: PrimaryColors.first,
                 border: Border.all(width: 1.5, color: pickerBorder),
                 borderRadius: BorderRadius.circular(10)),
@@ -47,10 +52,18 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                 : null,
           ),
         ),
-          Positioned(
-              bottom: imagePath == null? 8: null,
-              right: imagePath ==null? 8: -5,
-              top: imagePath == null? null: 0,
+        Positioned(
+            bottom: imagePath == null ? 8 : null,
+            right: imagePath == null ? 8 : -5,
+            top: imagePath == null ? null : 0,
+            child: GestureDetector(
+              onTap: () {
+                if (imagePath != null) {
+                  imagePath = null;
+                  setState(() {});
+                  widget.onImageChanged(imagePath);
+                }
+              },
               child: Container(
                 height: 16,
                 width: 16,
@@ -58,12 +71,13 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                     shape: BoxShape.circle, color: PrimaryColors.white),
                 child: Center(
                   child: Icon(
-                   imagePath==null? Icons.add: Icons.close,
+                    imagePath == null ? Icons.add : Icons.close,
                     color: PrimaryColors.first,
                     size: 10,
                   ),
                 ),
-              ))
+              ),
+            ))
       ],
     );
   }

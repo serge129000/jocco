@@ -54,7 +54,15 @@ class SecondStep extends StatelessWidget {
                 spacing: 7,
                 children: [
                   ...List<int>.generate(6, (i) => i)
-                      .map((e) => ImagePickerWidget())
+                      .map((e) => ImagePickerWidget(
+                            onImageChanged: (value) {
+                              if (value == null) {
+                                stepProvider.removeImage(key: e);
+                              } else {
+                                stepProvider.addImage(key: e, imagePath: value);
+                              }
+                            },
+                          ))
                 ],
               ),
               const Spacer(),
@@ -62,7 +70,15 @@ class SecondStep extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 child: Btn(
                   function: () {
-                    context.read<StepProvider>().nextStep();
+                    if (stepProvider.selectedImages.entries.isEmpty) {
+                      showSnackbar(
+                          context: context,
+                          isError: true,
+                          content: Text('Choisissez au moins une photo', style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                            color: PrimaryColors.white
+                          ),));
+                    } else
+                      context.read<StepProvider>().nextStep();
                   },
                   isTransparent: false,
                   anotherColor: PrimaryColors.white,

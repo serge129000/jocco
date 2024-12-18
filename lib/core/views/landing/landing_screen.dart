@@ -21,7 +21,7 @@ class LandingScreen extends StatelessWidget {
               end: Alignment.bottomCenter,
               colors: [PrimaryColors.gradientF, PrimaryColors.first],
               stops: [0.0, 0.765])),
-      child: Container(
+      child: SizedBox(
         height: double.infinity,
         width: double.infinity,
         child: Column(
@@ -31,8 +31,8 @@ class LandingScreen extends StatelessWidget {
             ),
             Flexible(
                 fit: FlexFit.tight,
-                child: Image.asset(kIconAssetPath(imageName: 'logo.png'),
-                    height: 136.59, width: 140)),
+                child: Image.asset(kAssetPath(imageName: 'log1.png'),
+                    height: 280, width: 277.11)),
             SafeArea(
               child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 50),
@@ -60,7 +60,9 @@ class LandingScreen extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Btn(
                             isTransparent: false,
-                            function: () {},
+                            function: () {
+                              kPushToPage(context, page: const RegisterScreen());
+                            },
                             child: Text(
                               AllText.logIn,
                               style: Theme.of(context)

@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:jocco/core/utils/all_text.dart';
-import 'package:jocco/core/utils/gender.dart';
 import 'package:jocco/core/views/providers/step_provider.dart';
-import 'package:jocco/core/views/widgets/selectable_container.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/color.dart';
 import '../../../utils/list_utils.dart';
-import '../../../utils/path.dart';
 import '../../../utils/screen.dart';
 import '../../../utils/step_utils.dart';
 import '../../widgets/another_selected_container.dart';

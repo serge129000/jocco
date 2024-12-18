@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:jocco/core/utils/color.dart';
+import 'package:jocco/core/views/home/pages/home.dart';
+
+import '../views/home/pages/history_page.dart';
 
 Size size({required BuildContext context}) => MediaQuery.of(context).size;
 
@@ -14,7 +18,9 @@ Route _createRoute({required Widget nextPage, bool? isFromBottom}) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => nextPage,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = isFromBottom != null && isFromBottom? const Offset(0.0, 1.0): const Offset(1.0, 0.0);
+      var begin = isFromBottom != null && isFromBottom
+          ? const Offset(0.0, 1.0)
+          : const Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.easeOut;
 
@@ -26,7 +32,27 @@ Route _createRoute({required Widget nextPage, bool? isFromBottom}) {
       );
     },
   );
-} 
+}
 
 bool isKeyBoardActivated({required BuildContext context}) =>
     MediaQuery.of(context).viewInsets.bottom > 0.0;
+
+enum Status { initial, loading, loaded, error }
+
+enum Pages {
+  home(correspondingPage: Home(), iconName: 'bottom_1.png'),
+  history(correspondingPage: HistoryPage(), iconName: 'bottom_2.png'),
+  message(correspondingPage: SizedBox(), iconName: 'bottom_3.png'),
+  profil(correspondingPage: SizedBox(), iconName: 'bottom_4.png');
+
+  const Pages({required this.iconName, required this.correspondingPage});
+  final String iconName;
+  final Widget correspondingPage;
+}
+
+void showSnackbar(
+    {required BuildContext context,
+    bool? isError,
+    required Widget content}) {
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: content, behavior: SnackBarBehavior.floating, backgroundColor: isError ?? false? Colors.red:  PrimaryColors.white,));
+}

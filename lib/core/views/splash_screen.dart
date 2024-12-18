@@ -1,10 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:jocco/core/utils/all_text.dart';
+import 'package:flutter/services.dart';
 import 'package:jocco/core/utils/color.dart';
 import 'package:jocco/core/utils/path.dart';
 import 'package:jocco/core/utils/screen.dart';
+import 'package:jocco/core/views/home/root.dart';
 import 'package:jocco/core/views/landing/landing_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -17,8 +19,13 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    Future.delayed(const Duration(seconds: 2)).then((v){
-      kReplaceToPage(context, page: const LandingScreen());
+    Future.delayed(const Duration(seconds: 2)).then((v) {
+      HapticFeedback.mediumImpact();
+      if (FirebaseAuth.instance.currentUser == null) {
+        kReplaceToPage(context, page: const LandingScreen());
+      } else {
+        kReplaceToPage(context, page: const Root());
+      }
     });
     super.initState();
   }
@@ -34,31 +41,13 @@ class _SplashScreenState extends State<SplashScreen> {
               end: Alignment.bottomCenter,
               colors: [PrimaryColors.gradientF, PrimaryColors.first],
               stops: [0.0, 0.765])),
-      child: Container(
+      child: SizedBox(
         height: double.infinity,
         width: double.infinity,
-        child: Column(
-          children: [
-            SizedBox(
-              height: size(context: context).height / 3,
-            ),
-            Flexible(
-                fit: FlexFit.tight,
-                child: Image.asset(kIconAssetPath(imageName: 'logo.png'),
-                    height: 136.59, width: 140)),
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 50),
-                child: Text(
-                  AllText.splashText,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      color: PrimaryColors.white, fontWeight: FontWeight.w600),
-                ),
-              ),
-            ),
-          ],
-        ),
+        child: Center(
+            child: Image.asset(kAssetPath(imageName: 'log1.png'),
+            fit: BoxFit.cover,
+                height: 280, width: 277.11)),
       ),
     );
   }

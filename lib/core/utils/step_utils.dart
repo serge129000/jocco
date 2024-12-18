@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 enum StepJ {
   first(name: 'first', value: 1),
   second(name: 'second', value: 2),
@@ -40,11 +42,17 @@ enum ProjectTimes {
   const ProjectTimes({required this.name});
 }
 
-enum LeaveAll{
+enum LeaveAll {
   yes(value: true, name: 'Oui'),
   no(value: false, name: 'Non');
 
   final bool value;
   final String name;
   const LeaveAll({required this.value, required this.name});
+}
+
+extension BoolExtension on bool {
+  String toFrenchString() {
+    return this ? "Oui" : "Non";
+  }
 }
