@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:jocco/core/utils/color.dart';
 import 'package:jocco/core/views/home/pages/home.dart';
+import 'package:jocco/core/views/home/pages/message.dart';
 
 import '../views/home/pages/history_page.dart';
+import '../views/home/pages/profil.dart';
 
 Size size({required BuildContext context}) => MediaQuery.of(context).size;
 
@@ -42,8 +44,8 @@ enum Status { initial, loading, loaded, error }
 enum Pages {
   home(correspondingPage: Home(), iconName: 'bottom_1.png'),
   history(correspondingPage: HistoryPage(), iconName: 'bottom_2.png'),
-  message(correspondingPage: SizedBox(), iconName: 'bottom_3.png'),
-  profil(correspondingPage: SizedBox(), iconName: 'bottom_4.png');
+  message(correspondingPage: Message(), iconName: 'bottom_3.png'),
+  profil(correspondingPage: Profil(), iconName: 'bottom_4.png');
 
   const Pages({required this.iconName, required this.correspondingPage});
   final String iconName;

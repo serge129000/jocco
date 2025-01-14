@@ -54,4 +54,12 @@ class AllText {
   static const interestCat = 'Categories d\'interet';
   static const personalityType = 'Types de Personnalite';
   static const projectTimeDebut = 'Lancement du projet';
+  static const findYourMatch = 'Trouvez votre match!';
+  static const findPersProject =
+      'Rencontrez des personnes partageant vos projets de vie.';
+  static const startMatch = 'Commencer a matcher';
+  static const explorePlan = 'Explorer le forfait';
+  static const premiumPlan = 'Forfait premium';
+  static const unlockWithPremium =
+      'Debloquez toutes les fonctionnalites avec le forfait premium';
 }

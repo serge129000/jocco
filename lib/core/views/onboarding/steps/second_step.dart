@@ -49,21 +49,25 @@ class SecondStep extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                         color: PrimaryColors.white)),
               ),
-              Wrap(
-                runSpacing: 10,
-                spacing: 7,
-                children: [
-                  ...List<int>.generate(6, (i) => i)
-                      .map((e) => ImagePickerWidget(
-                            onImageChanged: (value) {
-                              if (value == null) {
-                                stepProvider.removeImage(key: e);
-                              } else {
-                                stepProvider.addImage(key: e, imagePath: value);
-                              }
-                            },
-                          ))
-                ],
+              SizedBox(
+                width: double.infinity,
+                child: Wrap(
+                  alignment: WrapAlignment.spaceEvenly,
+                  runSpacing: 10,
+                  spacing: 7,
+                  children: [
+                    ...List<int>.generate(6, (i) => i)
+                        .map((e) => ImagePickerWidget(
+                              onImageChanged: (value) {
+                                if (value == null) {
+                                  stepProvider.removeImage(key: e);
+                                } else {
+                                  stepProvider.addImage(key: e, imagePath: value);
+                                }
+                              },
+                            ))
+                  ],
+                ),
               ),
               const Spacer(),
               Padding(

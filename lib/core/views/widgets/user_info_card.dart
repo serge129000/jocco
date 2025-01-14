@@ -9,7 +9,10 @@ class UserInfoCard extends StatefulWidget {
   final AppinioSwiperController controller;
   final PageController pageController;
   const UserInfoCard(
-      {super.key, required this.userData, required this.controller, required this.pageController});
+      {super.key,
+      required this.userData,
+      required this.controller,
+      required this.pageController});
   @override
   State<UserInfoCard> createState() => _UserInfoCardState();
 }
@@ -39,11 +42,131 @@ class _UserInfoCardState extends State<UserInfoCard> {
                 children: [
                   ...(widget.userData['userImages'] as List<String>)
                       .take(1)
-                      .map((e) => CustomImageShower(url: e)),
+                      .map((e) => Stack(
+                            children: [
+                              Container(child: CustomImageShower(url: e)),
+                              Positioned(
+                                  bottom: 0,
+                                  child: Opacity(
+                                    opacity: .7,
+                                    child: AnimatedContainer(
+                                      duration: Duration(milliseconds: 700),
+                                      height: constraint.maxHeight / 4.5,
+                                      width: constraint.maxWidth,
+                                      decoration: const BoxDecoration(
+                                          color: PrimaryColors.black,
+                                          borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(20),
+                                              bottomRight:
+                                                  Radius.circular(20))),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 5),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              widget.userData['nom'] +
+                                                  ' ' +
+                                                  widget.userData['age']
+                                                      .toString(),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyLarge!
+                                                  .copyWith(
+                                                      color:
+                                                          PrimaryColors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 2),
+                                              child: Text(
+                                                widget.userData['projet'],
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .labelSmall!
+                                                    .copyWith(
+                                                        color:
+                                                            PrimaryColors.white,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  )),
+                            ],
+                          )),
                   UserAboutShower(userData: widget.userData),
                   ...(widget.userData['userImages'] as List<String>)
                       .skip(1)
-                      .map((e) => CustomImageShower(url: e)),
+                      .map((e) => Stack(
+                            children: [
+                              Container(child: CustomImageShower(url: e)),
+                              Positioned(
+                                  bottom: 0,
+                                  child: Opacity(
+                                    opacity: .7,
+                                    child: AnimatedContainer(
+                                      duration: Duration(milliseconds: 700),
+                                      height: constraint.maxHeight / 4.5,
+                                      width: constraint.maxWidth,
+                                      decoration: const BoxDecoration(
+                                          color: PrimaryColors.black,
+                                          borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(20),
+                                              bottomRight:
+                                                  Radius.circular(20))),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 5),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              widget.userData['nom'] +
+                                                  ' ' +
+                                                  widget.userData['age']
+                                                      .toString(),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyLarge!
+                                                  .copyWith(
+                                                      color:
+                                                          PrimaryColors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 2),
+                                              child: Text(
+                                                widget.userData['projet'],
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .labelSmall!
+                                                    .copyWith(
+                                                        color:
+                                                            PrimaryColors.white,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  )),
+                            ],
+                          )),
                 ],
               ),
             ),
@@ -85,7 +208,7 @@ class _UserInfoCardState extends State<UserInfoCard> {
                     );
                   }),
                 )),
-                if(currentPage != 1)
+            /* if(currentPage != 1)
                 Positioned(
                   bottom: 0,
                   child: Opacity(
@@ -127,6 +250,7 @@ class _UserInfoCardState extends State<UserInfoCard> {
                     ),
                   ),
                 )),
+             */
             Positioned(
                 bottom: -20,
                 left: 50,
@@ -153,7 +277,7 @@ class _UserInfoCardState extends State<UserInfoCard> {
                 right: 50,
                 child: GestureDetector(
                   onTap: () {
-                    widget.controller.swipeDown();
+                    widget.controller.swipeRight();
                   },
                   child: Container(
                     height: 50,
@@ -169,7 +293,6 @@ class _UserInfoCardState extends State<UserInfoCard> {
                     ),
                   ),
                 )),
-                
           ],
         );
       }),

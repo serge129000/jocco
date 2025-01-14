@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jocco/core/utils/all_text.dart';
+import 'package:jocco/core/utils/app_utils.dart';
 import 'package:jocco/core/utils/color.dart';
 import 'package:jocco/core/utils/screen.dart';
 import 'package:jocco/core/models/country.dart';
@@ -110,6 +111,12 @@ class _PhoneRegisterSignInState extends State<PhoneRegisterSignIn> {
                               //print('completed');
                             },
                             verificationFailed: (firebaseAuthException) {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => errorDialog(
+                                      context: context,
+                                      err:
+                                          firebaseAuthException.message ?? ''));
                               print(
                                   'Erreur : ${firebaseAuthException.message}');
                               print(
@@ -133,6 +140,7 @@ class _PhoneRegisterSignInState extends State<PhoneRegisterSignIn> {
                     isTransparent: false,
                     anotherColor: PrimaryColors.white,
                     child: Builder(builder: (context) {
+                      print(authProvider.registerStatus);
                       return authProvider.registerStatus == Status.loading
                           ? const Center(
                               child: CupertinoActivityIndicator(

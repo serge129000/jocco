@@ -13,14 +13,19 @@ class CustomImageShower extends StatelessWidget {
         width: 1 / 0,
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
-        child: CachedNetworkImage(
-          imageUrl: url,
-          fit: BoxFit.cover,
-          placeholder: (context, url) {
-            return const CupertinoActivityIndicator(
-              color: PrimaryColors.white,
+        child: LayoutBuilder(
+          builder: (context, constraint) {
+            return CachedNetworkImage(
+              memCacheHeight: constraint.maxWidth.toInt() *  MediaQuery.of(context).devicePixelRatio.toInt(),
+              imageUrl: url,
+              fit: BoxFit.cover,
+              placeholder: (context, url) {
+                return const CupertinoActivityIndicator(
+                  color: PrimaryColors.white,
+                );
+              },
             );
-          },
+          }
         ));
   }
 }

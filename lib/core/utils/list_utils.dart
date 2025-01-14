@@ -47,9 +47,47 @@ List<Map<String, String?>> categories = [
 ];
 
 Map<String, dynamic> firstPremiumData = {
+  'index': 1,
   'title': 'Boostez vos likes!',
   'icon': 'boost_like.png',
   'sub':  'Accedez a votre historique de likes sur 48h avec l\'abonnement premium',
+  'simple': '25 likes supplementaires pour 24h',
+  'data': {
+    'title': 'Boost de 2 jours',
+    'sub': 'Profitezde 48h de visibilite maximale',
+    'details': [
+      '25 likes supplementaires',
+      'Visibilite accrue pour votre profil' ,
+      'Historique des likes sur 48h',
+      'Disponible pour les membres premium'
+    ]
+  }
+};
+
+Map<String, dynamic> secondPremiumData = {
+  'index': 2,
+  'title': 'Boostez vos likes!',
+  'icon': 'to_back.png',
+  'sub':  'Accedez a votre historique de likes sur 48h avec l\'abonnement premium',
+  'simple': '5 retours en arriere',
+  'data': {
+    'title': 'Boost de 2 jours',
+    'sub': 'Profitezde 48h de visibilite maximale',
+    'details': [
+      '25 likes supplementaires',
+      'Visibilite accrue pour votre profil' ,
+      'Historique des likes sur 48h',
+      'Disponible pour les membres premium'
+    ]
+  }
+};
+
+Map<String, dynamic> thirdPremiumData = {
+  'index': 3,
+  'title': 'Boostez vos likes!',
+  'icon': 'premium.png',
+  'sub':  'Accedez a votre historique de likes sur 48h avec l\'abonnement premium',
+  'simple': 'Booster son profil pour 24h',
   'data': {
     'title': 'Boost de 2 jours',
     'sub': 'Profitezde 48h de visibilite maximale',
