@@ -22,6 +22,9 @@ class _HomeState extends State<Home> {
   final PageController pageController = PageController();
   @override
   Widget build(BuildContext context) {
+    /* FirebaseAuth.instance.currentUser!.getIdToken().then((v) {
+      print(v);
+    }); */
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
@@ -52,14 +55,14 @@ class _HomeState extends State<Home> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 20),
-                        child: Consumer<AuthProvider>(
-                          builder: (BuildContext context, AuthProvider value,
+                        child: Consumer<AppAuthProvider>(
+                          builder: (BuildContext context, AppAuthProvider value,
                               Widget? child) {
                             return GestureDetector(
                                 onTap: () {
-                                  HapticFeedback.mediumImpact();
-                                  kPushToPage(context, page: Filter());
-                                  //value.logoutUser();
+                                  /* HapticFeedback.mediumImpact();
+                                  kPushToPage(context, page: Filter()); */
+                                  value.logoutUser();
                                 },
                                 child: Image.asset(
                                   kIconAssetPath(

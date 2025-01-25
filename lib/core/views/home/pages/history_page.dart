@@ -46,7 +46,7 @@ class _HistoryPageState extends State<HistoryPage>
             ),
             Padding(
               padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
-              child: Consumer<AuthProvider>(
+              child: Consumer<AppAuthProvider>(
                   builder: (context, authProvider, widgets) {
                 return TabBar(
                     onTap: (value) {

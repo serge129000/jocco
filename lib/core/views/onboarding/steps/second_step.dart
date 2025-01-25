@@ -74,11 +74,11 @@ class SecondStep extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 child: Btn(
                   function: () {
-                    if (stepProvider.selectedImages.entries.isEmpty) {
+                    if (stepProvider.selectedImages.entries.length < 3) {
                       showSnackbar(
                           context: context,
                           isError: true,
-                          content: Text('Choisissez au moins une photo', style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                          content: Text('Choisissez au moins 3 photos', style: Theme.of(context).textTheme.labelSmall!.copyWith(
                             color: PrimaryColors.white
                           ),));
                     } else

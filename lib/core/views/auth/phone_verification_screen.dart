@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:jocco/core/utils/screen.dart';
 import 'package:jocco/core/views/onboarding/onboarding.dart';
 import 'package:jocco/core/views/providers/auth_provider.dart';
@@ -23,12 +24,12 @@ class PhoneVerificationScreen extends StatefulWidget {
 }
 
 class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
-  late AuthProvider authProvider;
+  late AppAuthProvider authProvider;
   final formKey = GlobalKey<FormState>();
   String code = '';
   @override
   void initState() {
-    authProvider = context.read<AuthProvider>();
+    authProvider = context.read<AppAuthProvider>();
     authProvider.addListener(listener);
     super.initState();
   }
@@ -45,109 +46,117 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
         body: SizedBox(
       height: 1 / 0,
       width: 1 / 0,
-      child: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Align(alignment: Alignment.topLeft, child: BackWidget()),
-              Padding(
-                padding: const EdgeInsets.only(top: 30),
-                child: Text(
-                  AllText.verificationLabel,
-                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      fontWeight: FontWeight.w600, color: PrimaryColors.white),
+      child: Form(
+        key: formKey,
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Align(alignment: Alignment.topLeft, child: BackWidget()),
+                Padding(
+                  padding: const EdgeInsets.only(top: 30),
+                  child: Text(
+                    AllText.verificationLabel,
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: PrimaryColors.white),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                child: Text(
-                  widget.phoneNumber,
-                  style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                      fontWeight: FontWeight.w600, color: whiteInClearGreen),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  child: Text(
+                    widget.phoneNumber,
+                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                        fontWeight: FontWeight.w600, color: whiteInClearGreen),
+                  ),
                 ),
-              ),
-              Pinput(
-                length: 6,
-                onChanged: (value) {
-                  code = value;
-                },
-                submittedPinTheme: PinTheme(
-                    textStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: PrimaryColors.white,
-                        fontWeight: FontWeight.w500),
-                    height: 72,
-                    width: 64.43,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: PrimaryColors.white))),
-                focusedPinTheme: PinTheme(
-                    height: 72,
-                    width: 64.43,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: PrimaryColors.white))),
-                defaultPinTheme: PinTheme(
-                    height: 72,
-                    width: 64.43,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: PrimaryColors.first))),
-                validator: (value) {
-                  /* if (authProvider.verifyingOtpStatus == Status.error) {
-                    return 'Code incorrect';
-                  } */
-                  if (value!.length < 6) {
-                    return 'Code incomplet';
-                  }
-                  return '';
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 30, bottom: 5),
-                child: Text(
-                  AllText.verificationCodeSub,
-                  style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: PrimaryColors.white),
-                ),
-              ),
-              Text(
-                AllText.resend,
-                style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                    decorationColor: PrimaryColors.first,
-                    decoration: TextDecoration.underline,
-                    fontSize: 16,
-                    color: PrimaryColors.first,
-                    fontWeight: FontWeight.w500),
-              ),
-              const Spacer(),
-              Consumer<AuthProvider>(builder: (context, authProvider, widgets) {
-                return Btn(
-                  function: () {
-                    authProvider.verifyOtp(code: code, id: widget.id);
+                Pinput(
+                  length: 6,
+                  onChanged: (value) {
+                    code = value;
                   },
-                  isTransparent: false,
-                  anotherColor: PrimaryColors.white,
-                  child: authProvider.verifyingOtpStatus == Status.loading
-                      ? Center(
-                          child: CupertinoActivityIndicator(
-                          color: PrimaryColors.first,
-                        ))
-                      : Text(
-                          AllText.next,
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelMedium!
-                              .copyWith(
-                                  color: PrimaryColors.first,
-                                  fontWeight: FontWeight.w600),
-                        ),
-                );
-              })
-            ],
+                  submittedPinTheme: PinTheme(
+                      textStyle: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .copyWith(
+                              color: PrimaryColors.white,
+                              fontWeight: FontWeight.w500),
+                      height: 72,
+                      width: 64.43,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: PrimaryColors.white))),
+                  focusedPinTheme: PinTheme(
+                      height: 72,
+                      width: 64.43,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: PrimaryColors.white))),
+                  defaultPinTheme: PinTheme(
+                      height: 72,
+                      width: 64.43,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: PrimaryColors.first))),
+                  validator: (value) {
+                    if (authProvider.verifyingOtpStatus == Status.error) {
+                      return 'Code incorrect';
+                    }
+                    if (value!.length < 6) {
+                      return 'Code incomplet';
+                    }
+                    return '';
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 30, bottom: 5),
+                  child: Text(
+                    AllText.verificationCodeSub,
+                    style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: PrimaryColors.white),
+                  ),
+                ),
+                Text(
+                  AllText.resend,
+                  style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                      decorationColor: PrimaryColors.first,
+                      decoration: TextDecoration.underline,
+                      fontSize: 16,
+                      color: PrimaryColors.first,
+                      fontWeight: FontWeight.w500),
+                ),
+                const Spacer(),
+                Consumer<AppAuthProvider>(
+                    builder: (context, authProvider, widgets) {
+                  return Btn(
+                    function: () {
+                      authProvider.verifyOtp(code: code, id: widget.id);
+                    },
+                    isTransparent: false,
+                    anotherColor: PrimaryColors.white,
+                    child: authProvider.verifyingOtpStatus == Status.loading
+                        ? Center(
+                            child: CupertinoActivityIndicator(
+                            color: PrimaryColors.first,
+                          ))
+                        : Text(
+                            AllText.next,
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelMedium!
+                                .copyWith(
+                                    color: PrimaryColors.first,
+                                    fontWeight: FontWeight.w600),
+                          ),
+                  );
+                })
+              ],
+            ),
           ),
         ),
       ),
@@ -157,10 +166,11 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
   void listener() {
     switch (authProvider.verifyingOtpStatus) {
       case Status.loaded:
-        kReplaceToPage (context, page: const Onboarding());
+        kReplaceToPage(context, page: const Onboarding());
         break;
       case Status.error:
-        print('error');
+        HapticFeedback.mediumImpact();
+        formKey.currentState!.validate();
         break;
       default:
     }

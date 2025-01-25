@@ -4,6 +4,8 @@ import 'package:jocco/core/utils/country_list.dart';
 import 'package:jocco/core/utils/path.dart';
 import 'package:jocco/core/utils/screen.dart';
 import 'package:jocco/core/models/country.dart';
+import 'package:jocco/core/views/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
 
 class CustomPhonePicker extends StatefulWidget {
   final Function(Country?) onChanged;
@@ -16,11 +18,13 @@ class CustomPhonePicker extends StatefulWidget {
 class _CustomPhonePickerState extends State<CustomPhonePicker> {
   late List<Country> allCountry;
   late Country selectedCountry;
+  late AppAuthProvider appAuthProvider;
   @override
   void initState() {
+    appAuthProvider = context.read<AppAuthProvider>();
     allCountry = Countries.countryList.map((e) => Country.fromJson(e)).toList();
     selectedCountry = allCountry
-        .where((e) => e.name!.toLowerCase().contains('france'))
+        .where((e) => e.alpha2Code!.toLowerCase().contains(appAuthProvider.currentLocale?.toLowerCase() ?? 'fr'))
         .single;
     super.initState();
   }
@@ -30,7 +34,7 @@ class _CustomPhonePickerState extends State<CustomPhonePicker> {
     return GestureDetector(
       onTap: () {
         showModalBottomSheet(
-          backgroundColor: filledSelectedBorder,
+            backgroundColor: filledSelectedBorder,
             showDragHandle: true,
             context: context,
             builder: (context) {
@@ -46,14 +50,19 @@ class _CustomPhonePickerState extends State<CustomPhonePicker> {
                           });
                           kPopPage(context);
                         },
-                        leading: Text(allCountry[index].dialCode ?? '', style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: inDeepGreenGrey
-                        ),),
+                        leading: Text(
+                          allCountry[index].dialCode ?? '',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .copyWith(color: inDeepGreenGrey),
+                        ),
                         title: Text(
                           allCountry[index].name ?? '',
-                          style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                            color: inDeepGreenGrey
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelMedium!
+                              .copyWith(color: inDeepGreenGrey),
                         ),
                       );
                     });
@@ -67,7 +76,7 @@ class _CustomPhonePickerState extends State<CustomPhonePicker> {
         height: 48,
         width: 110.57,
         decoration: BoxDecoration(
-          color: filledSelectedBorder,
+            color: filledSelectedBorder,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: filledSelectedBorder)),
         child: Center(
@@ -76,9 +85,10 @@ class _CustomPhonePickerState extends State<CustomPhonePicker> {
             children: [
               Text(
                 selectedCountry.dialCode ?? 'U',
-                style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                  color: inDeepGreenGrey
-                ),
+                style: Theme.of(context)
+                    .textTheme
+                    .labelMedium!
+                    .copyWith(color: inDeepGreenGrey),
               ),
               Image.asset(
                 kIconAssetPath(imageName: 'dropdown.png'),

@@ -23,6 +23,8 @@ class StepProvider with ChangeNotifier {
   String? get projectCat => _projectCat;
   Map<int, String> _selectedImages = {};
   Map<int, String> get selectedImages => _selectedImages;
+  ProjectTimes _projectTimes = ProjectTimes.immediately;
+  ProjectTimes get projectTimes => _projectTimes;
 
   void nextStep() {
     _currentStep = StepJ.stepFromValue(step: _currentStep.value + 1);
@@ -95,6 +97,11 @@ class StepProvider with ChangeNotifier {
 
   void removeImage({required int key}) {
     _selectedImages.removeWhere((e, v) => e == key);
+    notifyListeners();
+  }
+
+  void setProjectTimes({required ProjectTimes times}) {
+    _projectTimes = times;
     notifyListeners();
   }
 }

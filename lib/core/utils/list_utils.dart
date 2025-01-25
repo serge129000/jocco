@@ -29,22 +29,135 @@ const List<String> projectTypes = [
   'Non, je cherche encore'
 ];
 
-List<Map<String, String?>> categories = [
-  {"title": "Rencontre avec projet enfant", "icon": "Chronometer.png"},
-  {"title": "Rencontre sans projet enfant", "icon": "Chronometer-2.png"},
-  {"title": "Hébergement", "icon": "Chronometer-3.png"},
-  {"title": "Restauration / commerces de bouche", "icon": "Chronometer-4.png"},
-  {"title": "Commerces", "icon": "Chronometer-5.png"},
-  {"title": "Voyage / Départ à l'étranger", "icon": "Chronometer-6.png"},
-  {"title": "Bien-être / médecine douce", "icon": "Chronometer-7.png"},
-  {"title": "Immobilier / architecture", "icon": "Chronometer-8.png"},
-  {"title": "Sport / diététique", "icon": "Chronometer-9.png"},
-  {"title": "Esthétique", "icon": "Chronometer-10.png"},
-  {"title": "Technologie", "icon": "Chronometer-11.png"},
-  {"title": "Art", "icon": "Chronometer-12.png"},
-  {"title": "Nature / Animalier", "icon": "Chronometer-7.png"},
-  {"title": "Autre", "icon": null},
+List<Map<String, dynamic>> categories = [
+  {
+    "title": "Rencontre avec projet enfant",
+    "icon": "Chronometer.png",
+    "examples": [
+      "Discussion autour du désir d'avoir des enfants",
+      "Ateliers de préparation à la parentalité",
+      "Rencontres pour futurs parents"
+    ],
+  },
+  {
+    "title": "Rencontre sans projet enfant",
+    "icon": "Chronometer-2.png",
+    "examples": [
+      "Rencontres pour personnes ne souhaitant pas avoir d'enfants",
+      "Groupes de discussions sur les styles de vie sans enfants",
+      "Événements sociaux pour célibataires sans projet parental"
+    ],
+  },
+  {
+    "title": "Hébergement",
+    "icon": "Chronometer-3.png",
+    "examples": [
+      "Création d'une plateforme de réservation d'auberges",
+      "Guide des meilleurs hébergements locaux",
+      "Service de gestion d'Airbnb automatisé"
+    ],
+  },
+  {
+    "title": "Restauration / commerces de bouche",
+    "icon": "Chronometer-4.png",
+    "examples": [
+      "Lancement d'un food truck spécialisé en cuisine végétarienne",
+      "Guide des meilleurs restaurants locaux",
+      "Plateforme de réservation de tables"
+    ],
+  },
+  {
+    "title": "Commerces",
+    "icon": "Chronometer-5.png",
+    "examples": [
+      "Lancement d'une boutique en ligne pour produits artisanaux",
+      "Développement d'une app pour les promotions locales",
+      "Création d'un espace de coworking commercial"
+    ],
+  },
+  {
+    "title": "Voyage / Départ à l'étranger",
+    "icon": "Chronometer-6.png",
+    "examples": [
+      "Organisation de voyages guidés personnalisés",
+      "Service d'accompagnement pour expatriés",
+      "Application de gestion des documents de voyage"
+    ],
+  },
+  {
+    "title": "Bien-être / médecine douce",
+    "icon": "Chronometer-7.png",
+    "examples": [
+      "Ateliers de méditation en ligne",
+      "Création d'un espace de yoga collectif",
+      "Service de consultation en naturopathie"
+    ],
+  },
+  {
+    "title": "Immobilier / architecture",
+    "icon": "Chronometer-8.png",
+    "examples": [
+      "Plateforme de recherche de logements écologiques",
+      "Outil de design d'intérieur interactif",
+      "Service de mise en relation avec des architectes"
+    ],
+  },
+  {
+    "title": "Sport / diététique",
+    "icon": "Chronometer-9.png",
+    "examples": [
+      "Application de coaching sportif personnalisé",
+      "Planificateur de repas équilibrés",
+      "Organisation d'événements sportifs locaux"
+    ],
+  },
+  {
+    "title": "Esthétique",
+    "icon": "Chronometer-10.png",
+    "examples": [
+      "Création d'une ligne de maquillage naturel",
+      "Application de réservation pour soins esthétiques",
+      "Tutoriels de maquillage en réalité augmentée"
+    ],
+  },
+  {
+    "title": "Technologie",
+    "icon": "Chronometer-11.png",
+    "examples": [
+      "Développement d'une application de gestion de projets",
+      "Création d'un système de maison connectée",
+      "Lancement d'un outil de productivité pour développeurs"
+    ],
+  },
+  {
+    "title": "Art",
+    "icon": "Chronometer-12.png",
+    "examples": [
+      "Plateforme de vente d'œuvres d'art en ligne",
+      "Création d'une application d'apprentissage du dessin",
+      "Organisation d'expositions virtuelles"
+    ],
+  },
+  {
+    "title": "Nature / Animalier",
+    "icon": "Chronometer-7.png",
+    "examples": [
+      "Application de randonnées guidées",
+      "Service de garde d'animaux",
+      "Plateforme de sensibilisation à la protection de la faune"
+    ],
+  },
+  {
+    "title": "Autre",
+    "icon": null,
+    "examples": [
+      "Projets divers ou hors catégorie",
+      "Services personnalisés",
+      "Projets innovants"
+    ],
+  },
 ];
+
 
 Map<String, dynamic> firstPremiumData = {
   'index': 1,

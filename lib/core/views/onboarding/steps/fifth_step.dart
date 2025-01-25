@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jocco/core/utils/all_text.dart';
+import 'package:jocco/core/utils/app_utils.dart';
 import 'package:jocco/core/utils/path.dart';
 import 'package:jocco/core/utils/screen.dart';
 import 'package:jocco/core/views/providers/step_provider.dart';
@@ -187,12 +188,22 @@ class _FifthStepState extends State<FifthStep> {
                                     ],
                                   ),
                                 ),
-                                const Positioned(
+                                Positioned(
                                     top: 5,
                                     right: 5,
-                                    child: Icon(
-                                      Icons.add,
-                                      color: PrimaryColors.white,
+                                    child: InkWell(
+                                      onTap: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) =>
+                                                showListDialog(
+                                                    context: context,
+                                                    data: e['examples']));
+                                      },
+                                      child: Icon(
+                                        Icons.add,
+                                        color: PrimaryColors.white,
+                                      ),
                                     ))
                               ],
                             ),
@@ -272,6 +283,19 @@ Widget confirmCategoryWidget(
               height: 162,
               width: 162,
             ),
+             Padding(
+               padding: const EdgeInsets.only(
+                bottom: 10
+               ),
+               child: Text(
+                           projectTitle,
+                           textAlign: TextAlign.center,
+                           style: Theme.of(context)
+                  .textTheme
+                  .bodySmall!
+                  .copyWith(color: PrimaryColors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                         ),
+             ),
           Text(
             'Confirmez-vous la sélection de la catgorie $projectTitle ?',
             textAlign: TextAlign.center,

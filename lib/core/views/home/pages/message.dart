@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jocco/core/views/home/pages/message_components/no_match.dart';
+import 'package:jocco/core/views/home/pages/message_components/message_list.dart';
 
 import '../../../utils/path.dart';
 
@@ -24,7 +24,7 @@ class Message extends StatelessWidget {
             ),
             Expanded(child: Align(
               alignment: Alignment.center,
-              child: NoMatch(),
+              child: MessageList() /* NoMatch() */,
             ))
           ],
         ),

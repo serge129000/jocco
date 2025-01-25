@@ -25,7 +25,7 @@ class AllText {
   static const searchingFor = 'Que recherchez-vous ?';
   static const physictraits =
       'Quels sont vos traits de personnalité dominants ?';
-  static const interestCenters = 'Quels sont vos centres d\'intérêt ?';
+  static const interestCenters = 'Avez-vous des passions ?';
   static const hasProject = 'Avez-vous un projet de\n vie ?';
   static const selectDepartment = 'Sélectionnez votre département';
   static const hasChild = 'Avez-vous des enfants ?';

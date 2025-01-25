@@ -8,6 +8,9 @@ import 'package:jocco/core/utils/path.dart';
 import 'package:jocco/core/utils/screen.dart';
 import 'package:jocco/core/views/home/root.dart';
 import 'package:jocco/core/views/landing/landing_screen.dart';
+import 'package:provider/provider.dart';
+
+import 'providers/auth_provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -17,8 +20,11 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  late AppAuthProvider authProvider;
   @override
   void initState() {
+    authProvider = context.read<AppAuthProvider>();
+    authProvider.init();
     Future.delayed(const Duration(seconds: 2)).then((v) {
       HapticFeedback.mediumImpact();
       if (FirebaseAuth.instance.currentUser == null) {
@@ -46,8 +52,7 @@ class _SplashScreenState extends State<SplashScreen> {
         width: double.infinity,
         child: Center(
             child: Image.asset(kAssetPath(imageName: 'log1.png'),
-            fit: BoxFit.cover,
-                height: 280, width: 277.11)),
+                fit: BoxFit.cover, height: 280, width: 277.11)),
       ),
     );
   }

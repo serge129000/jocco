@@ -36,4 +36,6 @@ class AuthServicesImpl implements AuthServices {
   Future<void> disconectUser() async {
    await FirebaseAuth.instance.signOut();
   }
+
+  //Future
 }

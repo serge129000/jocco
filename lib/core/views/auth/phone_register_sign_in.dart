@@ -23,14 +23,22 @@ class PhoneRegisterSignIn extends StatefulWidget {
 }
 
 class _PhoneRegisterSignInState extends State<PhoneRegisterSignIn> {
+  late AppAuthProvider appAuthProvider;
   final key = GlobalKey<FormState>();
   FocusNode phoneFocus = FocusNode();
   String phoneNumber = '';
-  Country? selectedCountry = Countries.countryList
+  late Country? selectedCountry;
+  @override
+  void initState() {
+    appAuthProvider = context.read<AppAuthProvider>();
+    selectedCountry = Countries.countryList
       .map((e) => Country.fromJson(e))
       .toList()
-      .where((e) => e.name!.toLowerCase().contains('france'))
+      .where((e) => e.alpha2Code!.toLowerCase().contains(appAuthProvider.currentLocale?.toLowerCase() ?? 'fr'))
       .single;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
@@ -99,7 +107,7 @@ class _PhoneRegisterSignInState extends State<PhoneRegisterSignIn> {
                   ),
                 ),
                 const Spacer(),
-                Consumer<AuthProvider>(
+                Consumer<AppAuthProvider>(
                     builder: (context, authProvider, widgets) {
                   return Btn(
                     function: () async {

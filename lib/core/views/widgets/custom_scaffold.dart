@@ -6,12 +6,14 @@ class CustomScaffold extends StatelessWidget {
   final PreferredSizeWidget? appBar;
   final Widget? body;
   final Widget? bottomNavigation;
-  const CustomScaffold({super.key, this.appBar, this.body, this.bottomNavigation});
+  final bool? canResizeBottom;
+  const CustomScaffold(
+      {super.key, this.appBar, this.body, this.bottomNavigation, this.canResizeBottom});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: canResizeBottom ?? false,
       extendBody: true,
       appBar: appBar,
       bottomNavigationBar: bottomNavigation,
@@ -20,15 +22,13 @@ class CustomScaffold extends StatelessWidget {
         height: size(context: context).height,
         width: size(context: context).width,
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomRight,
-            colors: [
-            Color(0xff00CCCC),
-            Color(0xff006666)
-          ])
+            gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomRight,
+                colors: [Color(0xff00CCCC), Color(0xff006666)])
             /* image: DecorationImage(
-                image: AssetImage(kAssetPath(imageName: 'gradient-main.jpg'))) */),
+                image: AssetImage(kAssetPath(imageName: 'gradient-main.jpg'))) */
+            ),
         child: body,
       ),
     );

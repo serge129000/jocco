@@ -19,7 +19,7 @@ class _FilterState extends State<Filter> {
     return CustomScaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20),
+          padding: const EdgeInsets.only(top: 20),
           child: Column(
             children: [
               Padding(

@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:jocco/core/utils/all_text.dart';
 import 'package:jocco/core/utils/gender.dart';
+import 'package:jocco/core/views/providers/auth_provider.dart';
 import 'package:jocco/core/views/providers/step_provider.dart';
 import 'package:jocco/core/views/widgets/custom_textfield.dart';
 import 'package:jocco/core/views/widgets/date_selector.dart';
 import 'package:jocco/core/views/widgets/department_selector.dart';
 import 'package:provider/provider.dart';
 
+import '../../../models/country.dart';
 import '../../../utils/color.dart';
+import '../../../utils/country_list.dart';
 import '../../../utils/screen.dart';
 import '../../../utils/step_utils.dart';
 import '../../widgets/back_widget.dart';
@@ -117,8 +120,17 @@ class _FirstStepState extends State<FirstStep> {
             ),
             Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20),
-                child: DepartmentSelector(
-                  onChanged: (v) {},
+                child: Consumer<AppAuthProvider>(
+                  builder: (context, appAuthProvider, widgets) {
+                    return DepartmentSelector(
+                      countryName: Countries.countryList
+                          .map((e) => Country.fromJson(e))
+                          .toList()
+                          .where((e) => e.alpha2Code!.toLowerCase().contains(appAuthProvider.currentLocale?.toLowerCase() ?? 'fr'))
+                          .single.name,
+                      onChanged: (v) {},
+                    );
+                  }
                 )),
             Text(
               AllText.enterBirthDay,

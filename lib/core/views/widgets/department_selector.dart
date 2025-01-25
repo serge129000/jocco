@@ -26,6 +26,7 @@ class _DepartmentSelectorState extends State<DepartmentSelector> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.countryName);
     return GestureDetector(
       onTap: () {
         showModalBottomSheet(
@@ -37,8 +38,7 @@ class _DepartmentSelectorState extends State<DepartmentSelector> {
                 return ListView.builder(
                     itemCount: (departmentData.single['state']).length,
                     itemBuilder: (context, index) {
-                      final stateList =
-                          (departmentData.single['state']);
+                      final stateList = (departmentData.single['state']);
                       return ListTile(
                         onTap: () {
                           setState(() {
@@ -53,7 +53,6 @@ class _DepartmentSelectorState extends State<DepartmentSelector> {
                               .bodySmall!
                               .copyWith(color: inDeepGreenGrey),
                         ),
-                        
                       );
                     });
               });
@@ -93,7 +92,7 @@ class _DepartmentSelectorState extends State<DepartmentSelector> {
     departmentData = await CountryJson.getcountryData();
     departmentData = departmentData
         .where((e) =>
-            e['name']!.toLowerCase().contains(widget.countryName ?? 'france'))
+            e['name']!.toLowerCase().contains(widget.countryName?.toLowerCase() ?? 'france'))
         .toList();
     setState(() {});
   }

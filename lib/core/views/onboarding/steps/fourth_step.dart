@@ -83,7 +83,16 @@ class FourthStep extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: Btn(
                 function: () {
-                  context.read<StepProvider>().nextStep();
+                  if (stepProvider.selectedInterest.length <= 3 && stepProvider.selectedInterest.length >= 1) {
+                    context.read<StepProvider>().nextStep();
+                  } else {
+                    showSnackbar(
+                          context: context,
+                          isError: true,
+                          content: Text('Choisissez au maximum 3 passions', style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                            color: PrimaryColors.white
+                          ),));
+                  }
                 },
                 isTransparent: false,
                 anotherColor: PrimaryColors.white,

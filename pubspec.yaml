@@ -45,6 +45,9 @@ dependencies:
   firebase_auth: ^5.3.3
   cached_network_image: ^3.4.1
   appinio_swiper: ^2.1.1
+  devicelocale: ^0.8.1
+  firebase_storage: ^12.4.1
+  #persona_flutter: ^3.2.8
 
 dev_dependencies:
   flutter_launcher_icons: "^0.14.2"

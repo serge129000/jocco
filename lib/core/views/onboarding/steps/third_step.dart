@@ -82,7 +82,16 @@ class ThirdStep extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: Btn(
                 function: () {
-                  context.read<StepProvider>().nextStep();
+                  if (stepProvider.selectedTraits.length <= 3 && stepProvider.selectedTraits.length >= 1) {
+                    context.read<StepProvider>().nextStep();
+                  } else {
+                    showSnackbar(
+                          context: context,
+                          isError: true,
+                          content: Text('Choisissez au maximum 3 traits', style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                            color: PrimaryColors.white
+                          ),));
+                  }
                 },
                 isTransparent: false,
                 anotherColor: PrimaryColors.white,
