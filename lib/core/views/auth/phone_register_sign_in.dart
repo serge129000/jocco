@@ -131,11 +131,13 @@ class _PhoneRegisterSignInState extends State<PhoneRegisterSignIn> {
                                   'Code erreur : ${firebaseAuthException.credential}');
                             },
                             codeSent: (s, v) {
-                              kReplaceToPage(context,
+                              if (mounted) {
+                                kReplaceToPage(context,
                                   page: PhoneVerificationScreen(
                                     phoneNumber: phoneNumber,
                                     id: s,
                                   ));
+                              }
                             },
                             codeAutoRetrievalTimeout:
                                 (codeAutoRetrievalTimeout) {});

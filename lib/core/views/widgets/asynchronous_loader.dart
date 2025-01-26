@@ -19,13 +19,29 @@ class _AsynchronousLoaderState extends State<AsynchronousLoader>
   void initState() {
     animationController =
         AnimationController(vsync: this, duration: Duration(seconds: 1));
-    animation = Tween<double>(begin: widget.debut, end: widget.finish).animate(
+    setupAnimation(widget.debut, widget.finish);
+    super.initState();
+    animationController.forward();
+  }
+
+  void setupAnimation(double debut, double fin) {
+    animation = Tween<double>(begin: debut, end: fin).animate(
       CurvedAnimation(parent: animationController, curve: Curves.ease),
     )..addListener(() {
         setState(() {});
       });
-    super.initState();
-    animationController.forward();
+  }
+
+  @override
+  void didUpdateWidget(covariant AsynchronousLoader oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.debut != oldWidget.debut || widget.finish != oldWidget.finish) {
+      // Arrête l'animation en cours
+      animationController.stop();
+      // Réinitialise le contrôleur avec les nouvelles valeurs
+      setupAnimation(animation.value, widget.finish);
+      animationController.forward(from: 0); // Redémarre depuis le début
+    }
   }
 
   @override
@@ -36,34 +52,37 @@ class _AsynchronousLoaderState extends State<AsynchronousLoader>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 40,
-      width: 1 / 0,
-      decoration: BoxDecoration(
-          color: Colors.grey, borderRadius: BorderRadius.circular(30)),
-      clipBehavior: Clip.antiAlias,
-      child: LayoutBuilder(builder: (context, constraint) {
-        return AnimatedBuilder(
-          animation: animation,
-          builder: (context, child) => Align(
-            alignment: Alignment.topLeft,
-            child: GestureDetector(
-              onTap: () {
-                /* animation = Tween<double>(begin: 0.5, end: 0.70).animate(
-                    CurvedAnimation(
-                        parent: animationController, curve: Curves.ease),
-                  );
-                  animationController.forward(); */
-              },
-              child: Container(
-                height: 1 / 0,
-                color: PrimaryColors.white,
-                width: (constraint.maxWidth * animation.value),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          height: 40,
+          width: 1 / 0,
+          decoration: BoxDecoration(
+              color: Colors.grey, borderRadius: BorderRadius.circular(30)),
+          clipBehavior: Clip.antiAlias,
+          child: LayoutBuilder(builder: (context, constraint) {
+            return AnimatedBuilder(
+              animation: animation,
+              builder: (context, child) => Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  height: 1 / 0,
+                  color: PrimaryColors.white,
+                  width: (constraint.maxWidth * animation.value),
+                ),
               ),
-            ),
-          ),
-        );
-      }),
+            );
+          }),
+        ),
+        Center(
+          child: Text(
+                    'En cours ${(animation.value * 100).toInt()}%',
+                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
+            color: PrimaryColors.first, fontWeight: FontWeight.w600),
+                  ),
+        )
+      ],
     );
   }
 }

@@ -29,6 +29,7 @@ class _SixthStepState extends State<SixthStep> {
   String projectSpec = '';
   String delay = '';
   bool registerStarting = false;
+  bool isConfirmed = false;
   @override
   void dispose() {
     RegisterStream.registerStreamController.close();
@@ -202,36 +203,101 @@ class _SixthStepState extends State<SixthStep> {
                   ],
                 ),
                 Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: Btn(
-                      function: () {
-                        if (!(stepProvider.selectedIfProject?.value ?? true)) {
-                          showDialog(
-                              context: context,
-                              builder: (context) =>
-                                  confirmFinalProject(context: context));
-                        } else {
-                          formkey.currentState!.validate()
-                              ? showDialog(
-                                  context: context,
-                                  builder: (context) =>
-                                      confirmFinalProject(context: context))
-                              : null;
-                        }
-                        /* context.read<StepProvider>().nextStep(); */
-                      },
-                      isTransparent: false,
-                      anotherColor: PrimaryColors.white,
-                      child: Text(
-                        AllText.next,
-                        style: Theme.of(context)
-                            .textTheme
-                            .labelMedium!
-                            .copyWith(
-                                color: PrimaryColors.first,
-                                fontWeight: FontWeight.w600),
-                      ),
-                    ))
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: !registerStarting
+                      ? Btn(
+                          function: () {
+                            if (!(stepProvider.selectedIfProject?.value ??
+                                true)) {
+                              showDialog(
+                                      context: context,
+                                      builder: (context) =>
+                                          confirmFinalProject(context: context))
+                                  .then((v) {
+                                print(isConfirmed);
+                                if (isConfirmed) {
+                                  RegisterStream.registerUser(
+                                      basicData: {},
+                                      otherInfosData: {},
+                                      insertPhotosData: {},
+                                      projectInfosData: {},
+                                      isFinished: (b) {
+                                        if (b) {
+                                          kPushAndRemoveUntil(context,
+                                              page: Root());
+                                        }
+                                      },
+                                      hasError: (err) {},
+                                      isStarted: (b) {
+                                        setState(
+                                          () {
+                                            registerStarting = b;
+                                          },
+                                        );
+                                      });
+                                }
+                              });
+                            } else {
+                              formkey.currentState!.validate()
+                                  ? showDialog(
+                                      context: context,
+                                      builder: (context) => confirmFinalProject(
+                                          context: context)).then((v) {
+                                      print(isConfirmed);
+                                      if (isConfirmed) {
+                                        RegisterStream.registerUser(
+                                            basicData: {},
+                                            otherInfosData: {},
+                                            insertPhotosData: {},
+                                            projectInfosData: {},
+                                            isFinished: (b) {
+                                              if (b) {
+                                                kPushAndRemoveUntil(context,
+                                                    page: Root());
+                                              }
+                                            },
+                                            hasError: (err) {},
+                                            isStarted: (b) {
+                                              setState(
+                                                () {
+                                                  registerStarting = b;
+                                                },
+                                              );
+                                            });
+                                      }
+                                    })
+                                  : null;
+                            }
+                            /* context.read<StepProvider>().nextStep(); */
+                          },
+                          isTransparent: false,
+                          anotherColor: PrimaryColors.white,
+                          child: Text(
+                            AllText.next,
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelMedium!
+                                .copyWith(
+                                    color: PrimaryColors.first,
+                                    fontWeight: FontWeight.w600),
+                          ),
+                        )
+                      : StreamBuilder<Map<String, double>>(
+                          stream: RegisterStream.stream,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return Container(
+                                width: 1 / 0,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                child: AsynchronousLoader(
+                                    debut: snapshot.data?['debut'] ?? 0.0,
+                                    finish: snapshot.data?['fin'] ?? 0.0),
+                              );
+                            }
+                            return SizedBox();
+                          }),
+                )
               ],
             ),
           ),
@@ -284,79 +350,57 @@ class _SixthStepState extends State<SixthStep> {
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: !registerStarting
-                      ? Row(
-                          children: [
-                            SizedBox(
-                                width: size(context: context).width / 3.6,
-                                child: Btn(
-                                    isTransparent: true,
-                                    function: () {
-                                      kPopPage(context);
-                                    },
-                                    child: Text(
-                                      'Annuler',
-                                      textAlign: TextAlign.center,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall!
-                                          .copyWith(
-                                              color: PrimaryColors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16),
-                                    ))),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
-                                child: Btn(
-                                    isTransparent: false,
-                                    function: () {
-                                      //kPopPage(context);
-                                      RegisterStream.registerUser(
-                                          basicData: {},
-                                          otherInfosData: {},
-                                          insertPhotosData: {},
-                                          projectInfosData: {},
-                                          isFinished: (b) {
-                                            if (b) {
-                                              kPushAndRemoveUntil(context,
-                                                  page: Root());
-                                            }
-                                          },
-                                          hasError: (err) {},
-                                          isStarted: (b) {
-                                            setState(
-                                              () {
-                                                registerStarting = b;
-                                              },
-                                            );
-                                          });
-                                      setState(() {});
-                                      /* kPushAndRemoveUntil(context, page: Root()); */
-                                    },
-                                    child: Text(
-                                      'Confirmer',
-                                      textAlign: TextAlign.center,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall!
-                                          .copyWith(
-                                              color: PrimaryColors.first,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16),
-                                    )))
-                          ],
-                        )
-                      : StreamBuilder<Map<String, double>>(
-                          stream: RegisterStream.stream,
-                          builder: (context, snapshot) {
-                            return AsynchronousLoader(
-                                debut: snapshot.data?['debut'] ?? 0.0,
-                                finish: snapshot.data?['fin'] ?? 0.0);
-                          }),
-                )
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                            width: size(context: context).width / 3.6,
+                            child: Btn(
+                                isTransparent: true,
+                                function: () {
+                                  setState(() {
+                                    isConfirmed = false;
+                                  });
+                                  kPopPage(context);
+                                },
+                                child: Text(
+                                  'Annuler',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .copyWith(
+                                          color: PrimaryColors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16),
+                                ))),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                            child: Btn(
+                                isTransparent: false,
+                                function: () {
+                                  /*  */
+                                  setState(() {
+                                    isConfirmed = true;
+                                  });
+                                  kPopPage(context);
+                                  /* kPushAndRemoveUntil(context, page: Root()); */
+                                },
+                                child: Text(
+                                  'Confirmer',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .copyWith(
+                                          color: PrimaryColors.first,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16),
+                                )))
+                      ],
+                    ))
               ],
             );
           }),
