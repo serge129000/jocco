@@ -218,78 +218,8 @@ class _SixthStepState extends State<SixthStep> {
                                       builder: (context) =>
                                           confirmFinalProject(context: context))
                                   .then((v) {
-                                print(isConfirmed);
                                 if (isConfirmed) {
-                                  RegisterStream.registerUser(
-                                      basicData: {
-                                        "nom": '',
-                                        "prenom": stepProvider.name?.trim(),
-                                        "dateNais": DateFormat("yyyy-MM-dd")
-                                            .format(stepProvider.birthDate!),
-                                        "departement": stepProvider.department,
-                                        "genre": stepProvider
-                                            .selectedGender?.name[0]
-                                            .toUpperCase(),
-                                        "parent": stepProvider.hasChildren,
-                                        "searchGenre": stepProvider
-                                            .choosenGender?.name[0]
-                                            .toUpperCase()
-                                      },
-                                      otherInfosData: {
-                                        "centreInterets":
-                                            stepProvider.selectedInterest,
-                                        "personnalites":
-                                            stepProvider.selectedTraits
-                                      },
-                                      insertPhotosData: List<File>.from(
-                                          stepProvider.selectedImages.values
-                                              .map((e) => File(e))),
-                                      projectInfosData: {
-                                        "categories": [stepProvider.projectCat],
-                                        "titre": projectTitle,
-                                        "description": stepProvider.projectCat,
-                                        "lifeProject": stepProvider
-                                            .selectedIfProject?.value,
-                                        "detailsLifeProject": projectSpec,
-                                        "delay": stepProvider.projectTimes.name,
-                                        "canLeave": stepProvider.leaveAll.value
-                                      },
-                                      isFinished: (b, pic) async {
-                                        await FirebaseAuth.instance.currentUser
-                                            ?.updateProfile(
-                                                displayName: stepProvider.name,
-                                                photoURL: pic);
-                                        await FirebaseAuth.instance.currentUser
-                                            ?.reload();
-                                        if (b) {
-                                          kPushAndRemoveUntil(context,
-                                              page: Root());
-                                        }
-                                      },
-                                      hasError: (err) {
-                                        showSnackbar(
-                                            context: context,
-                                            isError: true,
-                                            content: Text(
-                                              'Erreur',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .labelSmall!
-                                                  .copyWith(
-                                                      color:
-                                                          PrimaryColors.white),
-                                            ));
-                                        setState(() {
-                                          registerStarting = false;
-                                        });
-                                      },
-                                      isStarted: (b) {
-                                        setState(
-                                          () {
-                                            registerStarting = b;
-                                          },
-                                        );
-                                      });
+                                  registerUser(stepProvider);
                                 }
                               });
                             } else {
@@ -299,95 +229,11 @@ class _SixthStepState extends State<SixthStep> {
                                       builder: (context) => confirmFinalProject(
                                           context: context)).then((v) {
                                       if (isConfirmed) {
-                                        RegisterStream.registerUser(
-                                            basicData: {
-                                              "nom": '',
-                                              "prenom":
-                                                  stepProvider.name?.trim(),
-                                              "dateNais": DateFormat(
-                                                      "yyyy-MM-dd")
-                                                  .format(
-                                                      stepProvider.birthDate!),
-                                              "departement":
-                                                  stepProvider.department,
-                                              "genre": stepProvider
-                                                  .selectedGender?.name[0]
-                                                  .toUpperCase(),
-                                              "parent":
-                                                  stepProvider.hasChildren,
-                                              "searchGenre": stepProvider
-                                                  .choosenGender?.name[0]
-                                                  .toUpperCase()
-                                            },
-                                            otherInfosData: {
-                                              "centreInterets":
-                                                  stepProvider.selectedInterest,
-                                              "personnalites":
-                                                  stepProvider.selectedTraits
-                                            },
-                                            insertPhotosData: List<File>.from(
-                                                stepProvider
-                                                    .selectedImages.values
-                                                    .map((e) => File(e))),
-                                            projectInfosData: {
-                                              "categories": [
-                                                stepProvider.projectCat
-                                              ],
-                                              "titre": projectTitle,
-                                              "description":
-                                                  stepProvider.projectCat,
-                                              "lifeProject": stepProvider
-                                                  .selectedIfProject?.value,
-                                              "detailsLifeProject": projectSpec,
-                                              "delay": stepProvider
-                                                  .projectTimes.name,
-                                              "canLeave":
-                                                  stepProvider.leaveAll.value
-                                            },
-                                            isFinished: (b, pic) async {
-                                              await FirebaseAuth
-                                                  .instance.currentUser
-                                                  ?.updateProfile(
-                                                      displayName:
-                                                          stepProvider.name,
-                                                      photoURL: pic);
-                                              await FirebaseAuth
-                                                  .instance.currentUser
-                                                  ?.reload();
-                                              if (b) {
-                                                kPushAndRemoveUntil(context,
-                                                    page: Root());
-                                              }
-                                            },
-                                            hasError: (err) {
-                                              showSnackbar(
-                                                  context: context,
-                                                  isError: true,
-                                                  content: Text(
-                                                    'Erreur',
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .labelSmall!
-                                                        .copyWith(
-                                                            color: PrimaryColors
-                                                                .white),
-                                                  ));
-                                              setState(() {
-                                                registerStarting = false;
-                                              });
-                                            },
-                                            isStarted: (b) {
-                                              setState(
-                                                () {
-                                                  registerStarting = b;
-                                                },
-                                              );
-                                            });
+                                        registerUser(stepProvider);
                                       }
                                     })
                                   : null;
                             }
-                            /* context.read<StepProvider>().nextStep(); */
                           },
                           isTransparent: false,
                           anotherColor: PrimaryColors.white,
@@ -402,7 +248,8 @@ class _SixthStepState extends State<SixthStep> {
                           ),
                         )
                       : StreamBuilder<Map<String, double>>(
-                          stream: RegisterStream.registerStreamController.stream.asBroadcastStream(),
+                          stream: RegisterStream.registerStreamController.stream
+                              .asBroadcastStream(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               return Container(
@@ -523,6 +370,63 @@ class _SixthStepState extends State<SixthStep> {
               ],
             );
           }),
+        );
+      });
+
+  void registerUser(StepProvider stepProvider) => RegisterStream.registerUser(
+      basicData: {
+        "nom": '',
+        "prenom": stepProvider.name?.trim(),
+        "dateNais": DateFormat("yyyy-MM-dd").format(stepProvider.birthDate!),
+        "departement": stepProvider.department,
+        "genre": stepProvider.selectedGender?.name[0].toUpperCase(),
+        "parent": stepProvider.hasChildren,
+        "searchGenre": stepProvider.choosenGender?.name[0].toUpperCase()
+      },
+      otherInfosData: {
+        "centreInterets": stepProvider.selectedInterest,
+        "personnalites": stepProvider.selectedTraits
+      },
+      insertPhotosData: List<File>.from(
+          stepProvider.selectedImages.values.map((e) => File(e))),
+      projectInfosData: {
+        "categories": [stepProvider.projectCat],
+        "titre": projectTitle,
+        "description": stepProvider.projectCat,
+        "lifeProject": stepProvider.selectedIfProject?.value,
+        "detailsLifeProject": projectSpec,
+        "delay": stepProvider.projectTimes.name,
+        "canLeave": stepProvider.leaveAll.value
+      },
+      isFinished: (b, pic) async {
+        if (b) {
+          await FirebaseAuth.instance.currentUser
+            ?.updateProfile(displayName: stepProvider.name, photoURL: pic);
+        await FirebaseAuth.instance.currentUser?.reload();
+          kPushAndRemoveUntil(context, page: Root());
+        }
+      },
+      hasError: (err) {
+        RegisterStream.reinitStream();
+        showSnackbar(
+            context: context,
+            isError: true,
+            content: Text(
+              'Erreur',
+              style: Theme.of(context)
+                  .textTheme
+                  .labelSmall!
+                  .copyWith(color: PrimaryColors.white),
+            ));
+        setState(() {
+          registerStarting = false;
+        });
+      },
+      isStarted: (b) {
+        setState(
+          () {
+            registerStarting = b;
+          },
         );
       });
 }
