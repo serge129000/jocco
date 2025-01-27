@@ -8,6 +8,7 @@ import 'package:jocco/core/utils/path.dart';
 import 'package:jocco/core/utils/screen.dart';
 import 'package:jocco/core/views/home/root.dart';
 import 'package:jocco/core/views/landing/landing_screen.dart';
+import 'package:jocco/core/views/onboarding/onboarding.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/auth_provider.dart';
@@ -30,7 +31,11 @@ class _SplashScreenState extends State<SplashScreen> {
       if (FirebaseAuth.instance.currentUser == null) {
         kReplaceToPage(context, page: const LandingScreen());
       } else {
-        kReplaceToPage(context, page: const Root());
+        if (FirebaseAuth.instance.currentUser?.displayName == null) {
+          kPushAndRemoveUntil(context, page: Onboarding());
+        } else {
+          kPushAndRemoveUntil(context, page: const Root());
+        }
       }
     });
     super.initState();

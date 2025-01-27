@@ -7,7 +7,7 @@ import '../../utils/screen.dart';
 
 class DepartmentSelector extends StatefulWidget {
   final String? countryName;
-  final Function(String) onChanged;
+  final Function(String?) onChanged;
   const DepartmentSelector(
       {super.key, this.countryName, required this.onChanged});
 
@@ -26,7 +26,6 @@ class _DepartmentSelectorState extends State<DepartmentSelector> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.countryName);
     return GestureDetector(
       onTap: () {
         showModalBottomSheet(
@@ -44,6 +43,7 @@ class _DepartmentSelectorState extends State<DepartmentSelector> {
                           setState(() {
                             selectedDepartment = stateList[index]['name'];
                           });
+                          widget.onChanged(selectedDepartment);
                           kPopPage(context);
                         },
                         leading: Text(
@@ -91,8 +91,9 @@ class _DepartmentSelectorState extends State<DepartmentSelector> {
   void initRequiredData() async {
     departmentData = await CountryJson.getcountryData();
     departmentData = departmentData
-        .where((e) =>
-            e['name']!.toLowerCase().contains(widget.countryName?.toLowerCase() ?? 'france'))
+        .where((e) => e['name']!
+            .toLowerCase()
+            .contains(widget.countryName?.toLowerCase() ?? 'france'))
         .toList();
     setState(() {});
   }

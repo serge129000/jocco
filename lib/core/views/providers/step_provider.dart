@@ -5,9 +5,9 @@ import 'package:jocco/core/utils/step_utils.dart';
 class StepProvider with ChangeNotifier {
   StepJ _currentStep = StepJ.first;
   StepJ get currentStep => _currentStep;
-  Gender? _selectedGender;
+  Gender? _selectedGender = Gender.male;
   Gender? get selectedGender => _selectedGender;
-  Gender? _choosenGender;
+  Gender? _choosenGender = Gender.female;
   Gender? get choosenGender => _choosenGender;
   final List<String> _selectedTraits = [];
   List<String> get selectedTraits => _selectedTraits;
@@ -25,6 +25,12 @@ class StepProvider with ChangeNotifier {
   Map<int, String> get selectedImages => _selectedImages;
   ProjectTimes _projectTimes = ProjectTimes.immediately;
   ProjectTimes get projectTimes => _projectTimes;
+  String? _name;
+  String? get name => _name;
+  String? _department;
+  String? get department => _department;
+  DateTime? _birthDate;
+  DateTime? get birthDate => _birthDate;
 
   void nextStep() {
     _currentStep = StepJ.stepFromValue(step: _currentStep.value + 1);
@@ -38,6 +44,21 @@ class StepProvider with ChangeNotifier {
 
   void setGender({required Gender gender}) {
     _selectedGender = gender;
+    notifyListeners();
+  }
+
+  void setName({required String name}) {
+    _name = name;
+    notifyListeners();
+  }
+
+  void setDepartment({required String? departement}) {
+    _department = departement;
+    notifyListeners();
+  }
+
+  void setBirthDate({required DateTime birth}) {
+    _birthDate = birth;
     notifyListeners();
   }
 

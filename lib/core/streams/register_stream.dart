@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:jocco/core/services/user_services_impl.dart';
 
@@ -8,15 +9,15 @@ class RegisterStream {
   static Sink<Map<String, double>> get registerSink =>
       registerStreamController.sink;
   static Stream<Map<String, double>> get stream =>
-      registerStreamController.stream;
+      registerStreamController.stream.asBroadcastStream();
   static UserServicesImpl userServicesImpl = UserServicesImpl();
 
   static void registerUser(
       {required Map<String, dynamic> basicData,
       required Map<String, dynamic> otherInfosData,
-      required Map<String, dynamic> insertPhotosData,
+      required List<File> insertPhotosData,
       required Map<String, dynamic> projectInfosData,
-      required Function(bool) isFinished,
+      required Function(bool,String?) isFinished,
       required Function(double) hasError,
       required Function(bool) isStarted}) async {
     double step = 0.0;
@@ -31,18 +32,21 @@ class RegisterStream {
       step = await userServicesImpl.insertUserOtherInfos(data: otherInfosData);
       registerSink.add({'debut': previousStep, 'fin': step});
       previousStep = step;
-      step = await userServicesImpl.insertUserPhotos(data: insertPhotosData);
+      //je retourne expres la valeur et la photo de profil pour le recup facilement
+      final picDataResponse =
+          await userServicesImpl.insertUserPhotos(images: insertPhotosData);
+      step = picDataResponse['value'];
       registerSink.add({'debut': previousStep, 'fin': step});
       previousStep = step;
       step =
           await userServicesImpl.insertUserProjectInfos(data: projectInfosData);
       registerSink.add({'debut': previousStep, 'fin': step});
-      await Future.delayed(Duration(seconds: 2));
-      isFinished(true);
+      /* await Future.delayed(Duration(seconds: 2)); */
+      isFinished(true, picDataResponse['pic']);
     } catch (e) {
       hasError(step);
-      isFinished(false);
-      registerSink.close();
+      isFinished(false, null);/* 
+      registerSink.close(); */
       rethrow;
     }
   }

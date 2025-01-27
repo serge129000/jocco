@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:jocco/core/utils/all_text.dart';
 import 'package:jocco/core/utils/gender.dart';
 import 'package:jocco/core/views/providers/auth_provider.dart';
@@ -12,8 +13,6 @@ import '../../../models/country.dart';
 import '../../../utils/color.dart';
 import '../../../utils/country_list.dart';
 import '../../../utils/screen.dart';
-import '../../../utils/step_utils.dart';
-import '../../widgets/back_widget.dart';
 import '../../widgets/button.dart';
 
 class FirstStep extends StatefulWidget {
@@ -38,7 +37,7 @@ class _FirstStepState extends State<FirstStep> {
             const SizedBox(
               height: 110,
             ),
-            Align(
+            /* Align(
               alignment: Alignment.centerLeft,
               child: BackWidget(
                 onCondtion: () {
@@ -52,7 +51,7 @@ class _FirstStepState extends State<FirstStep> {
                   }
                 },
               ),
-            ),
+            ), */
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: Text(AllText.iam,
@@ -101,6 +100,9 @@ class _FirstStepState extends State<FirstStep> {
             Padding(
               padding: EdgeInsets.symmetric(vertical: 20),
               child: CustomTextfield(
+                onChanged: (p0) {
+                  stepProvider.setName(name: p0);
+                },
                 hasGreenColor: true,
                 hintText: AllText.firstnameLabel,
                 validator: (p0) {
@@ -121,17 +123,21 @@ class _FirstStepState extends State<FirstStep> {
             Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 child: Consumer<AppAuthProvider>(
-                  builder: (context, appAuthProvider, widgets) {
-                    return DepartmentSelector(
-                      countryName: Countries.countryList
-                          .map((e) => Country.fromJson(e))
-                          .toList()
-                          .where((e) => e.alpha2Code!.toLowerCase().contains(appAuthProvider.currentLocale?.toLowerCase() ?? 'fr'))
-                          .single.name,
-                      onChanged: (v) {},
-                    );
-                  }
-                )),
+                    builder: (context, appAuthProvider, widgets) {
+                  return DepartmentSelector(
+                    countryName: Countries.countryList
+                        .map((e) => Country.fromJson(e))
+                        .toList()
+                        .where((e) => e.alpha2Code!.toLowerCase().contains(
+                            appAuthProvider.currentLocale?.toLowerCase() ??
+                                'fr'))
+                        .single
+                        .name,
+                    onChanged: (v) {
+                      stepProvider.setDepartment(departement: v);
+                    },
+                  );
+                })),
             Text(
               AllText.enterBirthDay,
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
@@ -146,8 +152,9 @@ class _FirstStepState extends State<FirstStep> {
                 child: DatePickerWidget(
                     onChange: (v, e) {
                       setState(() {
-                        selectedDate = '${v.day}/${v.month}/${v.year}';
+                        selectedDate = DateFormat('dd/MM/yyyy').format(v);
                       });
+                      stepProvider.setBirthDate(birth: v);
                     },
                     dateFormat: selectedDate),
               ),
@@ -228,7 +235,22 @@ class _FirstStepState extends State<FirstStep> {
               child: Btn(
                 function: () {
                   if (formKey.currentState!.validate()) {
-                    context.read<StepProvider>().nextStep();
+                    print(stepProvider.department);
+                    if (stepProvider.department == null ||
+                        stepProvider.birthDate == null) {
+                      showSnackbar(
+                          context: context,
+                          isError: true,
+                          content: Text(
+                            'Veuillez renseigner tous les champs.',
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelSmall!
+                                .copyWith(color: PrimaryColors.white),
+                          ));
+                    } else {
+                      context.read<StepProvider>().nextStep();
+                    }
                   }
                 },
                 isTransparent: false,

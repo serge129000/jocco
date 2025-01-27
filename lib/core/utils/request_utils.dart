@@ -1,4 +1,4 @@
-Map<String, String> authHeaders({required String token}) => {
+Map<String, String> authHeaders({required String? token}) => {
       'Content-type': 'application/json; charset=utf-8',
       'Authorization': 'Bearer $token',
       'Accept-Charset': 'utf-8'
@@ -12,4 +12,4 @@ bool checkIfSuccess({required int statusCode}) {
 }
 
 Uri kProdUri({required String endPoint}) => 
-    Uri.parse("https://api.audiance.app/$endPoint");
+    Uri.parse("http://35.209.213.120:8081/$endPoint");

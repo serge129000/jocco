@@ -1,10 +1,7 @@
 import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:jocco/core/utils/path.dart';
-import 'package:jocco/core/utils/screen.dart';
 import 'package:jocco/core/utils/test_data.dart';
-import 'package:jocco/core/views/home/pages/home_components/filter.dart';
 import 'package:jocco/core/views/providers/auth_provider.dart';
 import 'package:jocco/core/views/widgets/user_info_card.dart';
 import 'package:provider/provider.dart';

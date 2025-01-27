@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:jocco/core/streams/register_stream.dart';
 import 'package:jocco/core/utils/all_text.dart';
 import 'package:jocco/core/utils/list_utils.dart';
@@ -141,7 +145,7 @@ class _SixthStepState extends State<SixthStep> {
                   },
                   validator: (p0) {
                     if (p0!.isEmpty) {
-                      return "Saisissez le titre de votre projet";
+                      return "Specifiez votre projet";
                     }
                     return null;
                   },
@@ -217,17 +221,68 @@ class _SixthStepState extends State<SixthStep> {
                                 print(isConfirmed);
                                 if (isConfirmed) {
                                   RegisterStream.registerUser(
-                                      basicData: {},
-                                      otherInfosData: {},
-                                      insertPhotosData: {},
-                                      projectInfosData: {},
-                                      isFinished: (b) {
+                                      basicData: {
+                                        "nom": '',
+                                        "prenom": stepProvider.name?.trim(),
+                                        "dateNais": DateFormat("yyyy-MM-dd")
+                                            .format(stepProvider.birthDate!),
+                                        "departement": stepProvider.department,
+                                        "genre": stepProvider
+                                            .selectedGender?.name[0]
+                                            .toUpperCase(),
+                                        "parent": stepProvider.hasChildren,
+                                        "searchGenre": stepProvider
+                                            .choosenGender?.name[0]
+                                            .toUpperCase()
+                                      },
+                                      otherInfosData: {
+                                        "centreInterets":
+                                            stepProvider.selectedInterest,
+                                        "personnalites":
+                                            stepProvider.selectedTraits
+                                      },
+                                      insertPhotosData: List<File>.from(
+                                          stepProvider.selectedImages.values
+                                              .map((e) => File(e))),
+                                      projectInfosData: {
+                                        "categories": [stepProvider.projectCat],
+                                        "titre": projectTitle,
+                                        "description": stepProvider.projectCat,
+                                        "lifeProject": stepProvider
+                                            .selectedIfProject?.value,
+                                        "detailsLifeProject": projectSpec,
+                                        "delay": stepProvider.projectTimes.name,
+                                        "canLeave": stepProvider.leaveAll.value
+                                      },
+                                      isFinished: (b, pic) async {
+                                        await FirebaseAuth.instance.currentUser
+                                            ?.updateProfile(
+                                                displayName: stepProvider.name,
+                                                photoURL: pic);
+                                        await FirebaseAuth.instance.currentUser
+                                            ?.reload();
                                         if (b) {
                                           kPushAndRemoveUntil(context,
                                               page: Root());
                                         }
                                       },
-                                      hasError: (err) {},
+                                      hasError: (err) {
+                                        showSnackbar(
+                                            context: context,
+                                            isError: true,
+                                            content: Text(
+                                              'Erreur',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .labelSmall!
+                                                  .copyWith(
+                                                      color:
+                                                          PrimaryColors.white),
+                                            ));
+                                        setState(() {
+                                          registerStarting = false;
+                                        });
+                                      },
                                       isStarted: (b) {
                                         setState(
                                           () {
@@ -243,20 +298,84 @@ class _SixthStepState extends State<SixthStep> {
                                       context: context,
                                       builder: (context) => confirmFinalProject(
                                           context: context)).then((v) {
-                                      print(isConfirmed);
                                       if (isConfirmed) {
                                         RegisterStream.registerUser(
-                                            basicData: {},
-                                            otherInfosData: {},
-                                            insertPhotosData: {},
-                                            projectInfosData: {},
-                                            isFinished: (b) {
+                                            basicData: {
+                                              "nom": '',
+                                              "prenom":
+                                                  stepProvider.name?.trim(),
+                                              "dateNais": DateFormat(
+                                                      "yyyy-MM-dd")
+                                                  .format(
+                                                      stepProvider.birthDate!),
+                                              "departement":
+                                                  stepProvider.department,
+                                              "genre": stepProvider
+                                                  .selectedGender?.name[0]
+                                                  .toUpperCase(),
+                                              "parent":
+                                                  stepProvider.hasChildren,
+                                              "searchGenre": stepProvider
+                                                  .choosenGender?.name[0]
+                                                  .toUpperCase()
+                                            },
+                                            otherInfosData: {
+                                              "centreInterets":
+                                                  stepProvider.selectedInterest,
+                                              "personnalites":
+                                                  stepProvider.selectedTraits
+                                            },
+                                            insertPhotosData: List<File>.from(
+                                                stepProvider
+                                                    .selectedImages.values
+                                                    .map((e) => File(e))),
+                                            projectInfosData: {
+                                              "categories": [
+                                                stepProvider.projectCat
+                                              ],
+                                              "titre": projectTitle,
+                                              "description":
+                                                  stepProvider.projectCat,
+                                              "lifeProject": stepProvider
+                                                  .selectedIfProject?.value,
+                                              "detailsLifeProject": projectSpec,
+                                              "delay": stepProvider
+                                                  .projectTimes.name,
+                                              "canLeave":
+                                                  stepProvider.leaveAll.value
+                                            },
+                                            isFinished: (b, pic) async {
+                                              await FirebaseAuth
+                                                  .instance.currentUser
+                                                  ?.updateProfile(
+                                                      displayName:
+                                                          stepProvider.name,
+                                                      photoURL: pic);
+                                              await FirebaseAuth
+                                                  .instance.currentUser
+                                                  ?.reload();
                                               if (b) {
                                                 kPushAndRemoveUntil(context,
                                                     page: Root());
                                               }
                                             },
-                                            hasError: (err) {},
+                                            hasError: (err) {
+                                              showSnackbar(
+                                                  context: context,
+                                                  isError: true,
+                                                  content: Text(
+                                                    'Erreur',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .labelSmall!
+                                                        .copyWith(
+                                                            color: PrimaryColors
+                                                                .white),
+                                                  ));
+                                              setState(() {
+                                                registerStarting = false;
+                                              });
+                                            },
                                             isStarted: (b) {
                                               setState(
                                                 () {
@@ -283,7 +402,7 @@ class _SixthStepState extends State<SixthStep> {
                           ),
                         )
                       : StreamBuilder<Map<String, double>>(
-                          stream: RegisterStream.stream,
+                          stream: RegisterStream.registerStreamController.stream.asBroadcastStream(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               return Container(
