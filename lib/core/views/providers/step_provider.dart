@@ -47,6 +47,11 @@ class StepProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void setChoosenGender({required Gender gender}) {
+    _choosenGender = gender;
+    notifyListeners();
+  }
+
   void setName({required String name}) {
     _name = name;
     notifyListeners();

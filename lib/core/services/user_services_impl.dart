@@ -58,7 +58,7 @@ class UserServicesImpl implements UserServices {
       Map<String, dynamic> data = {};
       List<String> imagesUploaded = [];
       for (int i = 0; i < images.length; i++) {
-        imagesUploaded[i] = await addImage(image: images[i], userId: uid);
+        imagesUploaded.add(await addImage(image: images[i], userId: uid));
       }
       data['images'] = imagesUploaded;
       final response = await http.patch(
@@ -68,7 +68,10 @@ class UserServicesImpl implements UserServices {
       if (!checkIfSuccess(statusCode: response.statusCode)) {
         throw Exception(response.body);
       }
-      return {'value': 0.7, 'pic': ([/* '' */data['images'] as List]).first};
+      return {
+        'value': 0.7,
+        'pic': ([/* '' */ data['images'] as List]).first
+      };
     } catch (e) {
       print(e);
       rethrow;
@@ -80,7 +83,7 @@ class UserServicesImpl implements UserServices {
       {required Map<String, dynamic> data}) async {
     try {
       await Future.delayed(Duration(seconds: 2));
-      final response = await http.patch(
+      final response = await http.post(
           kProdUri(endPoint: 'api/v1/projets/store'),
           body: jsonEncode(data),
           headers: authHeaders(
@@ -106,7 +109,8 @@ class UserServicesImpl implements UserServices {
           .child(userId)
           .child('${fileName}.jpg');
       await storageRef.putFile(image);
-      return storageRef.getDownloadURL();
+      //print(await storageRef.getDownloadURL());
+      return await storageRef.getDownloadURL();
     } catch (e) {
       print(e);
       rethrow;

@@ -247,7 +247,7 @@ class _SixthStepState extends State<SixthStep> {
                                     fontWeight: FontWeight.w600),
                           ),
                         )
-                      : StreamBuilder<Map<String, double>>(
+                      : StreamBuilder<Map<String, dynamic>>(
                           stream: RegisterStream.registerStreamController.stream
                               .asBroadcastStream(),
                           builder: (context, snapshot) {
@@ -257,6 +257,7 @@ class _SixthStepState extends State<SixthStep> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 5),
                                 child: AsynchronousLoader(
+                                  stepMessage: snapshot.data?['message'],
                                     debut: snapshot.data?['debut'] ?? 0.0,
                                     finish: snapshot.data?['fin'] ?? 0.0),
                               );
@@ -347,12 +348,10 @@ class _SixthStepState extends State<SixthStep> {
                             child: Btn(
                                 isTransparent: false,
                                 function: () {
-                                  /*  */
                                   setState(() {
                                     isConfirmed = true;
                                   });
                                   kPopPage(context);
-                                  /* kPushAndRemoveUntil(context, page: Root()); */
                                 },
                                 child: Text(
                                   'Confirmer',
@@ -395,7 +394,7 @@ class _SixthStepState extends State<SixthStep> {
         "description": stepProvider.projectCat,
         "lifeProject": stepProvider.selectedIfProject?.value,
         "detailsLifeProject": projectSpec,
-        "delay": stepProvider.projectTimes.name,
+        "delay": stepProvider.projectTimes.value,
         "canLeave": stepProvider.leaveAll.value
       },
       isFinished: (b, pic) async {

@@ -4,8 +4,9 @@ import 'package:jocco/core/utils/color.dart';
 class AsynchronousLoader extends StatefulWidget {
   final double debut;
   final double finish;
+  final String? stepMessage;
   const AsynchronousLoader(
-      {super.key, required this.finish, required this.debut});
+      {super.key, required this.finish, required this.debut, this.stepMessage});
 
   @override
   State<AsynchronousLoader> createState() => _AsynchronousLoaderState();
@@ -15,6 +16,7 @@ class _AsynchronousLoaderState extends State<AsynchronousLoader>
     with TickerProviderStateMixin {
   late AnimationController animationController;
   late Animation<double> animation;
+  String? stepMessage = 'En cours';
   @override
   void initState() {
     animationController =
@@ -39,6 +41,9 @@ class _AsynchronousLoaderState extends State<AsynchronousLoader>
       // Arrête l'animation en cours
       animationController.stop();
       // Réinitialise le contrôleur avec les nouvelles valeurs
+      setState(() {
+        stepMessage = widget.stepMessage;
+      });
       setupAnimation(animation.value, widget.finish);
       animationController.forward(from: 0); // Redémarre depuis le début
     }
@@ -77,10 +82,10 @@ class _AsynchronousLoaderState extends State<AsynchronousLoader>
         ),
         Center(
           child: Text(
-                    'En cours ${(animation.value * 100).toInt()}%',
-                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
-            color: PrimaryColors.first, fontWeight: FontWeight.w600),
-                  ),
+            '${stepMessage} (${(animation.value * 100).toInt()})%',
+            style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                color: PrimaryColors.first, fontWeight: FontWeight.w600),
+          ),
         )
       ],
     );

@@ -212,11 +212,11 @@ class _FirstStepState extends State<FirstStep> {
                                   activeColor: PrimaryColors.white,
                                   fillColor: const WidgetStatePropertyAll(
                                       PrimaryColors.white),
-                                  value: stepProvider.selectedGender ??
+                                  value: stepProvider.choosenGender ??
                                       Gender.male,
                                   groupValue: e,
                                   onChanged: (v) {
-                                    stepProvider.setGender(gender: e);
+                                    stepProvider.setChoosenGender(gender: e);
                                   }),
                               Text(
                                 e.name,

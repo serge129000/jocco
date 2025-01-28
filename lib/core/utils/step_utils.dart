@@ -33,13 +33,13 @@ enum IfProject {
 }
 
 enum ProjectTimes {
-  immediately(name: 'Immediatement'),
-  sixMonth(name: 'Dans 6 mois'),
-  yearAndMore(name: 'Dans 1 ans et plus');
+  immediately(name: 'Immediatement', value: 'NOW'),
+  sixMonth(name: 'Dans 6 mois', value: 'SOON'),
+  yearAndMore(name: 'Dans 1 ans et plus', value: 'LATER');
 
   final String name;
-
-  const ProjectTimes({required this.name});
+  final String value;
+  const ProjectTimes({required this.name, required this.value});
 }
 
 enum LeaveAll {
