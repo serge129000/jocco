@@ -1,10 +1,14 @@
 import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:jocco/core/utils/path.dart';
 import 'package:jocco/core/utils/test_data.dart';
 import 'package:jocco/core/views/providers/auth_provider.dart';
 import 'package:jocco/core/views/widgets/user_info_card.dart';
 import 'package:provider/provider.dart';
+
+import '../../../utils/screen.dart';
+import 'home_components/filter.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -57,9 +61,9 @@ class _HomeState extends State<Home> {
                               Widget? child) {
                             return GestureDetector(
                                 onTap: () {
-                                  /* HapticFeedback.mediumImpact();
-                                  kPushToPage(context, page: Filter()); */
-                                  value.logoutUser();
+                                  HapticFeedback.mediumImpact();
+                                  kPushToPage(context, page: Filter());
+                                  //value.logoutUser();
                                 },
                                 child: Image.asset(
                                   kIconAssetPath(

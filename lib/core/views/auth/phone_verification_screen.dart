@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:jocco/core/utils/screen.dart';
+import 'package:jocco/core/views/home/root.dart';
 import 'package:jocco/core/views/onboarding/onboarding.dart';
 import 'package:jocco/core/views/providers/auth_provider.dart';
 import 'package:jocco/core/views/widgets/back_widget.dart';
@@ -166,7 +168,12 @@ class _PhoneVerificationScreenState extends State<PhoneVerificationScreen> {
   void listener() {
     switch (authProvider.verifyingOtpStatus) {
       case Status.loaded:
-        kReplaceToPage(context, page: const Onboarding());
+        if (FirebaseAuth.instance.currentUser?.displayName == null) {
+          kReplaceToPage(context, page: const Onboarding());
+        } else {
+          kPushAndRemoveUntil(context, page: Root());
+        }
+
         break;
       case Status.error:
         HapticFeedback.mediumImpact();
