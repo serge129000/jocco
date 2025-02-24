@@ -12,4 +12,5 @@ bool checkIfSuccess({required int statusCode}) {
 }
 
 Uri kProdUri({required String endPoint}) => 
-    Uri.parse("https://4aa1-2c0f-f0f8-69c-7200-2891-816b-d747-6636.ngrok-free.app/$endPoint");
+    Uri.parse("http://35.209.213.120:8081/$endPoint");
+//http://35.209.213.120:8081

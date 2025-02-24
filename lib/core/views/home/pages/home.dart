@@ -1,9 +1,12 @@
 import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:jocco/core/utils/color.dart';
 import 'package:jocco/core/utils/path.dart';
-import 'package:jocco/core/utils/test_data.dart';
 import 'package:jocco/core/views/providers/auth_provider.dart';
+import 'package:jocco/core/views/providers/user_provider.dart';
+import 'package:jocco/core/views/widgets/custom_image_shower.dart';
 import 'package:jocco/core/views/widgets/user_info_card.dart';
 import 'package:provider/provider.dart';
 
@@ -18,9 +21,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final AppinioSwiperController appinioSwiperController =
-      AppinioSwiperController();
   final PageController pageController = PageController();
+  bool listFinished = false;
   @override
   Widget build(BuildContext context) {
     /* FirebaseAuth.instance.currentUser!.getIdToken().then((v) {
@@ -43,17 +45,21 @@ class _HomeState extends State<Home> {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          appinioSwiperController.unswipe();
-                        },
-                        child: Image.asset(
-                          kIconAssetPath(
-                              imageName: 'icon-park-outline_back-one.png'),
-                          height: 32,
-                          width: 32,
-                        ),
-                      ),
+                      Consumer<UserProvider>(
+                          builder: (context, userProvider, _) {
+                        return GestureDetector(
+                          onTap: () {
+                            /* userProvider.getBackToUser(); */
+                            userProvider.controller.unswipe();
+                          },
+                          child: Image.asset(
+                            kIconAssetPath(
+                                imageName: 'icon-park-outline_back-one.png'),
+                            height: 32,
+                            width: 32,
+                          ),
+                        );
+                      }),
                       Padding(
                         padding: const EdgeInsets.only(left: 20),
                         child: Consumer<AppAuthProvider>(
@@ -79,22 +85,50 @@ class _HomeState extends State<Home> {
                 ],
               ),
             ),
-            Expanded(
-                child: AppinioSwiper(
-              controller: appinioSwiperController,
-              backgroundCardCount: 0,
-              onSwipeEnd: (previousIndex, targetIndex, activity) {
-                pageController.jumpTo(0);
-              },
-              cardBuilder: (BuildContext context, int index) {
-                return UserInfoCard(
-                  userData: data[index],
-                  controller: appinioSwiperController,
-                  pageController: pageController,
-                );
-              },
-              cardCount: data.length, /*  UserInfoCard(userData: data[0]) */
-            ))
+            Expanded(child: Consumer2<UserProvider, AppAuthProvider>(
+                builder: (context, userProvider, appAuthProvider, _) {
+              if (userProvider.potentialMatchingUsers != null) {
+                if (userProvider.finalUsers.isNotEmpty) {
+                  return AppinioSwiper(
+                    onEnd: () {},
+                    controller: userProvider.controller,
+                    backgroundCardCount: 0,
+                    onSwipeEnd: (previousIndex, targetIndex, activity) {
+                      pageController.jumpTo(0);
+                    },
+                    cardBuilder: (BuildContext context, int index) {
+                      return UserInfoCard(
+                        user: userProvider.finalUsers[index],
+                        controller: userProvider.controller,
+                        pageController: pageController,
+                      );
+                    },
+                    cardCount: userProvider.finalUsers
+                        .length, /*  UserInfoCard(userData: data[0]) */
+                  );
+                }
+              }
+              return Stack(
+                alignment: Alignment.center,
+                children: [
+                  SpinKitPulse(
+                    size: 170,
+                    color: PrimaryColors.gradientF,
+                  ),
+                  Container(
+                    height: 100,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                    ),
+                    child: CustomImageShower(
+                      url: appAuthProvider.currentAppUser!.profileImage,
+                      isRounded: true,
+                    ),
+                  )
+                ],
+              );
+            }))
           ],
         ),
       ),

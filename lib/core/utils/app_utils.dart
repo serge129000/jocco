@@ -117,3 +117,6 @@ Widget showListDialog(
         ),
       );
     });
+
+String getAgeFromBirthDate({required DateTime birthDate}) =>
+    (DateTime.now().year - birthDate.year).toString();

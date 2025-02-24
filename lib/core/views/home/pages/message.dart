@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jocco/core/services/user_services_impl.dart';
 import 'package:jocco/core/views/home/pages/message_components/message_list.dart';
 
 import '../../../utils/path.dart';
@@ -17,12 +18,19 @@ class Message extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-              child: Image.asset(
-                kIconAssetPath(imageName: 'jocco.png'),
-                height: 26.35,
+              child: GestureDetector(
+                onTap: () {
+                  UserServicesImpl()
+                      .sendMessages(text: 'Hello', senderId: 'uuuu');
+                },
+                child: Image.asset(
+                  kIconAssetPath(imageName: 'jocco.png'),
+                  height: 26.35,
+                ),
               ),
             ),
-            Expanded(child: Align(
+            Expanded(
+                child: Align(
               alignment: Alignment.center,
               child: MessageList() /* NoMatch() */,
             ))

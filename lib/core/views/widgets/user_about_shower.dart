@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jocco/core/models/app_user.dart';
 import 'package:jocco/core/utils/color.dart';
 import 'package:jocco/core/utils/list_utils.dart';
 import 'package:jocco/core/utils/path.dart';
@@ -6,8 +7,8 @@ import 'package:jocco/core/utils/step_utils.dart';
 import 'package:jocco/core/views/widgets/coloured_container.dart';
 
 class UserAboutShower extends StatelessWidget {
-  final Map<String, dynamic> userData;
-  const UserAboutShower({super.key, required this.userData});
+  final AppUser user;
+  const UserAboutShower({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +30,11 @@ class UserAboutShower extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(
                   vertical: 15
                 ),
-                child: Text('Ville', style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                child: Text('Departement', style: Theme.of(context).textTheme.labelLarge!.copyWith(
                   color: blackShadeColor
                 ),),
               ),
-              ColouredContainer(child: Text(userData['ville'], style: Theme.of(context).textTheme.labelSmall!.copyWith(
+              ColouredContainer(child: Text(user.departement ?? '', style: Theme.of(context).textTheme.labelSmall!.copyWith(
                 color: PrimaryColors.white
               ),)),
               const Padding(padding: EdgeInsets.only(
@@ -42,7 +43,7 @@ class UserAboutShower extends StatelessWidget {
               child: Divider(
                 color: PrimaryColors.first,
               ),),
-              Padding(
+              /* Padding(
                 padding: const EdgeInsets.symmetric(
                   vertical: 15
                 ),
@@ -52,7 +53,7 @@ class UserAboutShower extends StatelessWidget {
               ),
               Text(userData['about'], style: Theme.of(context).textTheme.labelSmall!.copyWith(
                 color: PrimaryColors.white
-              ),),
+              ),), */
               const Padding(padding: EdgeInsets.only(
                 top: 12
               ),
@@ -70,11 +71,11 @@ class UserAboutShower extends StatelessWidget {
               ColouredContainer(child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Image.asset(kIconAssetPath(imageName: categories.where((e)=> e['title'] == userData['cat']).single['icon'].toString()), height: 35,),
+                  Image.asset(kIconAssetPath(imageName: categories.where((e)=> e['title'] == user.projet!.description).single['icon'].toString()), height: 35,),
                   Padding(padding: const EdgeInsets.symmetric(
                     horizontal: 10,
                   ),
-                  child: Text(userData['cat'], style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                  child: Text(user.projet!.description, style: Theme.of(context).textTheme.labelSmall!.copyWith(
                 color: PrimaryColors.white
               ),),),
                 ],
@@ -93,7 +94,7 @@ class UserAboutShower extends StatelessWidget {
                     color: blackShadeColor
                   ),),
               ),
-              ColouredContainer(child: Text(userData['projet'], style: Theme.of(context).textTheme.labelSmall!.copyWith(
+              ColouredContainer(child: Text(user.projet!.description, style: Theme.of(context).textTheme.labelSmall!.copyWith(
                 color: PrimaryColors.white
               ),)),
               const Padding(padding: EdgeInsets.only(
@@ -110,7 +111,7 @@ class UserAboutShower extends StatelessWidget {
                     color: blackShadeColor
                   ),),
               ),
-              ColouredContainer(child: Text((userData['children'] as bool).toFrenchString(), style: Theme.of(context).textTheme.labelSmall!.copyWith(
+              ColouredContainer(child: Text(user.parent.toFrenchString(), style: Theme.of(context).textTheme.labelSmall!.copyWith(
                 color: PrimaryColors.white
               ),))
             ],

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:jocco/core/models/app_user.dart';
 import 'package:jocco/core/services/auth_services_impl.dart';
 import 'package:jocco/core/utils/screen.dart';
 import 'package:devicelocale/devicelocale.dart';
@@ -16,6 +17,8 @@ class AppAuthProvider with ChangeNotifier {
   int get currentIndex => _currentIndex;
   String? _currentLocale;
   String? get currentLocale => _currentLocale;
+  AppUser? _currentAppUser;
+  AppUser? get currentAppUser => _currentAppUser;
 
   void verifyPhoneNumber(
       {required String phoneNumber,
@@ -80,5 +83,10 @@ class AppAuthProvider with ChangeNotifier {
     _currentLocale = await Devicelocale.currentLocale;
     _currentLocale = (_currentLocale ?? 'FR').split('-').last;
     //debugPrint('current Locale ${_currentLocale}');
+  }
+
+  Future<void> me() async {
+    _currentAppUser = await AuthServicesImpl().me();
+    notifyListeners();
   }
 }

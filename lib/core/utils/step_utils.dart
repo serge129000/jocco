@@ -40,6 +40,8 @@ enum ProjectTimes {
   final String name;
   final String value;
   const ProjectTimes({required this.name, required this.value});
+  factory ProjectTimes.fromString(String value) =>
+      ProjectTimes.values.where((e) => e.value == value).single;
 }
 
 enum LeaveAll {

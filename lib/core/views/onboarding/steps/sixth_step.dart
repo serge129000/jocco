@@ -8,6 +8,7 @@ import 'package:jocco/core/utils/all_text.dart';
 import 'package:jocco/core/utils/list_utils.dart';
 import 'package:jocco/core/utils/step_utils.dart';
 import 'package:jocco/core/views/home/root.dart';
+import 'package:jocco/core/views/providers/auth_provider.dart';
 import 'package:jocco/core/views/providers/step_provider.dart';
 import 'package:jocco/core/views/widgets/asynchronous_loader.dart';
 import 'package:jocco/core/views/widgets/custom_textfield.dart';
@@ -42,7 +43,8 @@ class _SixthStepState extends State<SixthStep> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<StepProvider>(builder: (context, stepProvider, widgets) {
+    return Consumer2<StepProvider, AppAuthProvider>(
+        builder: (context, stepProvider, appAuthProvider, _) {
       return Form(
         key: formkey,
         child: Padding(
@@ -219,7 +221,7 @@ class _SixthStepState extends State<SixthStep> {
                                           confirmFinalProject(context: context))
                                   .then((v) {
                                 if (isConfirmed) {
-                                  registerUser(stepProvider);
+                                  registerUser(stepProvider, appAuthProvider);
                                 }
                               });
                             } else {
@@ -229,7 +231,8 @@ class _SixthStepState extends State<SixthStep> {
                                       builder: (context) => confirmFinalProject(
                                           context: context)).then((v) {
                                       if (isConfirmed) {
-                                        registerUser(stepProvider);
+                                        registerUser(
+                                            stepProvider, appAuthProvider);
                                       }
                                     })
                                   : null;
@@ -257,7 +260,7 @@ class _SixthStepState extends State<SixthStep> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 5),
                                 child: AsynchronousLoader(
-                                  stepMessage: snapshot.data?['message'],
+                                    stepMessage: snapshot.data?['message'],
                                     debut: snapshot.data?['debut'] ?? 0.0,
                                     finish: snapshot.data?['fin'] ?? 0.0),
                               );
@@ -372,60 +375,63 @@ class _SixthStepState extends State<SixthStep> {
         );
       });
 
-  void registerUser(StepProvider stepProvider) => RegisterStream.registerUser(
-      basicData: {
-        "nom": '',
-        "prenom": stepProvider.name?.trim(),
-        "dateNais": DateFormat("yyyy-MM-dd").format(stepProvider.birthDate!),
-        "departement": stepProvider.department,
-        "genre": stepProvider.selectedGender?.name[0].toUpperCase(),
-        "parent": stepProvider.hasChildren,
-        "searchGenre": stepProvider.choosenGender?.name[0].toUpperCase()
-      },
-      otherInfosData: {
-        "centreInterets": stepProvider.selectedInterest,
-        "personnalites": stepProvider.selectedTraits
-      },
-      insertPhotosData: List<File>.from(
-          stepProvider.selectedImages.values.map((e) => File(e))),
-      projectInfosData: {
-        "categories": [stepProvider.projectCat],
-        "titre": projectTitle,
-        "description": stepProvider.projectCat,
-        "lifeProject": stepProvider.selectedIfProject?.value,
-        "detailsLifeProject": projectSpec,
-        "delay": stepProvider.projectTimes.value,
-        "canLeave": stepProvider.leaveAll.value
-      },
-      isFinished: (b, pic) async {
-        if (b) {
-          await FirebaseAuth.instance.currentUser
-            ?.updateProfile(displayName: stepProvider.name, photoURL: pic);
-        await FirebaseAuth.instance.currentUser?.reload();
-          kPushAndRemoveUntil(context, page: Root());
-        }
-      },
-      hasError: (err) {
-        RegisterStream.reinitStream();
-        showSnackbar(
-            context: context,
-            isError: true,
-            content: Text(
-              'Erreur',
-              style: Theme.of(context)
-                  .textTheme
-                  .labelSmall!
-                  .copyWith(color: PrimaryColors.white),
-            ));
-        setState(() {
-          registerStarting = false;
-        });
-      },
-      isStarted: (b) {
-        setState(
-          () {
-            registerStarting = b;
+  void registerUser(
+          StepProvider stepProvider, AppAuthProvider appAuthProvider) =>
+      RegisterStream.registerUser(
+          basicData: {
+            "nom": '',
+            "prenom": stepProvider.name?.trim(),
+            "dateNais":
+                DateFormat("yyyy-MM-dd").format(stepProvider.birthDate!),
+            "departement": stepProvider.department,
+            "genre": stepProvider.selectedGender?.name[0].toUpperCase(),
+            "parent": stepProvider.hasChildren,
+            "searchGenre": stepProvider.choosenGender?.name[0].toUpperCase()
           },
-        );
-      });
+          otherInfosData: {
+            "centreInterets": stepProvider.selectedInterest,
+            "personnalites": stepProvider.selectedTraits
+          },
+          insertPhotosData: List<File>.from(
+              stepProvider.selectedImages.values.map((e) => File(e))),
+          projectInfosData: {
+            "categories": [stepProvider.projectCat],
+            "titre": projectTitle,
+            "description": stepProvider.projectCat,
+            "lifeProject": stepProvider.selectedIfProject?.value,
+            "detailsLifeProject": projectSpec,
+            "delay": stepProvider.projectTimes.value,
+            "canLeave": stepProvider.leaveAll.value
+          },
+          isFinished: (b, pic, appUser) async {
+            if (b) {
+              await FirebaseAuth.instance.currentUser?.updateProfile(
+                  displayName: stepProvider.name, photoURL: pic);
+              await FirebaseAuth.instance.currentUser?.reload();
+              kPushAndRemoveUntil(context, page: Root());
+            }
+          },
+          hasError: (err) {
+            RegisterStream.reinitStream();
+            showSnackbar(
+                context: context,
+                isError: true,
+                content: Text(
+                  'Erreur',
+                  style: Theme.of(context)
+                      .textTheme
+                      .labelSmall!
+                      .copyWith(color: PrimaryColors.white),
+                ));
+            setState(() {
+              registerStarting = false;
+            });
+          },
+          isStarted: (b) {
+            setState(
+              () {
+                registerStarting = b;
+              },
+            );
+          });
 }

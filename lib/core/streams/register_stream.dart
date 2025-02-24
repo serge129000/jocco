@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:jocco/core/models/app_user.dart';
+import 'package:jocco/core/services/auth_services_impl.dart';
 import 'package:jocco/core/services/user_services_impl.dart';
 
 class RegisterStream {
@@ -11,6 +13,7 @@ class RegisterStream {
   static Stream<Map<String, dynamic>> get stream =>
       registerStreamController.stream.asBroadcastStream();
   static UserServicesImpl userServicesImpl = UserServicesImpl();
+  static AuthServicesImpl authServicesImpl = AuthServicesImpl();
   static void reinitStream() {
     registerStreamController.close();
     registerStreamController = StreamController<Map<String, dynamic>>();
@@ -21,33 +24,51 @@ class RegisterStream {
       required Map<String, dynamic> otherInfosData,
       required List<File> insertPhotosData,
       required Map<String, dynamic> projectInfosData,
-      required Function(bool, String?) isFinished,
+      required Function(bool, String?, AppUser?) isFinished,
       required Function(double) hasError,
       required Function(bool) isStarted}) async {
     double step = 0.0;
     double previousStep = 0.0;
     try {
       isStarted(true);
-      registerSink.add({'debut': previousStep, 'fin': step, 'message': 'Enregistrement des infos'});
+      registerSink.add({
+        'debut': previousStep,
+        'fin': step,
+        'message': 'Enregistrement des infos'
+      });
       previousStep = step;
       step = await userServicesImpl.insertBasicInfos(data: basicData);
-      registerSink.add({'debut': previousStep, 'fin': step, 'message': 'Chargement des images'});
+      registerSink.add({
+        'debut': previousStep,
+        'fin': step,
+        'message': 'Chargement des images'
+      });
       previousStep = step;
       step = await userServicesImpl.insertUserOtherInfos(data: otherInfosData);
-      registerSink.add({'debut': previousStep, 'fin': step, 'message': 'Sauvegarde des images'});
+      registerSink.add({
+        'debut': previousStep,
+        'fin': step,
+        'message': 'Sauvegarde des images'
+      });
       previousStep = step;
       final picDataResponse =
           await userServicesImpl.insertUserPhotos(images: insertPhotosData);
       step = picDataResponse['value'];
-      registerSink.add({'debut': previousStep, 'fin': step, 'message': 'Chargement du profil'});
+      registerSink.add({
+        'debut': previousStep,
+        'fin': step,
+        'message': 'Chargement du profil'
+      });
       previousStep = step;
       step =
           await userServicesImpl.insertUserProjectInfos(data: projectInfosData);
-      registerSink.add({'debut': previousStep, 'fin': step, 'message': 'Finalisation...'});
-      isFinished(true, (picDataResponse['pic'] as List).first);
+      registerSink.add(
+          {'debut': previousStep, 'fin': step, 'message': 'Finalisation...'});
+      final appUser = await authServicesImpl.me();
+      isFinished(true, (picDataResponse['pic'] as List).first, appUser);
     } catch (e) {
       hasError(step);
-      isFinished(false, null);
+      isFinished(false, null, null);
       rethrow;
     }
   }

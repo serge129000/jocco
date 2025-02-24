@@ -26,12 +26,13 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     authProvider = context.read<AppAuthProvider>();
     authProvider.init();
-    Future.delayed(const Duration(seconds: 2)).then((v) {
+    Future.delayed(const Duration(seconds: 2)).then((v) async {
       HapticFeedback.mediumImpact();
       if (FirebaseAuth.instance.currentUser == null) {
         kReplaceToPage(context, page: const LandingScreen());
       } else {
-        if (FirebaseAuth.instance.currentUser?.displayName == null) {
+        await authProvider.me();
+        if (authProvider.currentAppUser!.projet == null) {
           kPushAndRemoveUntil(context, page: Onboarding());
         } else {
           kPushAndRemoveUntil(context, page: const Root());

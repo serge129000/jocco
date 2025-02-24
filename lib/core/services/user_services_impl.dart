@@ -5,15 +5,18 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:jocco/core/models/potential_matching.dart';
+import 'package:jocco/core/services/storage_services_impl.dart';
 import 'package:jocco/core/services/user_services.dart';
 import 'package:http/http.dart' as http;
 import 'package:jocco/core/utils/request_utils.dart';
+import 'package:path_provider/path_provider.dart';
 
 class UserServicesImpl implements UserServices {
   @override
   Future<double> insertBasicInfos({required Map<String, dynamic> data}) async {
     try {
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(Duration(milliseconds: 1000));
       final response = await http.patch(
           kProdUri(endPoint: 'api/v1/users/basic-info'),
           body: jsonEncode(data),
@@ -33,7 +36,7 @@ class UserServicesImpl implements UserServices {
   Future<double> insertUserOtherInfos(
       {required Map<String, dynamic> data}) async {
     try {
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(Duration(milliseconds: 900));
       final response = await http.patch(
           kProdUri(endPoint: 'api/v1/users/other-infos'),
           body: jsonEncode(data),
@@ -55,7 +58,7 @@ class UserServicesImpl implements UserServices {
     String uid = await FirebaseAuth.instance.currentUser!.uid;
     String? jwt = await FirebaseAuth.instance.currentUser!.getIdToken();
     try {
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(Duration(milliseconds: 800));
       Map<String, dynamic> data = {};
       List<String> imagesUploaded = [];
       for (int i = 0; i < images.length; i++) {
@@ -102,12 +105,12 @@ class UserServicesImpl implements UserServices {
   @override
   Future<String> addImage({required File image, required String userId}) async {
     try {
-      final folderRef =
+      /* final folderRef =
           FirebaseStorage.instance.ref().child("photos").child(userId);
       final ListResult result = await folderRef.listAll();
       for (Reference fileRef in result.items) {
         fileRef.delete();
-      }
+      } */
       String fileName = DateTime.now().millisecondsSinceEpoch.toString() +
           Random().nextInt(17040039).toString();
       final Reference storageRef = FirebaseStorage.instance
@@ -152,11 +155,90 @@ class UserServicesImpl implements UserServices {
 
   @override
   Future<void> sendMessages(
-      {required DateTime timestamp,
-      required String text,
-      required String senderId,
-      required String roomId}) {
-    // TODO: implement sendMessages
-    throw UnimplementedError();
+      {required String text, required String senderId, String? roomId}) async {
+    final roomIdGet = await getRoomId(secondUserId: senderId);
+    final storeInstance = FirebaseFirestore.instance;
+    final authInstance = FirebaseAuth.instance;
+    await storeInstance.collection('chats').doc(roomId ?? roomIdGet).set({
+      'participants': [authInstance.currentUser!.uid, senderId],
+    }).then((value) async => await storeInstance
+            .collection('chats')
+            .doc(roomId ?? roomIdGet)
+            .collection('messages')
+            .add({
+          'sender': authInstance.currentUser!.uid,
+          'text': text,
+          //'type': messagesTypesNames[messageType],
+          'timestamp': FieldValue.serverTimestamp(),
+          'status': 'unRead',
+          //'users': [receiverUser.toJson(), currentUser.toJson()]
+        }));
+  }
+
+  @override
+  Future<String> getRoomId({required String secondUserId}) async {
+    QuerySnapshot chatQuery = await FirebaseFirestore.instance
+        .collection('chats')
+        .where('participants',
+            arrayContains: FirebaseAuth.instance.currentUser!.uid)
+        .get();
+
+    for (var doc in chatQuery.docs) {
+      List participants = doc['participants'];
+      if (participants.contains(secondUserId)) {
+        return doc.id;
+      }
+    }
+
+    // Si aucun chat trouvé, en créer un nouveau
+    DocumentReference chatRef =
+        await FirebaseFirestore.instance.collection('chats').add({
+      'participants': [FirebaseAuth.instance.currentUser!.uid, secondUserId],
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+
+    return chatRef.id;
+  }
+
+  @override
+  Future<File> addImageToCache({required String imageUrl}) async {
+    StorageServicesImpl storageServicesImpl = StorageServicesImpl();
+    try {
+      final fileImageResponse = await http.get(Uri.parse(imageUrl));
+      if (!checkIfSuccess(statusCode: fileImageResponse.statusCode)) {
+        throw Exception('Erreur de chargement de l\'image');
+      }
+      final currentDirectory = await getApplicationDocumentsDirectory();
+      final fileName = DateTime.now().millisecondsSinceEpoch;
+      final file = File('${currentDirectory.path}/images/${fileName}.png');
+      await file.writeAsBytes(fileImageResponse.bodyBytes);
+      storageServicesImpl.setImageNameAndPath(imageUrl: imageUrl, image: file);
+      return file;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<PotentialMatchingContent> getPotentialMatchings(
+      {(int, int)? paginData}) async {
+    try {
+      final response = await http.get(
+          kProdUri(
+              endPoint: paginData == null
+                  ? 'api/v1/users/matching-users'
+                  : 'api/v1/users/matching-users?page=${paginData.$1}&size=${paginData.$2}'),
+          headers: authHeaders(
+              token: await FirebaseAuth.instance.currentUser!.getIdToken()));
+      if (!checkIfSuccess(statusCode: response.statusCode)) {
+        throw Exception(response.body);
+      }
+      final potentialMatchingData =
+          jsonDecode(utf8.decode(response.bodyBytes))['data'];
+      return PotentialMatchingContent.fromJson(potentialMatchingData);
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
   }
 }

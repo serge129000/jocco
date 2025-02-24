@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../models/app_user.dart';
+
 abstract class AuthServices {
   Future<void> registerWithPhoneNumber(
       {required String phoneNumber,
@@ -10,4 +12,5 @@ abstract class AuthServices {
   Future<void> verifyOtp({required String code, required String id});
   Future<void> resendOtp();
   Future<void> disconectUser();
+  Future<AppUser> me();
 }

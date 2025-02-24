@@ -128,7 +128,7 @@ class _PhoneRegisterSignInState extends State<PhoneRegisterSignIn> {
                               print(
                                   'Erreur : ${firebaseAuthException.message}');
                               print(
-                                  'Code erreur : ${firebaseAuthException.credential}');
+                                  'Code erreur : ${firebaseAuthException.phoneNumber}');
                             },
                             codeSent: (s, v) {
                               if (mounted) {
