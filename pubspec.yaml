@@ -52,6 +52,8 @@ dependencies:
   firebase_messaging: ^15.2.1
   flutter_cache_manager: ^3.4.1
   flutter_spinkit: ^5.2.1
+  redacted: ^1.0.13
+  cupertino_modal_sheet: ^1.1.0
   #persona_flutter: ^3.2.8
 
 dev_dependencies:

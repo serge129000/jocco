@@ -62,4 +62,19 @@ class AllText {
   static const premiumPlan = 'Forfait premium';
   static const unlockWithPremium =
       'Debloquez toutes les fonctionnalites avec le forfait premium';
+  static const noProfil = 'Il n’y a plus personne à découvrir pour le moment !';
+  static const suggestOnNoProfil =
+      'Essayez de discuter avec des personnes à proximité ou modifiez vos filtres pour élargir vos rencontres';
+  static const updateFilter = 'Mettre a jour les filtres';
+  static const moreViews = 'Besoin de plus de likes ?';
+  static const whyMoreView =
+      'Ajoutez des photos engageantes ou passez au niveau supérieur avec le Boost de Like ou le Premium !';
+  static const swipe = 'Swipper';
+  static const errorT = 'Oops une erreur s\'est produite';
+  static const noMatch = 'Aucun Match';
+  static const whyError =
+      'Une erreur s\'est produite lors de la récupération de vos informations.';
+  static const retry = 'Reessayer';
+  static const applyFr = 'Appliquer';
+  static const addProjectCat = 'Ajouter Catégories de Projets de Vie';
 }

@@ -1,18 +1,20 @@
+import 'package:jocco/core/utils/step_utils.dart';
+
 class Filtre {
     final String id;
-    final String createdBy;
-    final DateTime createdDate;
-    final String lastModifiedBy;
-    final DateTime lastModifiedDate;
+    final String? createdBy;
+    final DateTime? createdDate;
+    final String? lastModifiedBy;
+    final DateTime? lastModifiedDate;
     final double distance;
     final bool filterDistance;
     final int minAge;
     final int maxAge;
     final String genre;
-    final dynamic lauchProject;
-    final List<dynamic> categories;
+    final ProjectTimes? lauchProject;
+    final List<String> categories;
     final List<String> centreInterets;
-    final List<dynamic> personnalites;
+    final List<String> personnalites;
 
     Filtre({
         required this.id,
@@ -43,9 +45,9 @@ class Filtre {
         int? maxAge,
         String? genre,
         dynamic lauchProject,
-        List<dynamic>? categories,
+        List<String>? categories,
         List<String>? centreInterets,
-        List<dynamic>? personnalites,
+        List<String>? personnalites,
     }) => 
         Filtre(
             id: id ?? this.id,
@@ -67,26 +69,26 @@ class Filtre {
     factory Filtre.fromJson(Map<String, dynamic> json) => Filtre(
         id: json["id"],
         createdBy: json["createdBy"],
-        createdDate: DateTime.parse(json["createdDate"]),
+        createdDate: json["createdDate"] == null? null: DateTime.parse(json["createdDate"]),
         lastModifiedBy: json["lastModifiedBy"],
-        lastModifiedDate: DateTime.parse(json["lastModifiedDate"]),
+        lastModifiedDate: json["lastModifiedDate"] == null? null: DateTime.parse(json["lastModifiedDate"]),
         distance: json["distance"],
         filterDistance: json["filterDistance"],
         minAge: json["minAge"],
         maxAge: json["maxAge"],
         genre: json["genre"],
-        lauchProject: json["lauchProject"],
-        categories: List<dynamic>.from(json["categories"].map((x) => x)),
+        lauchProject: json["lauchProject"] == null? null: ProjectTimes.fromString(json["lauchProject"]),
+        categories: List<String>.from(json["categories"].map((x) => x)),
         centreInterets: List<String>.from(json["centreInterets"].map((x) => x)),
-        personnalites: List<dynamic>.from(json["personnalites"].map((x) => x)),
+        personnalites: List<String>.from(json["personnalites"].map((x) => x)),
     );
 
     Map<String, dynamic> toJson() => {
         "id": id,
         "createdBy": createdBy,
-        "createdDate": createdDate.toIso8601String(),
+        "createdDate": createdDate?.toIso8601String(),
         "lastModifiedBy": lastModifiedBy,
-        "lastModifiedDate": lastModifiedDate.toIso8601String(),
+        "lastModifiedDate": lastModifiedDate?.toIso8601String(),
         "distance": distance,
         "filterDistance": filterDistance,
         "minAge": minAge,

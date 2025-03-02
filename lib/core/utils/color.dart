@@ -30,3 +30,4 @@ Color firstPremiumBtnColor = const Color(0xff047b7b);
 Color filterInactiveColor = const Color(0xff008f8f);
 Color filterTileBackground = const Color(0xff2b8888);
 Color appBarColor = Color(0xff1e7e7e);
+Color dividerColor = Color(0xff004242);

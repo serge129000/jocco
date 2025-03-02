@@ -57,7 +57,7 @@ class _MessageDetailsState extends State<MessageDetails> {
             ),
             Flexible(child: ListView(
               children: [
-                ...testChats.map((e)=> MessageCard(isReceived: e.isReceived, message: e.message, dateTime: e.time))
+                ...testChats.map((e)=> MessageCard(isReceived: true, message: e.message, dateTime: DateTime.fromMillisecondsSinceEpoch(e.time.millisecondsSinceEpoch)))
               ],
             )),
             Container(

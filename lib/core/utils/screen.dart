@@ -1,10 +1,14 @@
+import 'package:cupertino_modal_sheet/cupertino_modal_sheet.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jocco/core/utils/color.dart';
+import 'package:jocco/core/utils/list_utils.dart';
 import 'package:jocco/core/views/home/pages/home.dart';
 import 'package:jocco/core/views/home/pages/message.dart';
 
 import '../views/home/pages/history_page.dart';
 import '../views/home/pages/profil.dart';
+import '../views/widgets/premium_page.dart';
 
 Size size({required BuildContext context}) => MediaQuery.of(context).size;
 
@@ -53,8 +57,49 @@ enum Pages {
 }
 
 void showSnackbar(
-    {required BuildContext context,
-    bool? isError,
-    required Widget content}) {
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: content, behavior: SnackBarBehavior.floating, backgroundColor: isError ?? false? Colors.red:  PrimaryColors.white,));
+    {required BuildContext context, bool? isError, required Widget content}) {
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    content: content,
+    behavior: SnackBarBehavior.floating,
+    backgroundColor: isError ?? false ? Colors.red : PrimaryColors.white,
+  ));
+}
+
+void likeBoostSheet({required BuildContext context}) {
+  final nav = Navigator(
+    observers: [HeroController()],
+    onGenerateRoute: (settings) => CupertinoPageRoute(
+      builder: ((context) {
+        return Material(
+            elevation: 3,
+            color: PrimaryColors.black,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 20,
+                  ),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: IconButton(
+                        onPressed: () {
+                          Navigator.of(context, rootNavigator: true).pop();
+                        },
+                        icon: Icon(
+                          Icons.close,
+                          size: 30,
+                          color: PrimaryColors.gradientF,
+                        )),
+                  ),
+                ),
+                Center(child: PremiumPage(data: firstPremiumData)),
+              ],
+            ));
+      }),
+    ),
+  );
+  showCupertinoModalSheet(
+    context: context,
+    builder: (context) => nav,
+  );
 }

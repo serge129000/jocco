@@ -37,12 +37,12 @@ class UserAboutShower extends StatelessWidget {
               ColouredContainer(child: Text(user.departement ?? '', style: Theme.of(context).textTheme.labelSmall!.copyWith(
                 color: PrimaryColors.white
               ),)),
-              const Padding(padding: EdgeInsets.only(
+              /* const Padding(padding: EdgeInsets.only(
                 top: 12
               ),
               child: Divider(
                 color: PrimaryColors.first,
-              ),),
+              ),), */
               /* Padding(
                 padding: const EdgeInsets.symmetric(
                   vertical: 15

@@ -1,8 +1,8 @@
 import 'package:jocco/core/models/app_user.dart';
 
-class PotentialMatchingContent {
+class PotentialUserContent {
     final List<AppUser> content;
-    final Pageable pageable;
+    final Pageable? pageable;
     final bool last;
     final int totalElements;
     final int totalPages;
@@ -13,7 +13,7 @@ class PotentialMatchingContent {
     final int numberOfElements;
     final bool empty;
 
-    PotentialMatchingContent({
+    PotentialUserContent({
         required this.content,
         required this.pageable,
         required this.last,
@@ -27,7 +27,7 @@ class PotentialMatchingContent {
         required this.empty,
     });
 
-    PotentialMatchingContent copyWith({
+    PotentialUserContent copyWith({
         List<AppUser>? content,
         Pageable? pageable,
         bool? last,
@@ -40,7 +40,7 @@ class PotentialMatchingContent {
         int? numberOfElements,
         bool? empty,
     }) => 
-        PotentialMatchingContent(
+        PotentialUserContent(
             content: content ?? this.content,
             pageable: pageable ?? this.pageable,
             last: last ?? this.last,
@@ -54,9 +54,9 @@ class PotentialMatchingContent {
             empty: empty ?? this.empty,
         );
 
-    factory PotentialMatchingContent.fromJson(Map<String, dynamic> json) => PotentialMatchingContent(
+    factory PotentialUserContent.fromJson(Map<String, dynamic> json) => PotentialUserContent(
         content: List<AppUser>.from((json["content"] as List).map((x) => AppUser.fromJson(x))),
-        pageable: Pageable.fromJson(json["pageable"]),
+        pageable: json['pageable'].runtimeType == String? null: Pageable.fromJson(json["pageable"]),
         last: json["last"],
         totalElements: json["totalElements"],
         totalPages: json["totalPages"],
@@ -70,7 +70,7 @@ class PotentialMatchingContent {
 
     Map<String, dynamic> toJson() => {
         "content": List<dynamic>.from(content.map((x) => x)),
-        "pageable": pageable.toJson(),
+        "pageable": pageable?.toJson(),
         "last": last,
         "totalElements": totalElements,
         "totalPages": totalPages,

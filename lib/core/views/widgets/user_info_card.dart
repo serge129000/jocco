@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:jocco/core/models/app_user.dart';
 import 'package:jocco/core/utils/app_utils.dart';
 import 'package:jocco/core/utils/color.dart';
+import 'package:jocco/core/utils/screen.dart';
 import 'package:jocco/core/views/providers/user_provider.dart';
 import 'package:jocco/core/views/widgets/custom_image_shower.dart';
 import 'package:jocco/core/views/widgets/user_about_shower.dart';
@@ -37,135 +38,153 @@ class _UserInfoCardState extends State<UserInfoCard> {
             clipBehavior: Clip.none,
             children: [
               SizedBox(
-                child: PageView(
-                  controller: widget.pageController,
-                  onPageChanged: (value) {
-                    setState(() {
-                      currentPage = value;
-                    });
+                child: GestureDetector(
+                  onTapUp: (details) {
+                    if (details.localPosition.dx >
+                        size(context: context).width / 2) {
+                      widget.pageController.nextPage(duration: Duration(milliseconds: 500), curve: Curves.easeOut);
+                    }
+                    if (details.localPosition.dx <
+                        size(context: context).width / 2) {
+                      widget.pageController.previousPage(duration: Duration(milliseconds: 500), curve: Curves.easeOut);
+                    }
                   },
-                  children: [
-                    ...(widget.user.images).take(1).map((e) => Stack(
-                          children: [
-                            Container(child: CustomImageShower(url: e)),
-                            Positioned(
-                                bottom: 0,
-                                child: Opacity(
-                                  opacity: .7,
-                                  child: AnimatedContainer(
-                                    duration: Duration(milliseconds: 700),
-                                    height: constraint.maxHeight / 4.5,
-                                    width: constraint.maxWidth,
-                                    decoration: const BoxDecoration(
-                                        color: PrimaryColors.black,
-                                        borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(20),
-                                            bottomRight: Radius.circular(20))),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20, vertical: 5),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            widget.user.prenom! +
-                                                ' ' +
-                                                getAgeFromBirthDate(
-                                                        birthDate: widget
-                                                            .user.dateNais!)
-                                                    .toString(),
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyLarge!
-                                                .copyWith(
-                                                    color: PrimaryColors.white,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 2),
-                                            child: Text(
-                                              widget.user.projet!.description,
+                  child: PageView(
+                    controller: widget.pageController,
+                    onPageChanged: (value) {
+                      setState(() {
+                        currentPage = value;
+                      });
+                    },
+                    children: [
+                      ...(widget.user.images).take(1).map((e) => Stack(
+                            children: [
+                              Container(child: CustomImageShower(url: e)),
+                              Positioned(
+                                  bottom: 0,
+                                  child: Opacity(
+                                    opacity: .7,
+                                    child: AnimatedContainer(
+                                      duration: Duration(milliseconds: 700),
+                                      height: constraint.maxHeight / 4.5,
+                                      width: constraint.maxWidth,
+                                      decoration: const BoxDecoration(
+                                          color: PrimaryColors.black,
+                                          borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(20),
+                                              bottomRight:
+                                                  Radius.circular(20))),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 5),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              widget.user.prenom! +
+                                                  ' ' +
+                                                  getAgeFromBirthDate(
+                                                          birthDate: widget
+                                                              .user.dateNais!)
+                                                      .toString(),
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .labelSmall!
+                                                  .bodyLarge!
                                                   .copyWith(
                                                       color:
                                                           PrimaryColors.white,
                                                       fontWeight:
-                                                          FontWeight.w500),
+                                                          FontWeight.bold),
                                             ),
-                                          )
-                                        ],
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 2),
+                                              child: Text(
+                                                widget.user.projet!.description,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .labelSmall!
+                                                    .copyWith(
+                                                        color:
+                                                            PrimaryColors.white,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                              ),
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                )),
-                          ],
-                        )),
-                    UserAboutShower(user: widget.user),
-                    ...(widget.user.images).skip(1).map((e) => Stack(
-                          children: [
-                            Container(child: CustomImageShower(url: e)),
-                            Positioned(
-                                bottom: 0,
-                                child: Opacity(
-                                  opacity: .7,
-                                  child: AnimatedContainer(
-                                    duration: Duration(milliseconds: 700),
-                                    height: constraint.maxHeight / 4.5,
-                                    width: constraint.maxWidth,
-                                    decoration: const BoxDecoration(
-                                        color: PrimaryColors.black,
-                                        borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(20),
-                                            bottomRight: Radius.circular(20))),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20, vertical: 5),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            widget.user.prenom! +
-                                                ' ' +
-                                                getAgeFromBirthDate(
-                                                    birthDate:
-                                                        widget.user.dateNais!),
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyLarge!
-                                                .copyWith(
-                                                    color: PrimaryColors.white,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 2),
-                                            child: Text(
-                                              widget.user.projet!.description,
+                                  )),
+                            ],
+                          )),
+                      UserAboutShower(user: widget.user),
+                      ...(widget.user.images).skip(1).map((e) => Stack(
+                            children: [
+                              Container(child: CustomImageShower(url: e)),
+                              Positioned(
+                                  bottom: 0,
+                                  child: Opacity(
+                                    opacity: .7,
+                                    child: AnimatedContainer(
+                                      duration: Duration(milliseconds: 700),
+                                      height: constraint.maxHeight / 4.5,
+                                      width: constraint.maxWidth,
+                                      decoration: const BoxDecoration(
+                                          color: PrimaryColors.black,
+                                          borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(20),
+                                              bottomRight:
+                                                  Radius.circular(20))),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 5),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              widget.user.prenom! +
+                                                  ' ' +
+                                                  getAgeFromBirthDate(
+                                                      birthDate: widget
+                                                          .user.dateNais!),
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .labelSmall!
+                                                  .bodyLarge!
                                                   .copyWith(
                                                       color:
                                                           PrimaryColors.white,
                                                       fontWeight:
-                                                          FontWeight.w500),
+                                                          FontWeight.bold),
                                             ),
-                                          )
-                                        ],
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 2),
+                                              child: Text(
+                                                widget.user.projet!.description,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .labelSmall!
+                                                    .copyWith(
+                                                        color:
+                                                            PrimaryColors.white,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                              ),
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                )),
-                          ],
-                        )),
-                  ],
+                                  )),
+                            ],
+                          )),
+                    ],
+                  ),
                 ),
               ),
               Positioned(
@@ -282,7 +301,7 @@ class _UserInfoCardState extends State<UserInfoCard> {
                   child: GestureDetector(
                     onTap: () {
                       widget.controller.swipeRight().then((v) {
-                       Future.delayed(Duration(milliseconds: 210), () {
+                        Future.delayed(Duration(milliseconds: 210), () {
                           userProvider.passUser();
                         });
                       });

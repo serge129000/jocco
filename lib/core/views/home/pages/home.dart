@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:jocco/core/utils/color.dart';
 import 'package:jocco/core/utils/path.dart';
+import 'package:jocco/core/views/home/pages/home_components/no_potential_match_components.dart';
 import 'package:jocco/core/views/providers/auth_provider.dart';
 import 'package:jocco/core/views/providers/user_provider.dart';
 import 'package:jocco/core/views/widgets/custom_image_shower.dart';
@@ -49,8 +50,7 @@ class _HomeState extends State<Home> {
                           builder: (context, userProvider, _) {
                         return GestureDetector(
                           onTap: () {
-                            /* userProvider.getBackToUser(); */
-                            userProvider.controller.unswipe();
+                            userProvider.getBackToUser();
                           },
                           child: Image.asset(
                             kIconAssetPath(
@@ -103,9 +103,13 @@ class _HomeState extends State<Home> {
                         pageController: pageController,
                       );
                     },
+                    swipeOptions: SwipeOptions.only(),
                     cardCount: userProvider.finalUsers
                         .length, /*  UserInfoCard(userData: data[0]) */
                   );
+                }
+                if (userProvider.finalUsers.isEmpty) {
+                  return NoPotentialMatchComponents();
                 }
               }
               return Stack(

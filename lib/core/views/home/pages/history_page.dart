@@ -4,6 +4,7 @@ import 'package:jocco/core/utils/color.dart';
 import 'package:jocco/core/views/home/pages/history_components/history_component_matched.dart';
 import 'package:jocco/core/views/home/pages/history_components/recent_likes.dart';
 import 'package:jocco/core/views/providers/auth_provider.dart';
+import 'package:jocco/core/views/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/path.dart';
@@ -17,14 +18,18 @@ class HistoryPage extends StatefulWidget {
 
 class _HistoryPageState extends State<HistoryPage>
     with TickerProviderStateMixin {
+  late UserProvider userProvider;
   late TabController tabController = TabController(length: 2, vsync: this);
   @override
   void initState() {
+    userProvider = context.read<UserProvider>();
     tabController.addListener(() {
       if (tabController.previousIndex != tabController.index) {
         setState(() {});
       }
     });
+    userProvider.refreshUserLikers(null);
+    userProvider.refreshUserMatchs(null);
     super.initState();
   }
 

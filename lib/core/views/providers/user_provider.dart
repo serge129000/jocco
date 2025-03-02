@@ -1,7 +1,11 @@
 import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:jocco/core/models/app_user.dart';
+import 'package:jocco/core/models/chat.dart';
+import 'package:jocco/core/models/potential_matching.dart';
+import 'package:jocco/core/services/user_services_impl.dart';
 import 'package:jocco/core/streams/user_stream.dart';
+import 'package:jocco/core/utils/screen.dart';
 
 import '../../utils/gender.dart';
 import '../../utils/step_utils.dart';
@@ -9,6 +13,12 @@ import '../../utils/step_utils.dart';
 class UserProvider with ChangeNotifier {
   Map<String, dynamic> _filterData = {};
   Map<String, dynamic> get filterData => _filterData;
+  List<String> _interest = [];
+  List<String> get interest => _interest;
+  List<String> _cat = [];
+  List<String> get cat => _cat;
+  List<String> _personnality = [];
+  List<String> get personnality => _personnality;
   List<AppUser>? _potentialMatchingUsers = [];
   List<AppUser>? get potentialMatchingUsers => _potentialMatchingUsers;
   List<AppUser> _finalUsers = [];
@@ -17,6 +27,28 @@ class UserProvider with ChangeNotifier {
   List<AppUser> get passedUser => _passedUser;
   late AppinioSwiperController _controller;
   AppinioSwiperController get controller => _controller;
+  Status _gettingPotentialMatchingStatus = Status.initial;
+  Status get gettingPotentialMatchingStatus => _gettingPotentialMatchingStatus;
+  Status _gettingMyLikers = Status.initial;
+  Status get gettingMylikers => _gettingMyLikers;
+  Status _gettingMyMatchs = Status.initial;
+  Status get gettingMyMatchs => _gettingMyMatchs;
+  PotentialUserContent? _potentialMatchingUserContent;
+  PotentialUserContent? get potentialMatchingUserContent =>
+      _potentialMatchingUserContent;
+  PotentialUserContent? _potentialUserLikersContent;
+  PotentialUserContent? get potentialUserLikersContent =>
+      _potentialUserLikersContent;
+  PotentialUserContent? _potentialUserMatchsContent;
+  PotentialUserContent? get potentialUserMatchsContent =>
+      _potentialUserMatchsContent;
+  UserStream userStream = UserStream();
+  Status _onUpdatingFilterStatus = Status.initial;
+  Status get onUpdatingFilterStatus => _onUpdatingFilterStatus;
+  Map<String, List<Chat>> _chats = {};
+  Map<String, List<Chat>> get chats => _chats;
+  Map<String, List<AppUser>> _rooms = {};
+  Map<String, List<AppUser>> get rooms => _rooms;
 
   void setDistance({required double distanceValue}) {
     _filterData['distance'] = distanceValue;
@@ -39,18 +71,59 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void setProjectCat({required String projectCat}) {
-    _filterData['projectCat'] = projectCat;
+  void setProjectTimes({required ProjectTimes projectTime}) {
+    _filterData['projectTime'] = projectTime;
     notifyListeners();
   }
 
-  void setInterestCat({required List<String> interests}) {
-    _filterData['interests'] = interests;
+  void initProjectCat({required List receivCat}) {
+    _filterData['projectCat'] = receivCat;
+    notifyListeners();
+  }
+
+  void initInterest({required List interest}) {
+    _interest = List<String>.from(interest);
+    notifyListeners();
+  }
+
+  void initPersonnality({required List personnality}) {
+    _personnality = List<String>.from(personnality);
+    notifyListeners();
+  }
+
+  void setProjectCat({required String projectCat}) {
+    _cat.add(projectCat);
+    _filterData['projectCat'] = _cat;
+    notifyListeners();
+  }
+
+  void removeCat({required String cat}) {
+    _cat.removeWhere((e) => e == cat);
+    _filterData['projectCat'] = _cat;
+    notifyListeners();
+  }
+
+  void setInterestCat({required String interests}) {
+    _interest.add(interests);
+    _filterData['interests'] = _interest;
+    notifyListeners();
+  }
+
+  void removeInterestcat({required String interest}) {
+    _interest.removeWhere((e) => e == interest);
+    _filterData['interests'] = _interest;
     notifyListeners();
   }
 
   void setPersonnality({required String personnality}) {
-    _filterData['personnality'] = personnality;
+    _personnality.add(personnality);
+    _filterData['personnality'] = _personnality;
+    notifyListeners();
+  }
+
+  void removePersonnality({required String personnality}) {
+    _personnality.removeWhere((e) => e == personnality);
+    _filterData['personnality'] = _personnality;
     notifyListeners();
   }
 
@@ -74,15 +147,86 @@ class UserProvider with ChangeNotifier {
   }
 
   void getBackToUser() {
-    _finalUsers.insert(0, _passedUser.last);
+    _finalUsers.insert(0, _passedUser.removeAt(_passedUser.length - 1));
     notifyListeners();
   }
 
   void listenToUserMatching({required Function(Object) onError}) {
     UserStream.getPoMatchStream.listen((data) {
-      _potentialMatchingUsers = data;
-      _finalUsers.addAll(_potentialMatchingUsers ?? []);
+      _potentialMatchingUserContent = data.$1;
+      _gettingPotentialMatchingStatus = data.$2;
+      if (_passedUser.isEmpty) {
+        //forcer le _potentialMatchingUsers a etre null quand on a pas une premiere liste d'utilisateur
+        _potentialMatchingUsers = data.$1?.content;
+      }
+      notifyListeners();
+      if (data.$1 != null) {
+        _potentialMatchingUsers = data.$1?.content;
+        _finalUsers.addAll(_potentialMatchingUsers ?? []);
+      }
       notifyListeners();
     }).onError(onError);
+  }
+
+  void listenMyLikers() {
+    UserStream.gettingMyLikersStream.listen((data) {
+      if (data.$1 != null) {
+        _potentialUserLikersContent = data.$1;
+      }
+      _gettingMyLikers = data.$2;
+      notifyListeners();
+    });
+  }
+
+  void listenMyMatchs() {
+    UserStream.gettingMyMatchsStream.listen((data) {
+      if (data.$1 != null) {
+        _potentialUserMatchsContent = data.$1;
+      }
+      _gettingMyMatchs = data.$2;
+      notifyListeners();
+    });
+  }
+
+  void refreshUsermatchings((int, int)? pagingData) {
+    userStream.fetchUserPotentialMatching(pagingData);
+  }
+
+  void refreshUserLikers((int, int)? pagingData) {
+    userStream.fetchUserLikers(pagingData);
+  }
+
+  void refreshUserMatchs((int, int)? pagingData) {
+    userStream.fetchUserMatch(pagingData);
+  }
+
+  void listenToUserChat() {
+    UserServicesImpl().listenUserMessages(
+      onNewChat: (chats) {
+        chats.forEach((e, v) {
+          _chats[e] = List<Chat>.from(v.map((e) => Chat.fromjson(e)));
+        });
+        notifyListeners();
+      },
+      rommUsers: (roomUsers) {
+        roomUsers.forEach((e, v) {
+          _rooms[e] = v;
+        });
+        notifyListeners();
+      },
+    );
+  }
+
+  Future<void> updateFilter({required Map<String, dynamic> data}) async {
+    _onUpdatingFilterStatus = Status.loading;
+    notifyListeners();
+    try {
+      await UserServicesImpl().updateFilter(data: data);
+      _onUpdatingFilterStatus = Status.loaded;
+      notifyListeners();
+    } catch (e) {
+      _onUpdatingFilterStatus = Status.error;
+      notifyListeners();
+    }
   }
 }

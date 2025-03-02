@@ -20,9 +20,14 @@ class _RootState extends State<Root> {
     Future.delayed(Duration.zero, () {
       userProvider.initMatching();
       userProvider.startMatching(null);
+      userProvider.refreshUserLikers(null);
+      userProvider.refreshUserMatchs(null);
       userProvider.listenToUserMatching(onError: (err) {
         //: implementation de l'erreur
       });
+      userProvider.listenMyLikers();
+      userProvider.listenMyMatchs();
+      userProvider.listenToUserChat();
     });
     super.initState();
   }

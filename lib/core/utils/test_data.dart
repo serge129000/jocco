@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:jocco/core/models/chat.dart';
 import 'package:jocco/core/utils/gender.dart';
 import 'package:jocco/core/utils/step_utils.dart';
@@ -94,9 +95,9 @@ Map<String, dynamic> userData = {
       'https://plus.unsplash.com/premium_photo-1731950913794-d1d16af06a9d?q=80&w=2485&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
 };
 List<Chat> testChats = [
-  Chat(message: 'Hello', isReceived: true, time: DateTime.now()),
-  Chat(message: 'Comment tu vas?', isReceived: false, time: DateTime.now()),
-  Chat(message: 'Hello Bien?', isReceived: true, time: DateTime.now()),
-  Chat(message: 'Cool..', isReceived: false, time: DateTime.now()),
-  Chat(message: 'Top', isReceived: true, time: DateTime.now())
+  Chat(message: 'Hello', time: Timestamp.now(), chatStatus: ChatStatus.unread, sender: '0s0ypY2KDwYfqG3N3visC2rFEn73'),
+  Chat(message: 'Hello', time: Timestamp.now(), chatStatus: ChatStatus.unread, sender: '0s0ypY2KDwYfqG3N3visC2rFEn73'),
+  Chat(message: 'Hello', time: Timestamp.now(), chatStatus: ChatStatus.unread, sender: '0s0ypY2KDwYfqG3N3visC2rFEn73'),
+  Chat(message: 'Hello', time: Timestamp.now(), chatStatus: ChatStatus.unread, sender: '0s0ypY2KDwYfqG3N3visC2rFEn73'),
+  Chat(message: 'Hello', time: Timestamp.now(), chatStatus: ChatStatus.unread, sender: '0s0ypY2KDwYfqG3N3visC2rFEn73'),
 ];

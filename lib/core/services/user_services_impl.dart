@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:jocco/core/models/app_user.dart';
 import 'package:jocco/core/models/potential_matching.dart';
 import 'package:jocco/core/services/storage_services_impl.dart';
 import 'package:jocco/core/services/user_services.dart';
@@ -128,8 +129,11 @@ class UserServicesImpl implements UserServices {
   }
 
   @override
-  void listenUserMessages({required Function(Map<String, List>) onNewChat}) {
+  void listenUserMessages(
+      {required Function(Map<String, List>) onNewChat,
+      required Function(Map<String, List<AppUser>>) rommUsers}) {
     Map<String, List> allUserChats = {};
+    Map<String, List<AppUser>> userAndChats = {};
     FirebaseFirestore.instance
         .collection('chats')
         .where("participants",
@@ -146,8 +150,11 @@ class UserServicesImpl implements UserServices {
           for (var chatDetail in chatData.docs) {
             chatDetails.add(chatDetail.data());
           }
+          userAndChats[chat.id] = List<AppUser>.from(
+              ((chat.data()['users'] ?? []) as List).map((e) => AppUser.fromJson(e)));
           allUserChats[chat.id] = chatDetails;
           onNewChat(allUserChats);
+          rommUsers(userAndChats);
         });
       }
     });
@@ -155,12 +162,17 @@ class UserServicesImpl implements UserServices {
 
   @override
   Future<void> sendMessages(
-      {required String text, required String senderId, String? roomId}) async {
+      {required String text,
+      required String senderId,
+      String? roomId,
+      required AppUser currentUser,
+      required AppUser secondUser}) async {
     final roomIdGet = await getRoomId(secondUserId: senderId);
     final storeInstance = FirebaseFirestore.instance;
     final authInstance = FirebaseAuth.instance;
     await storeInstance.collection('chats').doc(roomId ?? roomIdGet).set({
       'participants': [authInstance.currentUser!.uid, senderId],
+      'users': [currentUser.toJson(), secondUser.toJson()]
     }).then((value) async => await storeInstance
             .collection('chats')
             .doc(roomId ?? roomIdGet)
@@ -168,10 +180,8 @@ class UserServicesImpl implements UserServices {
             .add({
           'sender': authInstance.currentUser!.uid,
           'text': text,
-          //'type': messagesTypesNames[messageType],
           'timestamp': FieldValue.serverTimestamp(),
           'status': 'unRead',
-          //'users': [receiverUser.toJson(), currentUser.toJson()]
         }));
   }
 
@@ -220,7 +230,7 @@ class UserServicesImpl implements UserServices {
   }
 
   @override
-  Future<PotentialMatchingContent> getPotentialMatchings(
+  Future<PotentialUserContent> getPotentialMatchings(
       {(int, int)? paginData}) async {
     try {
       final response = await http.get(
@@ -235,9 +245,113 @@ class UserServicesImpl implements UserServices {
       }
       final potentialMatchingData =
           jsonDecode(utf8.decode(response.bodyBytes))['data'];
-      return PotentialMatchingContent.fromJson(potentialMatchingData);
+      return PotentialUserContent.fromJson(potentialMatchingData);
     } catch (e) {
       print(e);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> dislikeUser({required String userId}) async {
+    try {
+      final response = await http.patch(
+          kProdUri(endPoint: 'api/v1/users/dislike/$userId'),
+          headers: authHeaders(
+              token: await FirebaseAuth.instance.currentUser!.getIdToken()));
+      if (!checkIfSuccess(statusCode: response.statusCode)) {
+        throw Exception(response.body);
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> likeUser({required String userId}) async {
+    try {
+      final response = await http.patch(
+          kProdUri(endPoint: 'api/v1/users/like/$userId'),
+          headers: authHeaders(
+              token: await FirebaseAuth.instance.currentUser!.getIdToken()));
+      if (!checkIfSuccess(statusCode: response.statusCode)) {
+        throw Exception(response.body);
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> viewUser({required String userId}) async {
+    try {
+      final response = await http.patch(
+          kProdUri(endPoint: 'api/v1/users/view/$userId'),
+          headers: authHeaders(
+              token: await FirebaseAuth.instance.currentUser!.getIdToken()));
+      if (!checkIfSuccess(statusCode: response.statusCode)) {
+        throw Exception(response.body);
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<PotentialUserContent> getMyLikers({(int, int)? paginData}) async {
+    try {
+      final response = await http.get(
+          kProdUri(
+              endPoint: paginData == null
+                  ? 'api/v1/users/my-likers'
+                  : 'api/v1/users/my-likers?page=${paginData.$1}&size=${paginData.$2}'),
+          headers: authHeaders(
+              token: await FirebaseAuth.instance.currentUser!.getIdToken()));
+      if (!checkIfSuccess(statusCode: response.statusCode)) {
+        throw Exception(response.body);
+      }
+      final potentialMatchingData =
+          jsonDecode(utf8.decode(response.bodyBytes))['data'];
+      return PotentialUserContent.fromJson(potentialMatchingData);
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<PotentialUserContent> getMyMatches({(int, int)? paginData}) async {
+    try {
+      final response = await http.get(
+          kProdUri(
+              endPoint: paginData == null
+                  ? 'api/v1/users/my-matches'
+                  : 'api/v1/users/my-matches?page=${paginData.$1}&size=${paginData.$2}'),
+          headers: authHeaders(
+              token: await FirebaseAuth.instance.currentUser!.getIdToken()));
+      if (!checkIfSuccess(statusCode: response.statusCode)) {
+        throw Exception(response.body);
+      }
+      final potentialMatchingData =
+          jsonDecode(utf8.decode(response.bodyBytes))['data'];
+      return PotentialUserContent.fromJson(potentialMatchingData);
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> updateFilter({required Map<String, dynamic> data}) async {
+    try {
+      final response = await http.put(kProdUri(endPoint: 'api/v1/users/filter'),
+          body: jsonEncode(data),
+          headers: authHeaders(
+              token: await FirebaseAuth.instance.currentUser!.getIdToken()));
+      if (!checkIfSuccess(statusCode: response.statusCode)) {
+        throw Exception(response.body);
+      }
+    } catch (e) {
       rethrow;
     }
   }
