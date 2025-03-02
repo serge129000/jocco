@@ -18,7 +18,8 @@ class _MessageCardState extends State<MessageCard> {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: widget.isReceived ? Alignment.centerLeft : Alignment.centerRight,
+      alignment:
+          widget.isReceived ? Alignment.centerLeft : Alignment.centerRight,
       child: Padding(
         padding: widget.isReceived
             ? const EdgeInsets.only(top: 5.0, left: 10.0, right: 90)
@@ -26,14 +27,11 @@ class _MessageCardState extends State<MessageCard> {
         child: Stack(
           children: [
             Container(
-                padding: EdgeInsets.only(
-                    top: 10,
-                    bottom: 10,
-                    right: 20,
-                    left: 20),
+                padding:
+                    EdgeInsets.only(top: 10, bottom: 10, right: 20, left: 20),
                 decoration: BoxDecoration(
-                  color: widget.isReceived ? Color(0xffC5FCFC
-) : Color(0xfff6f7f7),
+                  color:
+                      widget.isReceived ? Color(0xffC5FCFC) : Color(0xfff6f7f7),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(12.0),
                     topRight: Radius.circular(12.0),

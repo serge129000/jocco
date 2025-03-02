@@ -62,7 +62,7 @@ class SelectProjectLife extends StatelessWidget {
                 ),
               ),
               if (currentFilter!.categories.isEmpty &&
-                  userProvider.filterData['projectCat'] == null || (userProvider.filterData['projectCat'] as List).isEmpty)
+                  userProvider.filterData['projectCat'] == null || ((userProvider.filterData['projectCat'] ?? []) as List).isEmpty)
                 Container(
                   color: Color(0xff1e7e7e),
                   child: ListTile(

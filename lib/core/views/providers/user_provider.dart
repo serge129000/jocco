@@ -222,11 +222,26 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
     try {
       await UserServicesImpl().updateFilter(data: data);
+      _finalUsers = [];
       _onUpdatingFilterStatus = Status.loaded;
       notifyListeners();
     } catch (e) {
       _onUpdatingFilterStatus = Status.error;
       notifyListeners();
     }
+  }
+
+  void sendMessage({
+    required String text,
+    required String senderId,
+    String? roomId,
+    required AppUser currentUser,
+    required AppUser secondUser,
+  }) {
+    UserServicesImpl().sendMessages(
+        text: text,
+        senderId: senderId,
+        currentUser: currentUser,
+        secondUser: secondUser);
   }
 }

@@ -77,4 +77,5 @@ class AllText {
   static const retry = 'Reessayer';
   static const applyFr = 'Appliquer';
   static const addProjectCat = 'Ajouter Catégories de Projets de Vie';
+  static const writeMessage = 'Écrire un message...';
 }
