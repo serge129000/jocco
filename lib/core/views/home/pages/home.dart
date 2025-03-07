@@ -22,8 +22,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final PageController pageController = PageController();
-  bool listFinished = false;
   @override
   Widget build(BuildContext context) {
     /* FirebaseAuth.instance.currentUser!.getIdToken().then((v) {
@@ -50,7 +48,11 @@ class _HomeState extends State<Home> {
                           builder: (context, userProvider, _) {
                         return GestureDetector(
                           onTap: () {
-                            userProvider.getBackToUser();
+                            Future.delayed(Duration(milliseconds: 100), () {
+                              userProvider.setUnfinsihList();
+                              userProvider.controller.unswipe();
+                            });
+                            //userProvider.getBackToUser();
                           },
                           child: Image.asset(
                             kIconAssetPath(
@@ -87,29 +89,39 @@ class _HomeState extends State<Home> {
             ),
             Expanded(child: Consumer2<UserProvider, AppAuthProvider>(
                 builder: (context, userProvider, appAuthProvider, _) {
+              print(userProvider.listFinish);
               if (userProvider.potentialMatchingUsers != null) {
                 if (userProvider.finalUsers.isNotEmpty) {
                   return AppinioSwiper(
-                    onEnd: () {},
+                    initialIndex: userProvider.currentCardIndex.$1,
+                    onEnd: () {
+                      userProvider.setFinishingList();
+                    },
                     controller: userProvider.controller,
                     backgroundCardCount: 0,
                     onSwipeEnd: (previousIndex, targetIndex, activity) {
-                      pageController.jumpTo(0);
+                      userProvider.setCardIndex((previousIndex, targetIndex));
                     },
                     cardBuilder: (BuildContext context, int index) {
+                      return userProvider.listFinish
+                          ? NoPotentialMatchComponents()
+                          : UserInfoCard(
+                              user: userProvider.finalUsers[index],
+                              controller: userProvider.controller,
+                              pageController: new PageController(),
+                            );
+                      /* if (index == userProvider.finalUsers.length) {
+                        return NoPotentialMatchComponents();
+                      }
                       return UserInfoCard(
                         user: userProvider.finalUsers[index],
                         controller: userProvider.controller,
-                        pageController: pageController,
-                      );
+                        pageController: new PageController(),
+                      ); */
                     },
                     swipeOptions: SwipeOptions.only(),
-                    cardCount: userProvider.finalUsers
-                        .length, /*  UserInfoCard(userData: data[0]) */
+                    cardCount: userProvider.finalUsers.length,
                   );
-                }
-                if (userProvider.finalUsers.isEmpty) {
-                  return NoPotentialMatchComponents();
                 }
               }
               return Stack(
@@ -126,7 +138,7 @@ class _HomeState extends State<Home> {
                       shape: BoxShape.circle,
                     ),
                     child: CustomImageShower(
-                      url: appAuthProvider.currentAppUser!.profileImage,
+                      url: appAuthProvider.currentAppUser?.profileImage,
                       isRounded: true,
                     ),
                   )

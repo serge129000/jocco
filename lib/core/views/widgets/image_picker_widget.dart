@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jocco/core/utils/color.dart';
 import 'package:jocco/core/utils/path.dart';
+import 'package:jocco/core/views/widgets/custom_image_shower.dart';
 
 class ImagePickerWidget extends StatefulWidget {
   final Function(String?) onImageChanged;
-  const ImagePickerWidget({super.key, required this.onImageChanged});
+  final String? firstOnlineImage;
+  const ImagePickerWidget(
+      {super.key, required this.onImageChanged, this.firstOnlineImage});
 
   @override
   State<ImagePickerWidget> createState() => _ImagePickerWidgetState();
@@ -15,6 +18,13 @@ class ImagePickerWidget extends StatefulWidget {
 
 class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   String? imagePath;
+  String? firstOnlineImageGot;
+  @override
+  void initState() {
+    firstOnlineImageGot = widget.firstOnlineImage;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -43,13 +53,14 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                 border: Border.all(width: 1.5, color: pickerBorder),
                 borderRadius: BorderRadius.circular(10)),
             child: imagePath == null
-                ? Center(
+                ? firstOnlineImageGot != null
+                    ? CustomImageShower(url: firstOnlineImageGot): Center(
                     child: Image.asset(
                         height: 30.88,
                         width: 30.88,
                         kIconAssetPath(imageName: 'img_placeholder.png')),
                   )
-                : null,
+                    : null,
           ),
         ),
         Positioned(

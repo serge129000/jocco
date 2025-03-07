@@ -5,9 +5,11 @@ class Chat {
   final ChatStatus chatStatus;
   final Timestamp time;
   final String sender;
+  final String? id;
   Chat(
       {required this.message,
       required this.time,
+      this.id,
       required this.chatStatus,
       required this.sender});
   factory Chat.fromjson(_) {
@@ -15,8 +17,17 @@ class Chat {
         message: _['text'],
         time: _['timestamp'] ?? Timestamp.now(),
         chatStatus: ChatStatus.fromString(_['status']),
+        id: _['id'],
         sender: _['sender']);
   }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'timestamp': time,
+    'status': chatStatus.value,
+    'sender': sender,
+    'text': message
+  };
 }
 
 enum ChatStatus {

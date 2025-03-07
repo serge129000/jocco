@@ -4,7 +4,7 @@
 - boucler la liste de mes matchs
 //
 - Filtre
-- Terminer le chat 
+- Terminer le chat ( en cours d'implementation en cas d'erreur d'envoie)
 - Profil
 - Terminer le resend code 
 - terminer le widget de chargement de la pagination et la pagnination

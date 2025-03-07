@@ -42,11 +42,15 @@ class _UserInfoCardState extends State<UserInfoCard> {
                   onTapUp: (details) {
                     if (details.localPosition.dx >
                         size(context: context).width / 2) {
-                      widget.pageController.nextPage(duration: Duration(milliseconds: 500), curve: Curves.easeOut);
+                      widget.pageController.nextPage(
+                          duration: Duration(milliseconds: 500),
+                          curve: Curves.easeOut);
                     }
                     if (details.localPosition.dx <
                         size(context: context).width / 2) {
-                      widget.pageController.previousPage(duration: Duration(milliseconds: 500), curve: Curves.easeOut);
+                      widget.pageController.previousPage(
+                          duration: Duration(milliseconds: 500),
+                          curve: Curves.easeOut);
                     }
                   },
                   child: PageView(
@@ -276,8 +280,8 @@ class _UserInfoCardState extends State<UserInfoCard> {
                   child: GestureDetector(
                     onTap: () {
                       widget.controller.swipeLeft().then((v) {
-                        Future.delayed(Duration(milliseconds: 210), () {
-                          userProvider.passUser();
+                        Future.delayed(Duration(milliseconds: 300), () {
+                          
                         });
                       });
                     },
@@ -299,10 +303,11 @@ class _UserInfoCardState extends State<UserInfoCard> {
                   bottom: -20,
                   right: 50,
                   child: GestureDetector(
-                    onTap: () {
+                    onTap: () async {
+                      print(widget.controller.cardIndex);
                       widget.controller.swipeRight().then((v) {
                         Future.delayed(Duration(milliseconds: 210), () {
-                          userProvider.passUser();
+                          
                         });
                       });
                     },

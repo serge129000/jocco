@@ -151,7 +151,8 @@ class UserServicesImpl implements UserServices {
             chatDetails.add(chatDetail.data());
           }
           userAndChats[chat.id] = List<AppUser>.from(
-              ((chat.data()['users'] ?? []) as List).map((e) => AppUser.fromJson(e)));
+              ((chat.data()['users'] ?? []) as List)
+                  .map((e) => AppUser.fromJson(e)));
           allUserChats[chat.id] = chatDetails;
           onNewChat(allUserChats);
           rommUsers(userAndChats);
@@ -165,24 +166,30 @@ class UserServicesImpl implements UserServices {
       {required String text,
       required String senderId,
       String? roomId,
+      String? uuid,
       required AppUser currentUser,
       required AppUser secondUser}) async {
-    final roomIdGet = await getRoomId(secondUserId: senderId);
-    final storeInstance = FirebaseFirestore.instance;
-    final authInstance = FirebaseAuth.instance;
-    await storeInstance.collection('chats').doc(roomId ?? roomIdGet).set({
-      'participants': [authInstance.currentUser!.uid, senderId],
-      'users': [currentUser.toJson(), secondUser.toJson()]
-    }).then((value) async => await storeInstance
-            .collection('chats')
-            .doc(roomId ?? roomIdGet)
-            .collection('messages')
-            .add({
-          'sender': authInstance.currentUser!.uid,
-          'text': text,
-          'timestamp': FieldValue.serverTimestamp(),
-          'status': 'unRead',
-        }));
+    try {
+      final roomIdGet = roomId ?? await getRoomId(secondUserId: senderId);
+      final storeInstance = FirebaseFirestore.instance;
+      final authInstance = FirebaseAuth.instance;
+      await storeInstance.collection('chats').doc(roomIdGet).set({
+        'participants': [authInstance.currentUser!.uid, senderId],
+        'users': [currentUser.toJson(), secondUser.toJson()]
+      }).then((value) async => await storeInstance
+              .collection('chats')
+              .doc(roomId ?? roomIdGet)
+              .collection('messages')
+              .add({
+            'sender': authInstance.currentUser!.uid,
+            'text': text,
+            'uuid': uuid,
+            'timestamp': FieldValue.serverTimestamp(),
+            'status': 'unRead',
+          }));
+    } catch (e) {
+      rethrow;
+    }
   }
 
   @override

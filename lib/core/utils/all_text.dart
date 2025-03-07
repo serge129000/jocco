@@ -78,4 +78,7 @@ class AllText {
   static const applyFr = 'Appliquer';
   static const addProjectCat = 'Ajouter Catégories de Projets de Vie';
   static const writeMessage = 'Écrire un message...';
+  static const update = 'Modifier';
+  static const preview = 'Apercu';
+  static const updateProfil = 'Modifier le profil';
 }

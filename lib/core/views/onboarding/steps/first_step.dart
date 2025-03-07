@@ -54,11 +54,16 @@ class _FirstStepState extends State<FirstStep> {
             ), */
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Text(AllText.iam,
-                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      height: 0,
-                      fontWeight: FontWeight.w600,
-                      color: PrimaryColors.white)),
+              child: GestureDetector(
+                onTap: () {
+                  context.read<AppAuthProvider>().logoutUser();
+                },
+                child: Text(AllText.iam,
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        height: 0,
+                        fontWeight: FontWeight.w600,
+                        color: PrimaryColors.white)),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(bottom: 25),
@@ -129,8 +134,9 @@ class _FirstStepState extends State<FirstStep> {
                         .map((e) => Country.fromJson(e))
                         .toList()
                         .where((e) => e.alpha2Code!.toLowerCase().contains(
-                            appAuthProvider.currentLocale?.toLowerCase() ??
-                                'fr'))
+                            /* appAuthProvider.currentLocale?.toLowerCase() ??
+                                 */
+                            'fr'))
                         .single
                         .name,
                     onChanged: (v) {
@@ -212,8 +218,8 @@ class _FirstStepState extends State<FirstStep> {
                                   activeColor: PrimaryColors.white,
                                   fillColor: const WidgetStatePropertyAll(
                                       PrimaryColors.white),
-                                  value: stepProvider.choosenGender ??
-                                      Gender.male,
+                                  value:
+                                      stepProvider.choosenGender ?? Gender.male,
                                   groupValue: e,
                                   onChanged: (v) {
                                     stepProvider.setChoosenGender(gender: e);

@@ -49,6 +49,10 @@ class UserProvider with ChangeNotifier {
   Map<String, List<Chat>> get chats => _chats;
   Map<String, List<AppUser>> _rooms = {};
   Map<String, List<AppUser>> get rooms => _rooms;
+  (int, int) _currentCardIndex = (0, 0);
+  (int, int) get currentCardIndex => _currentCardIndex;
+  bool _listFinish = false;
+  bool get listFinish => _listFinish;
 
   void setDistance({required double distanceValue}) {
     _filterData['distance'] = distanceValue;
@@ -143,11 +147,13 @@ class UserProvider with ChangeNotifier {
 
   void passUser() {
     _passedUser.add(_finalUsers.removeAt(0));
+    print('passed user: $passedUser');
     notifyListeners();
   }
 
   void getBackToUser() {
     _finalUsers.insert(0, _passedUser.removeAt(_passedUser.length - 1));
+    print('back user: $finalUsers');
     notifyListeners();
   }
 
@@ -162,8 +168,10 @@ class UserProvider with ChangeNotifier {
       notifyListeners();
       if (data.$1 != null) {
         _potentialMatchingUsers = data.$1?.content;
+        setUnfinsihList();
         _finalUsers.addAll(_potentialMatchingUsers ?? []);
       }
+      //print("final users: $finalUsers");
       notifyListeners();
     }).onError(onError);
   }
@@ -223,6 +231,8 @@ class UserProvider with ChangeNotifier {
     try {
       await UserServicesImpl().updateFilter(data: data);
       _finalUsers = [];
+      _currentCardIndex = (0, 0);
+      setUnfinsihList();
       _onUpdatingFilterStatus = Status.loaded;
       notifyListeners();
     } catch (e) {
@@ -231,17 +241,32 @@ class UserProvider with ChangeNotifier {
     }
   }
 
-  void sendMessage({
-    required String text,
-    required String senderId,
-    String? roomId,
-    required AppUser currentUser,
-    required AppUser secondUser,
-  }) {
+  void sendMessage(
+      {required String text,
+      required String senderId,
+      String? roomId,
+      required AppUser currentUser,
+      required AppUser secondUser,
+      required String? uuid}) {
     UserServicesImpl().sendMessages(
         text: text,
         senderId: senderId,
         currentUser: currentUser,
+        uuid: uuid,
         secondUser: secondUser);
+  }
+
+  void setCardIndex((int, int) indexes) {
+    _currentCardIndex = indexes;
+    notifyListeners();
+  }
+
+  void setFinishingList() {
+    _listFinish = true;
+    notifyListeners();
+  }
+
+  void setUnfinsihList() {
+    _listFinish = false;
   }
 }

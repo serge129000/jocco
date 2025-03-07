@@ -9,6 +9,7 @@ import 'package:jocco/core/views/providers/user_provider.dart';
 import 'package:jocco/core/views/widgets/message_card.dart';
 import 'package:jocco/core/views/widgets/mini_user_circle_avatar.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class MessageDetails extends StatefulWidget {
   final String? roomId;
@@ -24,8 +25,12 @@ class _MessageDetailsState extends State<MessageDetails> {
   ScrollController scrollController = ScrollController();
   @override
   void initState() {
+    Future.delayed(Duration.zero, () {
+      scrollController.jumpTo(scrollController.position.maxScrollExtent);
+    });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Consumer2<UserProvider, AppAuthProvider>(
@@ -93,6 +98,7 @@ class _MessageDetailsState extends State<MessageDetails> {
                     .entries
                     .toList();
                 return ListView.builder(
+                  controller: scrollController,
                   itemCount: chatsSorted.length,
                   itemBuilder: (context, index) {
                     return Column(
@@ -139,6 +145,7 @@ class _MessageDetailsState extends State<MessageDetails> {
                           onFieldSubmitted: (value) {
                             if (value.isNotEmpty) {
                               userProvider.sendMessage(
+                                uuid: Uuid().v4(),
                                   text: value,
                                   senderId: currentUser.id,
                                   currentUser: currentUser,

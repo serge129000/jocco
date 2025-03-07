@@ -195,7 +195,7 @@ class _FilterState extends State<Filter> {
                           Switch.adaptive(
                               activeColor: PrimaryColors.white,
                               value: userProvider.filterData['st'] ??
-                                  currentFilter?.filterDistance,
+                                  currentFilter?.filterDistance ?? false,
                               onChanged: (value) {
                                 userProvider.setActivateOrDesactivate(
                                     st: value);
