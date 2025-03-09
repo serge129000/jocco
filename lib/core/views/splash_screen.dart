@@ -9,6 +9,7 @@ import 'package:jocco/core/utils/screen.dart';
 import 'package:jocco/core/views/home/root.dart';
 import 'package:jocco/core/views/landing/landing_screen.dart';
 import 'package:jocco/core/views/onboarding/onboarding.dart';
+import 'package:jocco/core/views/providers/step_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/auth_provider.dart';
@@ -22,11 +23,14 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   late AppAuthProvider authProvider;
+  late StepProvider stepProvider;
   @override
   void initState() {
     authProvider = context.read<AppAuthProvider>();
+    stepProvider = context.read<StepProvider>();
     authProvider.init();
     Future.delayed(const Duration(seconds: 2)).then((v) async {
+      stepProvider.reinitAll();
       HapticFeedback.mediumImpact();
       if (FirebaseAuth.instance.currentUser == null) {
         kReplaceToPage(context, page: const LandingScreen());

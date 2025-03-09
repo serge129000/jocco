@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jocco/core/utils/all_text.dart';
+import 'package:jocco/core/views/providers/auth_provider.dart';
 import 'package:jocco/core/views/providers/step_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -11,8 +12,32 @@ import '../../widgets/another_selected_container.dart';
 import '../../widgets/back_widget.dart';
 import '../../widgets/button.dart';
 
-class ThirdStep extends StatelessWidget {
-  const ThirdStep({super.key});
+class ThirdStep extends StatefulWidget {
+  final bool hasNotSizedBox;
+  const ThirdStep({super.key, this.hasNotSizedBox = false});
+
+  @override
+  State<ThirdStep> createState() => _ThirdStepState();
+}
+
+class _ThirdStepState extends State<ThirdStep> {
+  @override
+  void initState() {
+    Future.delayed(Duration.zero, () {
+      if (Provider.of<StepProvider>(context, listen: false)
+          .selectedTraits
+          .isEmpty) {
+        Provider.of<AppAuthProvider>(context, listen: false)
+            .currentAppUser!
+            .personnalites
+            .forEach((vl) {
+          Provider.of<StepProvider>(context, listen: false)
+              .addTraits(trait: vl ?? '');
+        });
+      }
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +47,10 @@ class ThirdStep extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(
-              height: 110,
-            ),
+            if (!widget.hasNotSizedBox)
+              const SizedBox(
+                height: 110,
+              ),
             Align(
               alignment: Alignment.centerLeft,
               child: BackWidget(
@@ -59,7 +85,21 @@ class ThirdStep extends StatelessWidget {
                         if (stepProvider.selectedTraits.contains(e)) {
                           stepProvider.deleteTrait(trait: e);
                         } else {
-                          stepProvider.addTraits(trait: e);
+                          if (!(stepProvider.selectedTraits.length < 3 &&
+                              stepProvider.selectedTraits.length >= 1)) {
+                            showSnackbar(
+                                context: context,
+                                isError: true,
+                                content: Text(
+                                  'Choisissez au maximum 3 traits',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelSmall!
+                                      .copyWith(color: PrimaryColors.white),
+                                ));
+                          } else {
+                            stepProvider.addTraits(trait: e);
+                          }
                         }
                       },
                       child: AnotherSelectedContainer(
@@ -78,31 +118,37 @@ class ThirdStep extends StatelessWidget {
               ],
             ),
             const Spacer(),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Btn(
-                function: () {
-                  if (stepProvider.selectedTraits.length <= 3 && stepProvider.selectedTraits.length >= 1) {
-                    context.read<StepProvider>().nextStep();
-                  } else {
-                    showSnackbar(
+            if (!widget.hasNotSizedBox)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Btn(
+                  function: () {
+                    if (stepProvider.selectedTraits.length <= 3 &&
+                        stepProvider.selectedTraits.length >= 1) {
+                      context.read<StepProvider>().nextStep();
+                    } else {
+                      showSnackbar(
                           context: context,
                           isError: true,
-                          content: Text('Choisissez au maximum 3 traits', style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                            color: PrimaryColors.white
-                          ),));
-                  }
-                },
-                isTransparent: false,
-                anotherColor: PrimaryColors.white,
-                child: Text(
-                  AllText.next,
-                  style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                      color: PrimaryColors.first,
-                      fontWeight: FontWeight.w600),
+                          content: Text(
+                            'Choisissez au maximum 3 traits',
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelSmall!
+                                .copyWith(color: PrimaryColors.white),
+                          ));
+                    }
+                  },
+                  isTransparent: false,
+                  anotherColor: PrimaryColors.white,
+                  child: Text(
+                    AllText.next,
+                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                        color: PrimaryColors.first,
+                        fontWeight: FontWeight.w600),
+                  ),
                 ),
-              ),
-            )
+              )
           ],
         ),
       );

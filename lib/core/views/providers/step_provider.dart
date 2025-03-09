@@ -9,7 +9,7 @@ class StepProvider with ChangeNotifier {
   Gender? get selectedGender => _selectedGender;
   Gender? _choosenGender = Gender.female;
   Gender? get choosenGender => _choosenGender;
-  final List<String> _selectedTraits = [];
+  List<String> _selectedTraits = [];
   List<String> get selectedTraits => _selectedTraits;
   final List<String> _selectedInterest = [];
   List<String> get selectedInterest => _selectedInterest;
@@ -21,8 +21,8 @@ class StepProvider with ChangeNotifier {
   bool get hasChildren => _hasChildren;
   String? _projectCat;
   String? get projectCat => _projectCat;
-  Map<int, String> _selectedImages = {};
-  Map<int, String> get selectedImages => _selectedImages;
+  Map<int, String?> _selectedImages = {};
+  Map<int, String?> get selectedImages => _selectedImages;
   ProjectTimes _projectTimes = ProjectTimes.immediately;
   ProjectTimes get projectTimes => _projectTimes;
   String? _name;
@@ -31,6 +31,8 @@ class StepProvider with ChangeNotifier {
   String? get department => _department;
   DateTime? _birthDate;
   DateTime? get birthDate => _birthDate;
+  List<String> _removeOnlinePic = [];
+  List<String> get removeOnlinePic => _removeOnlinePic;
 
   void nextStep() {
     _currentStep = StepJ.stepFromValue(step: _currentStep.value + 1);
@@ -122,12 +124,20 @@ class StepProvider with ChangeNotifier {
   }
 
   void removeImage({required int key}) {
-    _selectedImages.removeWhere((e, v) => e == key);
+    /*  _selectedImages.removeWhere((e, v) => e == key); */
+    _selectedImages[key] = null;
     notifyListeners();
   }
 
   void setProjectTimes({required ProjectTimes times}) {
     _projectTimes = times;
+    notifyListeners();
+  }
+
+  void reinitAll() {
+    _selectedImages = {};
+    _selectedIfProject = null;
+    _selectedTraits = [];
     notifyListeners();
   }
 }

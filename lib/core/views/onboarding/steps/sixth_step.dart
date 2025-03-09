@@ -393,7 +393,7 @@ class _SixthStepState extends State<SixthStep> {
             "personnalites": stepProvider.selectedTraits
           },
           insertPhotosData: List<File>.from(
-              stepProvider.selectedImages.values.map((e) => File(e))),
+              stepProvider.selectedImages.values.where((v)=>v != null).map((e) => File(e!))),
           projectInfosData: {
             "categories": [stepProvider.projectCat],
             "titre": projectTitle,

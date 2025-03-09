@@ -58,7 +58,7 @@ class SecondStep extends StatelessWidget {
                   children: [
                     ...List<int>.generate(6, (i) => i)
                         .map((e) => ImagePickerWidget(
-                              onImageChanged: (value) {
+                              onImageChanged: (value, isUrl) {
                                 if (value == null) {
                                   stepProvider.removeImage(key: e);
                                 } else {

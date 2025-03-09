@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jocco/core/views/home/pages/profil_components/update_page.dart';
 import 'package:jocco/core/views/widgets/custom_uniform_scaffold.dart';
+import 'package:jocco/core/views/widgets/user_info_card.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../utils/all_text.dart';
@@ -81,9 +82,19 @@ class _UpdateProfilState extends State<UpdateProfil>
             }),
           ),
           Expanded(
-              child: TabBarView(
-                  controller: tabController,
-                  children: [UpdatePage(), SizedBox()]))
+              child: Consumer<AppAuthProvider>(
+                builder: (context, appAuthProvider, _) {
+                  return TabBarView(
+                      controller: tabController,
+                      children: [UpdatePage(), Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 40,
+                          horizontal: 20
+                        ),
+                        child: UserInfoCard(user: appAuthProvider.currentAppUser!, controller: null, pageController: new PageController()),
+                      )]);
+                }
+              ))
         ],
       ),
     );

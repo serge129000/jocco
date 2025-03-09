@@ -159,3 +159,8 @@ Map<DateTime, List<Chat>> sortMessagesByDate(List<Chat> messages) {
 
   return resultat;
 }
+
+bool isUrl(String input) {
+  final urlRegex = RegExp(r'^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$', caseSensitive: false);
+  return urlRegex.hasMatch(input);
+}

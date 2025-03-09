@@ -53,7 +53,7 @@ class UserProvider with ChangeNotifier {
   (int, int) get currentCardIndex => _currentCardIndex;
   bool _listFinish = false;
   bool get listFinish => _listFinish;
-
+  
   void setDistance({required double distanceValue}) {
     _filterData['distance'] = distanceValue;
     notifyListeners();

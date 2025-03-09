@@ -2,15 +2,21 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:jocco/core/utils/app_utils.dart';
 import 'package:jocco/core/utils/color.dart';
 import 'package:jocco/core/utils/path.dart';
 import 'package:jocco/core/views/widgets/custom_image_shower.dart';
 
 class ImagePickerWidget extends StatefulWidget {
-  final Function(String?) onImageChanged;
+  // le path ou l'url de l'iamge plus si c'est oui ou non le profil de base true si c'est le cas
+  final Function(String?, bool) onImageChanged;
+  final Function(String?, bool)? onOnlineImageDeleted;
   final String? firstOnlineImage;
   const ImagePickerWidget(
-      {super.key, required this.onImageChanged, this.firstOnlineImage});
+      {super.key,
+      required this.onImageChanged,
+      this.firstOnlineImage,
+      this.onOnlineImageDeleted});
 
   @override
   State<ImagePickerWidget> createState() => _ImagePickerWidgetState();
@@ -18,10 +24,15 @@ class ImagePickerWidget extends StatefulWidget {
 
 class _ImagePickerWidgetState extends State<ImagePickerWidget> {
   String? imagePath;
-  String? firstOnlineImageGot;
+  String? firstImageGot;
   @override
   void initState() {
-    firstOnlineImageGot = widget.firstOnlineImage;
+    firstImageGot = widget.firstOnlineImage;
+    if (firstImageGot != null) {
+      Future.delayed(Duration.zero, () {
+        widget.onImageChanged(firstImageGot, true);
+      });
+    }
     super.initState();
   }
 
@@ -37,7 +48,14 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                 .then((imgPath) {
               imagePath = imgPath?.path;
               setState(() {});
-              widget.onImageChanged(imgPath?.path);
+              if (widget.onOnlineImageDeleted != null &&
+                  firstImageGot != null &&
+                  imgPath != null) {
+                firstImageGot = null;
+                setState(() {});
+                widget.onOnlineImageDeleted!(firstImageGot, true);
+              }
+              widget.onImageChanged(imgPath?.path, false);
             });
           },
           child: Container(
@@ -46,33 +64,62 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
             width: 109.62,
             decoration: BoxDecoration(
                 image: imagePath == null
-                    ? null
+                    ? firstImageGot != null && !isUrl(firstImageGot!)
+                        ? DecorationImage(
+                            image: FileImage(File(firstImageGot!)),
+                            fit: BoxFit.cover)
+                        : null
                     : DecorationImage(
                         image: FileImage(File(imagePath!)), fit: BoxFit.cover),
                 color: PrimaryColors.first,
                 border: Border.all(width: 1.5, color: pickerBorder),
                 borderRadius: BorderRadius.circular(10)),
             child: imagePath == null
-                ? firstOnlineImageGot != null
-                    ? CustomImageShower(url: firstOnlineImageGot): Center(
-                    child: Image.asset(
-                        height: 30.88,
-                        width: 30.88,
-                        kIconAssetPath(imageName: 'img_placeholder.png')),
-                  )
-                    : null,
+                ? firstImageGot != null
+                    ? isUrl(firstImageGot!)
+                        ? CustomImageShower(
+                            url: firstImageGot,
+                            radius: 8,
+                          )
+                        : SizedBox()
+                    : Center(
+                        child: Image.asset(
+                            height: 30.88,
+                            width: 30.88,
+                            kIconAssetPath(imageName: 'img_placeholder.png')),
+                      )
+                : null,
           ),
         ),
         Positioned(
-            bottom: imagePath == null ? 8 : null,
-            right: imagePath == null ? 8 : -5,
-            top: imagePath == null ? null : 0,
+            bottom: imagePath == null
+                ? firstImageGot == null
+                    ? 8
+                    : null
+                : null,
+            right: imagePath == null
+                ? firstImageGot == null
+                    ? 8
+                    : -5
+                : -5,
+            top: imagePath == null
+                ? firstImageGot == null
+                    ? null
+                    : null
+                : 0,
             child: GestureDetector(
               onTap: () {
                 if (imagePath != null) {
                   imagePath = null;
                   setState(() {});
-                  widget.onImageChanged(imagePath);
+                  widget.onImageChanged(imagePath, false);
+                }
+                if (imagePath == null) {
+                  if (firstImageGot != null) {
+                    firstImageGot = null;
+                    widget.onImageChanged(firstImageGot, true);
+                    setState(() {});
+                  }
                 }
               },
               child: Container(
@@ -82,7 +129,11 @@ class _ImagePickerWidgetState extends State<ImagePickerWidget> {
                     shape: BoxShape.circle, color: PrimaryColors.white),
                 child: Center(
                   child: Icon(
-                    imagePath == null ? Icons.add : Icons.close,
+                    imagePath == null
+                        ? firstImageGot == null
+                            ? Icons.add
+                            : Icons.close
+                        : Icons.close,
                     color: PrimaryColors.first,
                     size: 10,
                   ),

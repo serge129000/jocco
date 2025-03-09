@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 class UserInfoCard extends StatefulWidget {
   final AppUser user;
-  final AppinioSwiperController controller;
+  final AppinioSwiperController? controller;
   final PageController pageController;
   const UserInfoCard(
       {super.key,
@@ -279,7 +279,7 @@ class _UserInfoCardState extends State<UserInfoCard> {
                   left: 50,
                   child: GestureDetector(
                     onTap: () {
-                      widget.controller.swipeLeft().then((v) {
+                      widget.controller?.swipeLeft().then((v) {
                         Future.delayed(Duration(milliseconds: 300), () {
                           
                         });
@@ -304,8 +304,7 @@ class _UserInfoCardState extends State<UserInfoCard> {
                   right: 50,
                   child: GestureDetector(
                     onTap: () async {
-                      print(widget.controller.cardIndex);
-                      widget.controller.swipeRight().then((v) {
+                      widget.controller?.swipeRight().then((v) {
                         Future.delayed(Duration(milliseconds: 210), () {
                           
                         });

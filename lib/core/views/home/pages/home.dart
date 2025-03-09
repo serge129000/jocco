@@ -89,7 +89,6 @@ class _HomeState extends State<Home> {
             ),
             Expanded(child: Consumer2<UserProvider, AppAuthProvider>(
                 builder: (context, userProvider, appAuthProvider, _) {
-              print(userProvider.listFinish);
               if (userProvider.potentialMatchingUsers != null) {
                 if (userProvider.finalUsers.isNotEmpty) {
                   return AppinioSwiper(
@@ -110,14 +109,6 @@ class _HomeState extends State<Home> {
                               controller: userProvider.controller,
                               pageController: new PageController(),
                             );
-                      /* if (index == userProvider.finalUsers.length) {
-                        return NoPotentialMatchComponents();
-                      }
-                      return UserInfoCard(
-                        user: userProvider.finalUsers[index],
-                        controller: userProvider.controller,
-                        pageController: new PageController(),
-                      ); */
                     },
                     swipeOptions: SwipeOptions.only(),
                     cardCount: userProvider.finalUsers.length,

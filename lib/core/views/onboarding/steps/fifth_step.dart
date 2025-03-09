@@ -3,6 +3,7 @@ import 'package:jocco/core/utils/all_text.dart';
 import 'package:jocco/core/utils/app_utils.dart';
 import 'package:jocco/core/utils/path.dart';
 import 'package:jocco/core/utils/screen.dart';
+import 'package:jocco/core/views/providers/auth_provider.dart';
 import 'package:jocco/core/views/providers/step_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -13,7 +14,8 @@ import '../../widgets/back_widget.dart';
 import '../../widgets/button.dart';
 
 class FifthStep extends StatefulWidget {
-  const FifthStep({super.key});
+  final bool hasNotSizedBox;
+  const FifthStep({super.key, this.hasNotSizedBox = false});
 
   @override
   State<FifthStep> createState() => _FifthStepState();
@@ -24,6 +26,16 @@ class _FifthStepState extends State<FifthStep> {
   String? anotherProject;
   String? selectedProjectIcon;
   @override
+  void initState() {
+    if (Provider.of<StepProvider>(context, listen: false).projectCat == null) {
+      Future.delayed(Duration.zero, () {
+        Provider.of<StepProvider>(context, listen: false).addProjectCat(category: Provider.of<AppAuthProvider>(context, listen: false).currentAppUser!.projet!.description);
+      });
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Consumer<StepProvider>(builder: (context, stepProvider, widgets) {
       return Padding(
@@ -32,9 +44,10 @@ class _FifthStepState extends State<FifthStep> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(
-                height: 110,
-              ),
+              if (!widget.hasNotSizedBox)
+                const SizedBox(
+                  height: 110,
+                ),
               Align(
                 alignment: Alignment.centerLeft,
                 child: BackWidget(
@@ -219,41 +232,42 @@ class _FifthStepState extends State<FifthStep> {
                     focusNode: anotherPFocus,
                   ),
                 ), */
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: Btn(
-                  function: () {
-                    if (stepProvider.projectCat == null) {
-                      showSnackbar(
-                          context: context,
-                          isError: true,
-                          content: Text(
-                            'Choisissez une categorie',
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelSmall!
-                                .copyWith(color: PrimaryColors.white),
-                          ));
-                    } else {
-                      showDialog(
-                          context: context,
-                          builder: (context) => confirmCategoryWidget(
-                              context: context,
-                              projectIcon: selectedProjectIcon,
-                              anotherProject: anotherProject,
-                              projectTitle: stepProvider.projectCat ?? ''));
-                    }
-                  },
-                  isTransparent: false,
-                  anotherColor: PrimaryColors.white,
-                  child: Text(
-                    AllText.next,
-                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                        color: PrimaryColors.first,
-                        fontWeight: FontWeight.w600),
+              if (!widget.hasNotSizedBox)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Btn(
+                    function: () {
+                      if (stepProvider.projectCat == null) {
+                        showSnackbar(
+                            context: context,
+                            isError: true,
+                            content: Text(
+                              'Choisissez une categorie',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelSmall!
+                                  .copyWith(color: PrimaryColors.white),
+                            ));
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (context) => confirmCategoryWidget(
+                                context: context,
+                                projectIcon: selectedProjectIcon,
+                                anotherProject: anotherProject,
+                                projectTitle: stepProvider.projectCat ?? ''));
+                      }
+                    },
+                    isTransparent: false,
+                    anotherColor: PrimaryColors.white,
+                    child: Text(
+                      !widget.hasNotSizedBox ? AllText.next : 'Continuer',
+                      style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                          color: PrimaryColors.first,
+                          fontWeight: FontWeight.w600),
+                    ),
                   ),
-                ),
-              )
+                )
             ],
           ),
         ),
@@ -283,19 +297,17 @@ Widget confirmCategoryWidget(
               height: 162,
               width: 162,
             ),
-             Padding(
-               padding: const EdgeInsets.only(
-                bottom: 10
-               ),
-               child: Text(
-                           projectTitle,
-                           textAlign: TextAlign.center,
-                           style: Theme.of(context)
-                  .textTheme
-                  .bodySmall!
-                  .copyWith(color: PrimaryColors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                         ),
-             ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Text(
+              projectTitle,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                  color: PrimaryColors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
           Text(
             'Confirmez-vous la sélection de la catgorie $projectTitle ?',
             textAlign: TextAlign.center,
@@ -313,7 +325,7 @@ Widget confirmCategoryWidget(
             ),
           ),
           Text(
-            'Ce choix déterminera la catgorie des profils avec lesquels vous pourrez matcher, il ne sera possible de la changer qu’aprés 10 jours d’utilisation',
+            'Ce choix déterminera la categorie des profils avec lesquels vous pourrez matcher, il ne sera possible de la changer qu’aprés 10 jours d’utilisation',
             textAlign: TextAlign.center,
             style: Theme.of(context)
                 .textTheme
