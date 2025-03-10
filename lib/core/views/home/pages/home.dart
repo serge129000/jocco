@@ -52,7 +52,6 @@ class _HomeState extends State<Home> {
                               userProvider.setUnfinsihList();
                               userProvider.controller.unswipe();
                             });
-                            //userProvider.getBackToUser();
                           },
                           child: Image.asset(
                             kIconAssetPath(

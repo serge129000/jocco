@@ -2,9 +2,9 @@ import 'package:jocco/core/utils/step_utils.dart';
 
 class Projet {
     final String id;
-    final String createdBy;
+    final String? createdBy;
     final DateTime?createdDate;
-    final String lastModifiedBy;
+    final String? lastModifiedBy;
     final DateTime?lastModifiedDate;
     final String titre;
     final String description;
@@ -61,9 +61,9 @@ class Projet {
     factory Projet.fromJson(Map<String, dynamic> json) => Projet(
         id: json["id"],
         createdBy: json["createdBy"],
-        createdDate: DateTime.tryParse(json["createdDate"]),
+        createdDate: DateTime.tryParse(json["createdDate"]??''),
         lastModifiedBy: json["lastModifiedBy"],
-        lastModifiedDate: DateTime.tryParse(json["lastModifiedDate"]),
+        lastModifiedDate: DateTime.tryParse(json["lastModifiedDate"]??''),
         titre: json["titre"],
         description: json["description"],
         lifeProject: json["lifeProject"],

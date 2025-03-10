@@ -21,7 +21,8 @@ import '../../widgets/back_widget.dart';
 import '../../widgets/button.dart';
 
 class SixthStep extends StatefulWidget {
-  const SixthStep({super.key});
+  final bool hasNotSizedBox;
+  const SixthStep({super.key, this.hasNotSizedBox = false});
 
   @override
   State<SixthStep> createState() => _SixthStepState();
@@ -53,9 +54,10 @@ class _SixthStepState extends State<SixthStep> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(
-                  height: 110,
-                ),
+                if (!widget.hasNotSizedBox)
+                  const SizedBox(
+                    height: 110,
+                  ),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: BackWidget(
@@ -126,6 +128,7 @@ class _SixthStepState extends State<SixthStep> {
                   },
                   onChanged: (p0) {
                     projectTitle = p0;
+                    stepProvider.setProjectTitle(title: p0);
                   },
                   isActivate: stepProvider.selectedIfProject?.value ?? true,
                   hasGreenColor: true,
@@ -144,6 +147,7 @@ class _SixthStepState extends State<SixthStep> {
                 CustomTextfield(
                   onChanged: (p0) {
                     projectSpec = p0;
+                    stepProvider.setProjectSpec(spec: p0);
                   },
                   validator: (p0) {
                     if (p0!.isEmpty) {
@@ -208,66 +212,68 @@ class _SixthStepState extends State<SixthStep> {
                         ))
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: !registerStarting
-                      ? Btn(
-                          function: () {
-                            if (!(stepProvider.selectedIfProject?.value ??
-                                true)) {
-                              showDialog(
-                                      context: context,
-                                      builder: (context) =>
-                                          confirmFinalProject(context: context))
-                                  .then((v) {
-                                if (isConfirmed) {
-                                  registerUser(stepProvider, appAuthProvider);
-                                }
-                              });
-                            } else {
-                              formkey.currentState!.validate()
-                                  ? showDialog(
-                                      context: context,
-                                      builder: (context) => confirmFinalProject(
-                                          context: context)).then((v) {
-                                      if (isConfirmed) {
-                                        registerUser(
-                                            stepProvider, appAuthProvider);
-                                      }
-                                    })
-                                  : null;
-                            }
-                          },
-                          isTransparent: false,
-                          anotherColor: PrimaryColors.white,
-                          child: Text(
-                            AllText.next,
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelMedium!
-                                .copyWith(
-                                    color: PrimaryColors.first,
-                                    fontWeight: FontWeight.w600),
-                          ),
-                        )
-                      : StreamBuilder<Map<String, dynamic>>(
-                          stream: RegisterStream.registerStreamController.stream
-                              .asBroadcastStream(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              return Container(
-                                width: 1 / 0,
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 5),
-                                child: AsynchronousLoader(
-                                    stepMessage: snapshot.data?['message'],
-                                    debut: snapshot.data?['debut'] ?? 0.0,
-                                    finish: snapshot.data?['fin'] ?? 0.0),
-                              );
-                            }
-                            return SizedBox();
-                          }),
-                )
+                if (!widget.hasNotSizedBox)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: !registerStarting
+                        ? Btn(
+                            function: () {
+                              if (!(stepProvider.selectedIfProject?.value ??
+                                  true)) {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => confirmFinalProject(
+                                        context: context)).then((v) {
+                                  if (isConfirmed) {
+                                    registerUser(stepProvider, appAuthProvider);
+                                  }
+                                });
+                              } else {
+                                formkey.currentState!.validate()
+                                    ? showDialog(
+                                        context: context,
+                                        builder: (context) =>
+                                            confirmFinalProject(
+                                                context: context)).then((v) {
+                                        if (isConfirmed) {
+                                          registerUser(
+                                              stepProvider, appAuthProvider);
+                                        }
+                                      })
+                                    : null;
+                              }
+                            },
+                            isTransparent: false,
+                            anotherColor: PrimaryColors.white,
+                            child: Text(
+                              AllText.next,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium!
+                                  .copyWith(
+                                      color: PrimaryColors.first,
+                                      fontWeight: FontWeight.w600),
+                            ),
+                          )
+                        : StreamBuilder<Map<String, dynamic>>(
+                            stream: RegisterStream
+                                .registerStreamController.stream
+                                .asBroadcastStream(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return Container(
+                                  width: 1 / 0,
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  child: AsynchronousLoader(
+                                      stepMessage: snapshot.data?['message'],
+                                      debut: snapshot.data?['debut'] ?? 0.0,
+                                      finish: snapshot.data?['fin'] ?? 0.0),
+                                );
+                              }
+                              return SizedBox();
+                            }),
+                  )
               ],
             ),
           ),
@@ -384,16 +390,17 @@ class _SixthStepState extends State<SixthStep> {
             "dateNais":
                 DateFormat("yyyy-MM-dd").format(stepProvider.birthDate!),
             "departement": stepProvider.department,
-            "genre": stepProvider.selectedGender?.name[0].toUpperCase(),
+            "genre": stepProvider.selectedGender?.symbol.toUpperCase(),
             "parent": stepProvider.hasChildren,
-            "searchGenre": stepProvider.choosenGender?.name[0].toUpperCase()
+            "searchGenre": stepProvider.choosenGender?.symbol.toUpperCase()
           },
           otherInfosData: {
             "centreInterets": stepProvider.selectedInterest,
             "personnalites": stepProvider.selectedTraits
           },
-          insertPhotosData: List<File>.from(
-              stepProvider.selectedImages.values.where((v)=>v != null).map((e) => File(e!))),
+          insertPhotosData: List<File>.from(stepProvider.selectedImages.values
+              .where((v) => v != null)
+              .map((e) => File(e!))),
           projectInfosData: {
             "categories": [stepProvider.projectCat],
             "titre": projectTitle,

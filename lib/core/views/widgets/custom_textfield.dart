@@ -13,6 +13,7 @@ class CustomTextfield extends StatelessWidget {
   final TextInputType? keyboardType;
   final bool hasGreenColor;
   final bool isActivate;
+  final TextEditingController? controller;
   const CustomTextfield(
       {super.key,
       this.onChanged,
@@ -20,10 +21,12 @@ class CustomTextfield extends StatelessWidget {
       this.onFieldSubmitted,
       this.onSaved,
       this.validator,
+      this.controller,
       this.keyboardType,
       this.focusNode,
       this.hintText,
-      this.hasGreenColor = false, this.isActivate = true});
+      this.hasGreenColor = false,
+      this.isActivate = true});
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +56,7 @@ class CustomTextfield extends StatelessWidget {
               ),
             ]),
         child: TextFormField(
+          controller: controller,
           enabled: isActivate,
           keyboardType: keyboardType,
           onChanged: onChanged,
@@ -73,9 +77,9 @@ class CustomTextfield extends StatelessWidget {
                   .textTheme
                   .bodySmall!
                   .copyWith(color: inDeepGreenGrey),
-              errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(
-                color: Colors.red
-              )),
+              errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: Colors.red)),
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
               contentPadding: const EdgeInsets.symmetric(horizontal: 5)),

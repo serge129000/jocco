@@ -81,4 +81,5 @@ class AllText {
   static const update = 'Modifier';
   static const preview = 'Apercu';
   static const updateProfil = 'Modifier le profil';
+  static const aboutMe = 'À propos de moi';
 }

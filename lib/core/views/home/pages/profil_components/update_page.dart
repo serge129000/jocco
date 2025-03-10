@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:jocco/core/utils/screen.dart';
 import 'package:jocco/core/views/home/pages/profil_components/all_profil_update.dart';
 import 'package:jocco/core/views/onboarding/steps/fifth_step.dart';
+import 'package:jocco/core/views/onboarding/steps/first_step.dart';
 import 'package:jocco/core/views/onboarding/steps/fourth_step.dart';
+import 'package:jocco/core/views/onboarding/steps/sixth_step.dart';
 import 'package:jocco/core/views/onboarding/steps/third_step.dart';
 import 'package:jocco/core/views/providers/auth_provider.dart';
 import 'package:jocco/core/views/providers/step_provider.dart';
@@ -58,23 +60,45 @@ class UpdatePage extends StatelessWidget {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: ListTile(
-              leading: Text(
-                AllText.catProject,
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                    color: PrimaryColors.white, fontWeight: FontWeight.w500),
-              ),
-              trailing: Icon(
-                Icons.arrow_forward_ios,
-                size: 15,
-                color: PrimaryColors.white,
-              ),
-              onTap: () {
-                kPushToPage(context, page: AllProfilUpdate(body: FifthStep(hasNotSizedBox: true,)));
-              },
+          SizedBox(
+            height: 10,
+          ),
+          ListTile(
+            leading: Text(
+              AllText.aboutMe,
+              style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                  color: PrimaryColors.white, fontWeight: FontWeight.w500),
             ),
+            trailing: Icon(
+              Icons.arrow_forward_ios,
+              size: 15,
+              color: PrimaryColors.white,
+            ),
+            onTap: () {
+              kPushToPage(context, page: AllProfilUpdate(body: FirstStep(hasNotSizedBox: true,)));
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Divider(
+              color: dividerColor,
+              thickness: 3,
+            ),
+          ),
+          ListTile(
+            leading: Text(
+              AllText.catProject,
+              style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                  color: PrimaryColors.white, fontWeight: FontWeight.w500),
+            ),
+            trailing: Icon(
+              Icons.arrow_forward_ios,
+              size: 15,
+              color: PrimaryColors.white,
+            ),
+            onTap: () {
+              kPushToPage(context, page: AllProfilUpdate(body: FifthStep(hasNotSizedBox: true,)));
+            },
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -126,6 +150,21 @@ class UpdatePage extends StatelessWidget {
               color: dividerColor,
               thickness: 3,
             ),
+          ),
+          ListTile(
+            leading: Text(
+              AllText.describeProject,
+              style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                  color: PrimaryColors.white, fontWeight: FontWeight.w500),
+            ),
+            trailing: Icon(
+              Icons.arrow_forward_ios,
+              size: 15,
+              color: PrimaryColors.white,
+            ),
+            onTap: () {
+              kPushToPage(context, page: AllProfilUpdate(body: SixthStep(hasNotSizedBox: true,)));
+            },
           ),
         ],
       );

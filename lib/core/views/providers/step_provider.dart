@@ -33,6 +33,10 @@ class StepProvider with ChangeNotifier {
   DateTime? get birthDate => _birthDate;
   List<String> _removeOnlinePic = [];
   List<String> get removeOnlinePic => _removeOnlinePic;
+  String? _projectTitle;
+  String? _projectSpec;
+  String? get projectTitle => _projectTitle;
+  String? get projectSpec => _projectSpec;
 
   void nextStep() {
     _currentStep = StepJ.stepFromValue(step: _currentStep.value + 1);
@@ -138,6 +142,16 @@ class StepProvider with ChangeNotifier {
     _selectedImages = {};
     _selectedIfProject = null;
     _selectedTraits = [];
+    notifyListeners();
+  }
+
+  void setProjectTitle({required String? title}) {
+    _projectTitle = title;
+    notifyListeners();
+  }
+
+  void setProjectSpec({required String? spec}) {
+    _projectSpec = spec;
     notifyListeners();
   }
 }

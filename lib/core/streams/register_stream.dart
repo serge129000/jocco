@@ -23,6 +23,8 @@ class RegisterStream {
       {required Map<String, dynamic> basicData,
       required Map<String, dynamic> otherInfosData,
       required List<File> insertPhotosData,
+      List<String>? otherImages,
+      String? projectId,
       required Map<String, dynamic> projectInfosData,
       required Function(bool, String?, AppUser?) isFinished,
       required Function(double) hasError,
@@ -52,7 +54,7 @@ class RegisterStream {
       });
       previousStep = step;
       final picDataResponse =
-          await userServicesImpl.insertUserPhotos(images: insertPhotosData);
+          await userServicesImpl.insertUserPhotos(images: insertPhotosData, otherImages: otherImages);
       step = picDataResponse['value'];
       registerSink.add({
         'debut': previousStep,
@@ -60,7 +62,7 @@ class RegisterStream {
         'message': 'Chargement du profil'
       });
       previousStep = step;
-      step =
+      step = projectId != null? await userServicesImpl.updateUserProjectInfos(data: projectInfosData, id: projectId):
           await userServicesImpl.insertUserProjectInfos(data: projectInfosData);
       registerSink.add(
           {'debut': previousStep, 'fin': step, 'message': 'Finalisation...'});

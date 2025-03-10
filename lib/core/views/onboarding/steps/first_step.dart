@@ -13,10 +13,12 @@ import '../../../models/country.dart';
 import '../../../utils/color.dart';
 import '../../../utils/country_list.dart';
 import '../../../utils/screen.dart';
+import '../../widgets/back_widget.dart';
 import '../../widgets/button.dart';
 
 class FirstStep extends StatefulWidget {
-  const FirstStep({super.key});
+  final bool hasNotSizedBox;
+  const FirstStep({super.key, this.hasNotSizedBox = false});
 
   @override
   State<FirstStep> createState() => _FirstStepState();
@@ -25,45 +27,45 @@ class FirstStep extends StatefulWidget {
 class _FirstStepState extends State<FirstStep> {
   String selectedDate = '';
   final formKey = GlobalKey<FormState>();
+  TextEditingController nameController = TextEditingController();
+  @override
+  void initState() {
+      nameController.text =
+          Provider.of<StepProvider>(context, listen: false).name ?? Provider.of<AppAuthProvider>(context, listen: false)
+              .currentAppUser
+              ?.prenom ??
+          '';
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Consumer<StepProvider>(builder: (context, stepProvider, widgets) {
+    return Consumer2<StepProvider, AppAuthProvider>(builder: (context, stepProvider, appAuthProvider, widgets) {
       return Form(
         key: formKey,
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 15),
-          //crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(
-              height: 110,
-            ),
-            /* Align(
-              alignment: Alignment.centerLeft,
-              child: BackWidget(
-                onCondtion: () {
-                  if (Provider.of<StepProvider>(context, listen: false)
-                          .currentStep !=
-                      StepJ.first) {
-                    Provider.of<StepProvider>(context, listen: false)
-                        .backStep();
-                  } else {
-                    kPopPage(context);
-                  }
-                },
+            if (!widget.hasNotSizedBox)
+              const SizedBox(
+                height: 110,
               ),
-            ), */
+            if (widget.hasNotSizedBox)
+              Align(
+                alignment: Alignment.centerLeft,
+                child: BackWidget(
+                  onCondtion: () {
+                    kPopPage(context);
+                  },
+                ),
+              ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
-              child: GestureDetector(
-                onTap: () {
-                  context.read<AppAuthProvider>().logoutUser();
-                },
-                child: Text(AllText.iam,
-                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        height: 0,
-                        fontWeight: FontWeight.w600,
-                        color: PrimaryColors.white)),
-              ),
+              child: Text(AllText.iam,
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      height: 0,
+                      fontWeight: FontWeight.w600,
+                      color: PrimaryColors.white)),
             ),
             Padding(
               padding: const EdgeInsets.only(bottom: 25),
@@ -77,8 +79,7 @@ class _FirstStepState extends State<FirstStep> {
                                   activeColor: PrimaryColors.white,
                                   fillColor: const WidgetStatePropertyAll(
                                       PrimaryColors.white),
-                                  value: stepProvider.selectedGender ??
-                                      Gender.male,
+                                  value: stepProvider.selectedGender ?? Gender.fromSymbol(appAuthProvider.currentAppUser!.genre ?? Gender.male.symbol),
                                   groupValue: e,
                                   onChanged: (v) {
                                     stepProvider.setGender(gender: e);
@@ -105,6 +106,7 @@ class _FirstStepState extends State<FirstStep> {
             Padding(
               padding: EdgeInsets.symmetric(vertical: 20),
               child: CustomTextfield(
+                controller: nameController,
                 onChanged: (p0) {
                   stepProvider.setName(name: p0);
                 },
@@ -134,9 +136,8 @@ class _FirstStepState extends State<FirstStep> {
                         .map((e) => Country.fromJson(e))
                         .toList()
                         .where((e) => e.alpha2Code!.toLowerCase().contains(
-                            /* appAuthProvider.currentLocale?.toLowerCase() ??
-                                 */
-                            'fr'))
+                            appAuthProvider.currentLocale?.toLowerCase() ??
+                                'fr'))
                         .single
                         .name,
                     onChanged: (v) {
@@ -162,7 +163,7 @@ class _FirstStepState extends State<FirstStep> {
                       });
                       stepProvider.setBirthDate(birth: v);
                     },
-                    dateFormat: selectedDate),
+                    dateFormat: selectedDate.isEmpty? stepProvider.birthDate != null? DateFormat('dd/MM/yyyy').format(stepProvider.birthDate!): appAuthProvider.currentAppUser!.dateNais != null? DateFormat('dd/MM/yyyy').format(appAuthProvider.currentAppUser!.dateNais!): selectedDate: selectedDate),
               ),
             ),
             Text(
@@ -236,38 +237,40 @@ class _FirstStepState extends State<FirstStep> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 30),
-              child: Btn(
-                function: () {
-                  if (formKey.currentState!.validate()) {
-                    print(stepProvider.department);
-                    if (stepProvider.department == null ||
-                        stepProvider.birthDate == null) {
-                      showSnackbar(
-                          context: context,
-                          isError: true,
-                          content: Text(
-                            'Veuillez renseigner tous les champs.',
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelSmall!
-                                .copyWith(color: PrimaryColors.white),
-                          ));
-                    } else {
-                      context.read<StepProvider>().nextStep();
+            if (!widget.hasNotSizedBox)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 30),
+                child: Btn(
+                  function: () {
+                    if (formKey.currentState!.validate()) {
+                      print(stepProvider.department);
+                      if (stepProvider.department == null ||
+                          stepProvider.birthDate == null) {
+                        showSnackbar(
+                            context: context,
+                            isError: true,
+                            content: Text(
+                              'Veuillez renseigner tous les champs.',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelSmall!
+                                  .copyWith(color: PrimaryColors.white),
+                            ));
+                      } else {
+                        context.read<StepProvider>().nextStep();
+                      }
                     }
-                  }
-                },
-                isTransparent: false,
-                anotherColor: PrimaryColors.white,
-                child: Text(
-                  AllText.next,
-                  style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                      color: PrimaryColors.first, fontWeight: FontWeight.w600),
+                  },
+                  isTransparent: false,
+                  anotherColor: PrimaryColors.white,
+                  child: Text(
+                    AllText.next,
+                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                        color: PrimaryColors.first,
+                        fontWeight: FontWeight.w600),
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       );

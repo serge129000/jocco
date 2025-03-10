@@ -17,7 +17,7 @@ class UserServicesImpl implements UserServices {
   @override
   Future<double> insertBasicInfos({required Map<String, dynamic> data}) async {
     try {
-      await Future.delayed(Duration(milliseconds: 1000));
+      await Future.delayed(Duration(milliseconds: 500));
       final response = await http.patch(
           kProdUri(endPoint: 'api/v1/users/basic-info'),
           body: jsonEncode(data),
@@ -37,7 +37,7 @@ class UserServicesImpl implements UserServices {
   Future<double> insertUserOtherInfos(
       {required Map<String, dynamic> data}) async {
     try {
-      await Future.delayed(Duration(milliseconds: 900));
+      await Future.delayed(Duration(milliseconds: 500));
       final response = await http.patch(
           kProdUri(endPoint: 'api/v1/users/other-infos'),
           body: jsonEncode(data),
@@ -55,16 +55,17 @@ class UserServicesImpl implements UserServices {
 
   @override
   Future<Map<String, dynamic>> insertUserPhotos(
-      {required List<File> images}) async {
+      {required List<File> images, List<String>? otherImages}) async {
     String uid = await FirebaseAuth.instance.currentUser!.uid;
     String? jwt = await FirebaseAuth.instance.currentUser!.getIdToken();
     try {
-      await Future.delayed(Duration(milliseconds: 800));
+      await Future.delayed(Duration(milliseconds: 500));
       Map<String, dynamic> data = {};
       List<String> imagesUploaded = [];
       for (int i = 0; i < images.length; i++) {
         imagesUploaded.add(await addImage(image: images[i], userId: uid));
       }
+      if (otherImages != null) imagesUploaded.addAll(otherImages);
       data['images'] = imagesUploaded;
       final response = await http.patch(
           kProdUri(endPoint: 'api/v1/users/images'),
@@ -359,6 +360,26 @@ class UserServicesImpl implements UserServices {
         throw Exception(response.body);
       }
     } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<double> updateUserProjectInfos(
+      {required Map<String, dynamic> data, required String id}) async {
+    try {
+      data['id'] = id;
+      final response = await http.put(
+          kProdUri(endPoint: 'api/v1/projets/update'),
+          body: jsonEncode(data),
+          headers: authHeaders(
+              token: await FirebaseAuth.instance.currentUser!.getIdToken()));
+      if (!checkIfSuccess(statusCode: response.statusCode)) {
+        throw Exception(response.body);
+      }
+      return 0.9;
+    } catch (e) {
+      print(e);
       rethrow;
     }
   }

@@ -9,6 +9,7 @@ abstract class UserServices {
   Future<Map<String, dynamic>> insertUserPhotos({required List<File> images});
   Future<double> insertUserOtherInfos({required Map<String, dynamic> data});
   Future<double> insertUserProjectInfos({required Map<String, dynamic> data});
+  Future<double> updateUserProjectInfos({required Map<String, dynamic> data, required String id});
   Future<String> addImage({required File image, required String userId});
   void listenUserMessages({required Function(Map<String, List>) onNewChat, required Function(Map<String, List<AppUser>>) rommUsers});
   Future<void> sendMessages(
