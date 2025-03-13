@@ -102,7 +102,7 @@ class _FilterState extends State<Filter> {
                                         : (userProvider
                                                     .filterData['projectTime']
                                                 as ProjectTimes)
-                                            .name,
+                                            .value,
                                     "filterDistance":
                                         userProvider.filterData['st'] ??
                                             currentFilter?.filterDistance

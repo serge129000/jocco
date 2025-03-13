@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:jocco/core/utils/app_utils.dart';
 import 'package:jocco/core/utils/color.dart';
 import 'package:jocco/core/utils/date_t.dart';
 import 'package:jocco/core/utils/screen.dart';
@@ -16,7 +17,7 @@ class MessageList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer2<UserProvider, AppAuthProvider>(
         builder: (context, userProvider, appAuthProvider, _) {
-      final entries = userProvider.chats.entries.toList();
+      final entries = sortUserChatsByLastMessage(userProvider.chats.entries.toList()).where((e)=> e.value.isNotEmpty).toList();
       //print(entries);
       return ListView.builder(
         itemCount: entries.length,
@@ -26,29 +27,29 @@ class MessageList extends StatelessWidget {
               .where((e) => e.key == currentRoomId)
               .single;
           final destinataire = destinataireList.value
-              .where((e) => e.id != appAuthProvider.currentAppUser?.id).single;
-          final lastChat = entries[index].value.last;
+              .where((e) => e.id != appAuthProvider.currentAppUser?.id).firstOrNull;
+          final lastChat = entries[index].value.lastOrNull;
           return Builder(builder: (context) {
             return ListTile(
               onTap: () {
                 kPushToPage(context, page: MessageDetails(roomId: currentRoomId,));
               },
-              leading: MiniUserCircleAvatar(url: destinataire.profileImage ?? '',),
+              leading: MiniUserCircleAvatar(url: destinataire?.profileImage ?? '',),
               title: Text(
-                destinataire.prenom ?? '',
+                destinataire?.prenom ?? '',
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                     fontWeight: FontWeight.bold,
                     fontSize: 22,
                     color: PrimaryColors.white),
               ),
               subtitle: Text(
-               lastChat.message,
+               lastChat?.message ?? '',
                 style: Theme.of(context).textTheme.labelSmall!.copyWith(
                     fontWeight: FontWeight.w500, color: PrimaryColors.white),
               ),
               trailing: Builder(
                 builder: (context) {
-                  final bld = lastChat.time.toDate().toLocal();
+                  final bld = lastChat?.time.toDate().toLocal() ?? DateTime.now();
                   final now = DateTime.now();
                   return Text(
                     bld.day == now.day && bld.year == now.year? DateFormat('HH:mm').format(bld): DateT.getDureeRelative(bld),

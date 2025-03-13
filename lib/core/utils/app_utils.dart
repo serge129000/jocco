@@ -164,3 +164,25 @@ bool isUrl(String input) {
   final urlRegex = RegExp(r'^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$', caseSensitive: false);
   return urlRegex.hasMatch(input);
 }
+
+List<MapEntry<String, List<Chat>>> sortUserChatsByLastMessage(
+    List<MapEntry<String, List<Chat>>> userChats) {
+  userChats.sort((a, b) {
+    final List<Chat> messagesA = a.value;
+    final List<Chat> messagesB = b.value;
+
+    if (messagesA.isNotEmpty && messagesB.isNotEmpty) {
+      final int timestampA = messagesA.last.time.millisecondsSinceEpoch;
+      final int timestampB = messagesB.last.time.millisecondsSinceEpoch;
+      return timestampB.compareTo(timestampA);
+    } else if (messagesA.isNotEmpty && messagesB.isEmpty) {
+      return -1;
+    } else if (messagesA.isEmpty && messagesB.isNotEmpty) {
+      return 1;
+    } else {
+      return 0;
+    }
+  });
+
+  return userChats;
+}

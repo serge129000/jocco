@@ -4,6 +4,7 @@ import 'package:jocco/core/utils/app_utils.dart';
 import 'package:jocco/core/utils/color.dart';
 import 'package:jocco/core/utils/list_utils.dart';
 import 'package:jocco/core/utils/screen.dart';
+import 'package:jocco/core/views/home/pages/profil_components/settings/setting_page.dart';
 import 'package:jocco/core/views/home/pages/profil_components/update_profil.dart';
 import 'package:jocco/core/views/providers/auth_provider.dart';
 import 'package:jocco/core/views/providers/user_provider.dart';
@@ -35,10 +36,15 @@ class Profil extends StatelessWidget {
                     kIconAssetPath(imageName: 'jocco.png'),
                     height: 26.35,
                   ),
-                  Image.asset(
-                    kIconAssetPath(imageName: 'uil_setting.png'),
-                    height: 32,
-                    width: 32,
+                  GestureDetector(
+                    onTap: () {
+                      kPushToPage(context, page: SettingPage());
+                    },
+                    child: Image.asset(
+                      kIconAssetPath(imageName: 'uil_setting.png'),
+                      height: 32,
+                      width: 32,
+                    ),
                   ),
                 ],
               ),
@@ -109,6 +115,9 @@ class Profil extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: PremiumLongCard(
+                  onTap: () {
+                    customSheet(context: context, data: thirdPremiumData);
+                  },
                   topTitle: AllText.premiumPlan,
                   subTitle: AllText.unlockWithPremium,
                   btnColor: firstPremiumBtnColor),

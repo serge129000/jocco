@@ -163,7 +163,7 @@ class _FirstStepState extends State<FirstStep> {
                       });
                       stepProvider.setBirthDate(birth: v);
                     },
-                    dateFormat: selectedDate.isEmpty? stepProvider.birthDate != null? DateFormat('dd/MM/yyyy').format(stepProvider.birthDate!): appAuthProvider.currentAppUser!.dateNais != null? DateFormat('dd/MM/yyyy').format(appAuthProvider.currentAppUser!.dateNais!): selectedDate: selectedDate),
+                    dateFormat: selectedDate.isEmpty? stepProvider.birthDate != null? DateFormat('dd/MM/yyyy').format(stepProvider.birthDate!): appAuthProvider.currentAppUser?.dateNais != null? DateFormat('dd/MM/yyyy').format(appAuthProvider.currentAppUser!.dateNais!): selectedDate: selectedDate),
               ),
             ),
             Text(

@@ -11,10 +11,10 @@ abstract class UserServices {
   Future<double> insertUserProjectInfos({required Map<String, dynamic> data});
   Future<double> updateUserProjectInfos({required Map<String, dynamic> data, required String id});
   Future<String> addImage({required File image, required String userId});
-  void listenUserMessages({required Function(Map<String, List>) onNewChat, required Function(Map<String, List<AppUser>>) rommUsers});
+  void listenUserMessages({required Function(Map<String, List>) onNewChat, required AppUser currentUser, required Function(Map<String, List<AppUser>>) rommUsers});
   Future<void> sendMessages(
-      {required String text, required String senderId, String? roomId, required AppUser currentUser, required AppUser secondUser});
-  Future<String> getRoomId({required String secondUserId});
+      {required String text, String? roomId, required AppUser currentUser, required AppUser secondUser});
+  Future<String> getRoomId({required String secondUserId, required AppUser currentUser});
   Future<File> addImageToCache({required String imageUrl});
   Future<PotentialUserContent> getPotentialMatchings({(int, int)? paginData});
   Future<void> viewUser({required String userId});

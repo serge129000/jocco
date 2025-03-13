@@ -35,7 +35,7 @@ class Message extends StatelessWidget {
                 Expanded(
                     child: Align(
                   alignment: Alignment.center,
-                  child: userProvider.chats.entries.isEmpty? NoMatch(): MessageList() /* NoMatch() */,
+                  child: userProvider.chats.entries.where((e)=> e.value.isNotEmpty).isEmpty? NoMatch(): MessageList() /* NoMatch() */,
                 ))
               ],
             ),

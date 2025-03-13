@@ -412,6 +412,8 @@ class _SixthStepState extends State<SixthStep> {
           },
           isFinished: (b, pic, appUser) async {
             if (b) {
+              RegisterStream.reinitStream();
+              await appAuthProvider.me();
               await FirebaseAuth.instance.currentUser?.updateProfile(
                   displayName: stepProvider.name, photoURL: pic);
               await FirebaseAuth.instance.currentUser?.reload();

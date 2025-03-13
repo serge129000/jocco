@@ -37,8 +37,8 @@ class _MessageDetailsState extends State<MessageDetails> {
         builder: (context, userProvider, appAuthProvider, _) {
       final destinataireList = userProvider.rooms.entries
           .where((e) => e.key == widget.roomId)
-          .single;
-      final destinataire = destinataireList.value
+          .firstOrNull;
+      final destinataire = destinataireList?.value
               .where((e) => e.id != appAuthProvider.currentAppUser?.id)
               .firstOrNull ??
           widget.destinataire;
@@ -79,7 +79,7 @@ class _MessageDetailsState extends State<MessageDetails> {
                                 fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        destinataire?.departement ?? '',
+                        destinataire?.projet?.description ?? '',
                         style: Theme.of(context).textTheme.labelSmall!.copyWith(
                             color: PrimaryColors.white,
                             fontWeight: FontWeight.w500),
@@ -120,7 +120,7 @@ class _MessageDetailsState extends State<MessageDetails> {
                           ),
                         ),
                         ...chatsSorted[index].value.map((e) => MessageCard(
-                            isReceived: e.sender == currentUser.id,
+                            isReceived: e.sender != currentUser.id,
                             message: e.message,
                             dateTime: e.time.toDate().toLocal()))
                       ],

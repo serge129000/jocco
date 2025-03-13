@@ -29,6 +29,7 @@ class _FifthStepState extends State<FifthStep> {
   void initState() {
     if (Provider.of<StepProvider>(context, listen: false).projectCat == null) {
       Future.delayed(Duration.zero, () {
+        if(Provider.of<AppAuthProvider>(context, listen: false).currentAppUser?.projet != null)
         Provider.of<StepProvider>(context, listen: false).addProjectCat(category: Provider.of<AppAuthProvider>(context, listen: false).currentAppUser!.projet!.description);
       });
     }

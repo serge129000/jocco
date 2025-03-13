@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 List<String> traitsDePersonnalite = [
   'Ambitieux(se)',
   'Créatif(ve)',
@@ -162,12 +164,12 @@ List<Map<String, dynamic>> categories = [
 Map<String, dynamic> firstPremiumData = {
   'index': 1,
   'title': 'Boostez vos likes!',
-  'icon': 'boost_like.png',
+  'icon': 'match.png',
   'sub':  'Accedez a votre historique de likes sur 48h avec l\'abonnement premium',
   'simple': '25 likes supplementaires pour 24h',
   'data': {
     'title': 'Boost de 2 jours',
-    'sub': 'Profitezde 48h de visibilite maximale',
+    'sub': 'Profitez de 48h de visibilite maximale',
     'details': [
       '25 likes supplementaires',
       'Visibilite accrue pour votre profil' ,
@@ -179,18 +181,18 @@ Map<String, dynamic> firstPremiumData = {
 
 Map<String, dynamic> secondPremiumData = {
   'index': 2,
-  'title': 'Boostez vos likes!',
+  'title': '5 retours en arrière',
   'icon': 'to_back.png',
-  'sub':  'Accedez a votre historique de likes sur 48h avec l\'abonnement premium',
+  'sub':  'Revenez en arrière jusqu\'à 5 fois pour revoir les profils manqués.',
   'simple': '5 retours en arriere',
+  'color': Color(0xffa4c814),
   'data': {
-    'title': 'Boost de 2 jours',
-    'sub': 'Profitezde 48h de visibilite maximale',
+    'title': '5 retours en arrière',
+    'sub': 'Ne laissez plus passer une opportunité !',
     'details': [
-      '25 likes supplementaires',
-      'Visibilite accrue pour votre profil' ,
-      'Historique des likes sur 48h',
-      'Disponible pour les membres premium'
+      '5 retours en arrière',
+      'Boost de profil pour plus de visibilité' ,
+      'Accès à qui vous a liké',
     ]
   }
 };

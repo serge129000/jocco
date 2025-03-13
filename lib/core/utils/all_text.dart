@@ -82,4 +82,6 @@ class AllText {
   static const preview = 'Apercu';
   static const updateProfil = 'Modifier le profil';
   static const aboutMe = 'À propos de moi';
+  static const settings = 'Paramètres';
+  static const disconnect = 'Se déconnecter';
 }

@@ -57,11 +57,14 @@ enum Pages {
 }
 
 void showSnackbar(
-    {required BuildContext context, bool? isError, required Widget content}) {
+    {required BuildContext context, bool? isError, required Widget content, SnackBarAction? action}) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    content: content,
-    behavior: SnackBarBehavior.floating,
-    backgroundColor: isError ?? false ? Colors.red : PrimaryColors.white,
+    showCloseIcon: true,
+    action: action,
+    content: Container(
+      height: 70,
+      child: content),
+    backgroundColor: isError ?? false ? PrimaryColors.second : PrimaryColors.white,
   ));
 }
 
@@ -72,7 +75,7 @@ void likeBoostSheet({required BuildContext context}) {
       builder: ((context) {
         return Material(
             elevation: 3,
-            color: PrimaryColors.black,
+            color: PrimaryColors.first,
             child: Column(
               children: [
                 Padding(
@@ -93,6 +96,84 @@ void likeBoostSheet({required BuildContext context}) {
                   ),
                 ),
                 Center(child: PremiumPage(data: firstPremiumData)),
+              ],
+            ));
+      }),
+    ),
+  );
+  showCupertinoModalSheet(
+    context: context,
+    builder: (context) => nav,
+  );
+}
+
+void getBackSheet({required BuildContext context}) {
+  final nav = Navigator(
+    observers: [HeroController()],
+    onGenerateRoute: (settings) => CupertinoPageRoute(
+      builder: ((context) {
+        return Material(
+            elevation: 3,
+            color: PrimaryColors.first,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 20,
+                  ),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: IconButton(
+                        onPressed: () {
+                          Navigator.of(context, rootNavigator: true).pop();
+                        },
+                        icon: Icon(
+                          Icons.close,
+                          size: 30,
+                          color: PrimaryColors.gradientF,
+                        )),
+                  ),
+                ),
+                Center(child: PremiumPage(data: secondPremiumData)),
+              ],
+            ));
+      }),
+    ),
+  );
+  showCupertinoModalSheet(
+    context: context,
+    builder: (context) => nav,
+  );
+}
+
+void customSheet({required BuildContext context, required Map<String, dynamic> data}) {
+  final nav = Navigator(
+    observers: [HeroController()],
+    onGenerateRoute: (settings) => CupertinoPageRoute(
+      builder: ((context) {
+        return Material(
+            elevation: 3,
+            color: PrimaryColors.first,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 20,
+                  ),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: IconButton(
+                        onPressed: () {
+                          Navigator.of(context, rootNavigator: true).pop();
+                        },
+                        icon: Icon(
+                          Icons.close,
+                          size: 30,
+                          color: PrimaryColors.gradientF,
+                        )),
+                  ),
+                ),
+                Center(child: PremiumPage(data: data, )),
               ],
             ));
       }),

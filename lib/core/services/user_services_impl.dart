@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:jocco/core/models/app_user.dart';
+import 'package:jocco/core/models/custom_exception.dart';
 import 'package:jocco/core/models/potential_matching.dart';
 import 'package:jocco/core/services/storage_services_impl.dart';
 import 'package:jocco/core/services/user_services.dart';
@@ -132,13 +133,13 @@ class UserServicesImpl implements UserServices {
   @override
   void listenUserMessages(
       {required Function(Map<String, List>) onNewChat,
+      required AppUser currentUser,
       required Function(Map<String, List<AppUser>>) rommUsers}) {
     Map<String, List> allUserChats = {};
     Map<String, List<AppUser>> userAndChats = {};
     FirebaseFirestore.instance
         .collection('chats')
-        .where("participants",
-            arrayContains: FirebaseAuth.instance.currentUser!.uid)
+        .where("participants", arrayContains: currentUser.id)
         .snapshots(includeMetadataChanges: true)
         .listen((chats) {
       for (var chat in chats.docs) {
@@ -165,24 +166,24 @@ class UserServicesImpl implements UserServices {
   @override
   Future<void> sendMessages(
       {required String text,
-      required String senderId,
       String? roomId,
       String? uuid,
       required AppUser currentUser,
       required AppUser secondUser}) async {
     try {
-      final roomIdGet = roomId ?? await getRoomId(secondUserId: senderId);
+      final roomIdGet = roomId ??
+          await getRoomId(
+              secondUserId: secondUser.id, currentUser: currentUser);
       final storeInstance = FirebaseFirestore.instance;
-      final authInstance = FirebaseAuth.instance;
       await storeInstance.collection('chats').doc(roomIdGet).set({
-        'participants': [authInstance.currentUser!.uid, senderId],
+        'participants': [currentUser.id, secondUser.id],
         'users': [currentUser.toJson(), secondUser.toJson()]
       }).then((value) async => await storeInstance
               .collection('chats')
-              .doc(roomId ?? roomIdGet)
+              .doc(roomIdGet)
               .collection('messages')
               .add({
-            'sender': authInstance.currentUser!.uid,
+            'sender': currentUser.id,
             'text': text,
             'uuid': uuid,
             'timestamp': FieldValue.serverTimestamp(),
@@ -194,16 +195,17 @@ class UserServicesImpl implements UserServices {
   }
 
   @override
-  Future<String> getRoomId({required String secondUserId}) async {
+  Future<String> getRoomId(
+      {required String secondUserId, required AppUser currentUser}) async {
     QuerySnapshot chatQuery = await FirebaseFirestore.instance
         .collection('chats')
-        .where('participants',
-            arrayContains: FirebaseAuth.instance.currentUser!.uid)
+        .where('participants', arrayContains: currentUser.id)
         .get();
 
     for (var doc in chatQuery.docs) {
       List participants = doc['participants'];
       if (participants.contains(secondUserId)) {
+        print('chat doc: ${doc.id}');
         return doc.id;
       }
     }
@@ -211,7 +213,7 @@ class UserServicesImpl implements UserServices {
     // Si aucun chat trouvé, en créer un nouveau
     DocumentReference chatRef =
         await FirebaseFirestore.instance.collection('chats').add({
-      'participants': [FirebaseAuth.instance.currentUser!.uid, secondUserId],
+      'participants': [currentUser.id, secondUserId],
       'createdAt': FieldValue.serverTimestamp(),
     });
 
@@ -268,8 +270,11 @@ class UserServicesImpl implements UserServices {
           headers: authHeaders(
               token: await FirebaseAuth.instance.currentUser!.getIdToken()));
       if (!checkIfSuccess(statusCode: response.statusCode)) {
-        throw Exception(response.body);
+        throw CustomException(
+            message: jsonDecode(utf8.decode(response.bodyBytes))['message']);
       }
+    } on CustomException catch (e) {
+      throw e;
     } catch (e) {
       rethrow;
     }
@@ -283,8 +288,11 @@ class UserServicesImpl implements UserServices {
           headers: authHeaders(
               token: await FirebaseAuth.instance.currentUser!.getIdToken()));
       if (!checkIfSuccess(statusCode: response.statusCode)) {
-        throw Exception(response.body);
+        throw CustomException(
+            message: jsonDecode(utf8.decode(response.bodyBytes))['message']);
       }
+    } on CustomException catch (e) {
+      throw e;
     } catch (e) {
       rethrow;
     }

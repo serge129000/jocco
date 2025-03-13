@@ -44,14 +44,20 @@ class _HomeState extends State<Home> {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Consumer<UserProvider>(
-                          builder: (context, userProvider, _) {
+                      Consumer2<UserProvider, AppAuthProvider>(
+                          builder: (context, userProvider, appAuthProvider, _) {
                         return GestureDetector(
                           onTap: () {
-                            Future.delayed(Duration(milliseconds: 100), () {
+                            if (appAuthProvider
+                                    .currentAppUser?.subscription?.active ??
+                                false) {
                               userProvider.setUnfinsihList();
-                              userProvider.controller.unswipe();
-                            });
+                              Future.delayed(Duration(milliseconds: 100), () {
+                                userProvider.controller.unswipe();
+                              });
+                            } else {
+                              getBackSheet(context: context);
+                            }
                           },
                           child: Image.asset(
                             kIconAssetPath(
@@ -88,26 +94,33 @@ class _HomeState extends State<Home> {
             ),
             Expanded(child: Consumer2<UserProvider, AppAuthProvider>(
                 builder: (context, userProvider, appAuthProvider, _) {
+              userProvider.controller.activityHistory.then((v) {
+                print(v?.length);
+              });
               if (userProvider.potentialMatchingUsers != null) {
                 if (userProvider.finalUsers.isNotEmpty) {
+                  if (userProvider.listFinish) {
+                    return NoPotentialMatchComponents();
+                  }
                   return AppinioSwiper(
-                    initialIndex: userProvider.currentCardIndex.$1,
+                    initialIndex: userProvider.currentCardIndex.$2,
                     onEnd: () {
                       userProvider.setFinishingList();
                     },
                     controller: userProvider.controller,
                     backgroundCardCount: 0,
                     onSwipeEnd: (previousIndex, targetIndex, activity) {
+                      userProvider.controller.activityHistory.then((v) {
+                        print(v?.length);
+                      });
                       userProvider.setCardIndex((previousIndex, targetIndex));
                     },
                     cardBuilder: (BuildContext context, int index) {
-                      return userProvider.listFinish
-                          ? NoPotentialMatchComponents()
-                          : UserInfoCard(
-                              user: userProvider.finalUsers[index],
-                              controller: userProvider.controller,
-                              pageController: new PageController(),
-                            );
+                      return UserInfoCard(
+                        user: userProvider.finalUsers[index],
+                        controller: userProvider.controller,
+                        pageController: null,
+                      );
                     },
                     swipeOptions: SwipeOptions.only(),
                     cardCount: userProvider.finalUsers.length,

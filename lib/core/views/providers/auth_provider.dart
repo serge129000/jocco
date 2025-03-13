@@ -49,6 +49,7 @@ class AppAuthProvider with ChangeNotifier {
     notifyListeners();
     try {
       await authServicesImpl.verifyOtp(code: code, id: id);
+      await me();
       _verifyingOtpStatus = Status.loaded;
       notifyListeners();
     } catch (e) {

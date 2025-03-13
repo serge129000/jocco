@@ -3,6 +3,7 @@ import 'package:jocco/core/utils/app_utils.dart';
 import 'package:jocco/core/utils/color.dart';
 import 'package:jocco/core/utils/screen.dart';
 import 'package:jocco/core/views/home/pages/history_components/no_likers.dart';
+import 'package:jocco/core/views/providers/auth_provider.dart';
 import 'package:jocco/core/views/providers/user_provider.dart';
 import 'package:jocco/core/views/widgets/error_widget.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +17,8 @@ class RecentLikes extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Consumer<UserProvider>(builder: (context, userProvider, _) {
+      child: Consumer2<UserProvider, AppAuthProvider>(
+          builder: (context, userProvider, appAuthProvider, _) {
         print(userProvider.gettingMylikers);
         if (userProvider.gettingMylikers == Status.loading) {
           return Center(
@@ -39,12 +41,20 @@ class RecentLikes extends StatelessWidget {
                   spacing: 10,
                   children: [
                     ...userProvider.potentialUserLikersContent!.content
-                        .map((e) => UserCardComponents(
-                              url: e.profileImage!,
-                              userName: e.prenom ?? '',
-                              userAge:
-                                  getAgeFromBirthDate(birthDate: e.dateNais!),
-                            ))
+                        .map((e) => Builder(builder: (context) {
+                              print(appAuthProvider
+                                  .currentAppUser?.subscription?.active);
+                              return UserCardComponents(
+                                isHiden: !(appAuthProvider
+                                        .currentAppUser?.subscription?.active ??
+                                    false),
+                                user: e,
+                                url: e.profileImage!,
+                                userName: e.prenom ?? '',
+                                userAge:
+                                    getAgeFromBirthDate(birthDate: e.dateNais!),
+                              );
+                            }))
                   ],
                 ),
               ],

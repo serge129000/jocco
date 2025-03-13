@@ -74,6 +74,8 @@ class NoLikers extends StatelessWidget {
               child: Btn(
                 function: () {
                   HapticFeedback.mediumImpact();
+                  /* kPushToPage(context,
+                      page: PremiumPage(data: firstPremiumData)); */
                   likeBoostSheet(context: context);
                 },
                 child: Text(

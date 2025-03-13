@@ -164,7 +164,7 @@ class AppUser {
       phone: json["phone"],
       projet: json["projet"] == null ? null : Projet.fromJson(json["projet"]),
       role: json["role"],
-      profileImage: json["profileImage"],
+      profileImage: List<String?>.from(json["images"].map((x) => x)).firstOrNull /* json["profileImage"] */,
       aboutMe: json["aboutMe"],
       notificationToken: json["notificationToken"],
       resetCode: json["resetCode"],

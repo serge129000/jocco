@@ -27,9 +27,9 @@ class _ThirdStepState extends State<ThirdStep> {
       if (Provider.of<StepProvider>(context, listen: false)
           .selectedTraits
           .isEmpty) {
-        Provider.of<AppAuthProvider>(context, listen: false)
-            .currentAppUser!
-            .personnalites
+        (Provider.of<AppAuthProvider>(context, listen: false)
+            .currentAppUser
+            ?.personnalites ?? [])
             .forEach((vl) {
           Provider.of<StepProvider>(context, listen: false)
               .addTraits(trait: vl ?? '');
@@ -85,8 +85,7 @@ class _ThirdStepState extends State<ThirdStep> {
                         if (stepProvider.selectedTraits.contains(e)) {
                           stepProvider.deleteTrait(trait: e);
                         } else {
-                          if (!(stepProvider.selectedTraits.length < 3 &&
-                              stepProvider.selectedTraits.length >= 1)) {
+                          if ((stepProvider.selectedTraits.length >= 3)) {
                             showSnackbar(
                                 context: context,
                                 isError: true,

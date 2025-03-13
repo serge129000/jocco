@@ -28,8 +28,8 @@ class _FourthStepState extends State<FourthStep> {
           .selectedInterest
           .isEmpty) {
         Provider.of<AppAuthProvider>(context, listen: false)
-            .currentAppUser!
-            .centreInterets
+            .currentAppUser
+            ?.centreInterets
             .forEach((vl) {
           Provider.of<StepProvider>(context, listen: false)
               .addInterest(interest: vl ?? '');
@@ -85,8 +85,7 @@ class _FourthStepState extends State<FourthStep> {
                         if (stepProvider.selectedInterest.contains(e)) {
                           stepProvider.deleteInterest(interest: e);
                         } else {
-                          if (!(stepProvider.selectedInterest.length < 3 &&
-                              stepProvider.selectedInterest.length >= 1)) {
+                          if ((stepProvider.selectedInterest.length >= 3)) {
                             showSnackbar(
                                 context: context,
                                 isError: true,

@@ -36,6 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
         kReplaceToPage(context, page: const LandingScreen());
       } else {
         await authProvider.me();
+        debugPrint('me is checked');
         if (authProvider.currentAppUser!.projet == null) {
           kPushAndRemoveUntil(context, page: Onboarding());
         } else {

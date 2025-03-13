@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:jocco/core/utils/color.dart';
+import 'package:jocco/core/utils/screen.dart';
+import 'package:jocco/core/views/providers/auth_provider.dart';
 import 'package:jocco/core/views/providers/page_provider.dart';
 import 'package:jocco/core/views/providers/user_provider.dart';
 import 'package:jocco/core/views/widgets/bottom_navigation.dart';
@@ -14,9 +17,11 @@ class Root extends StatefulWidget {
 
 class _RootState extends State<Root> {
   late UserProvider userProvider;
+  late AppAuthProvider authProvider;
   @override
   void initState() {
     userProvider = context.read<UserProvider>();
+    authProvider = context.read<AppAuthProvider>();
     Future.delayed(Duration.zero, () {
       userProvider.initMatching();
       userProvider.startMatching(null);
@@ -27,9 +32,16 @@ class _RootState extends State<Root> {
       });
       userProvider.listenMyLikers();
       userProvider.listenMyMatchs();
-      userProvider.listenToUserChat();
+      userProvider.listenToUserChat(currentUser: authProvider.currentAppUser!);
     });
+    userProvider.addListener(listener);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    userProvider.removeListener(listener);
+    super.dispose();
   }
 
   @override
@@ -40,5 +52,24 @@ class _RootState extends State<Root> {
         bottomNavigation: const BottomNavigation(),
       );
     });
+  }
+
+  void listener() {
+    if (userProvider.onLinkingOrDisliking == Status.error) {
+      showSnackbar(
+          context: context,
+          action: SnackBarAction(
+              label: 'Boost',
+              onPressed: () {
+                likeBoostSheet(context: context);
+              }),
+          isError: true,
+          content: Text(
+            userProvider.currentError,
+            style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                  color: PrimaryColors.white,
+                ),
+          ));
+    }
   }
 }

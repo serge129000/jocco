@@ -32,8 +32,8 @@ class CustomImageShower extends StatelessWidget {
             errorWidget: (context, url, error) {
               return SizedBox();
             },
-            /* memCacheHeight: constraint.maxWidth.toInt() *
-                MediaQuery.of(context).devicePixelRatio.toInt(), */
+            memCacheHeight: constraint.maxWidth.toInt() *
+                MediaQuery.of(context).devicePixelRatio.toInt(),
             imageUrl: url ?? '',
             fit: BoxFit.cover,
             placeholder: (context, url) {

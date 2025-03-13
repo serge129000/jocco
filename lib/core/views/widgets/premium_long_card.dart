@@ -8,7 +8,8 @@ class PremiumLongCard extends StatelessWidget {
   final String topTitle;
   final String subTitle;
   final Color btnColor;
-  const PremiumLongCard({super.key, required this.topTitle, required this.subTitle, required this.btnColor});
+  final Function() onTap;
+  const PremiumLongCard({super.key, required this.topTitle, required this.subTitle, required this.btnColor, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +38,7 @@ class PremiumLongCard extends StatelessWidget {
             ),
           ),
           Btn(
+            function: onTap,
               child: Text(AllText.explorePlan, style: TextStyle(
                     color: PrimaryColors.white
                   ),),

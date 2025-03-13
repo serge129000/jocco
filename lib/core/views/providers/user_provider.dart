@@ -5,6 +5,7 @@ import 'package:jocco/core/models/chat.dart';
 import 'package:jocco/core/models/potential_matching.dart';
 import 'package:jocco/core/services/user_services_impl.dart';
 import 'package:jocco/core/streams/user_stream.dart';
+import 'package:jocco/core/utils/all_text.dart';
 import 'package:jocco/core/utils/screen.dart';
 
 import '../../utils/gender.dart';
@@ -53,6 +54,14 @@ class UserProvider with ChangeNotifier {
   (int, int) get currentCardIndex => _currentCardIndex;
   bool _listFinish = false;
   bool get listFinish => _listFinish;
+  Status _gettingUserId = Status.initial;
+  Status get gettingUserId => _gettingUserId;
+  Map<String, String> _usersRoomid = {};
+  Map<String, String> get usersRoomid => _usersRoomid;
+  Status _onLikingOrDisliking = Status.initial;
+  Status get onLinkingOrDisliking => _onLikingOrDisliking;
+  String _currentError = AllText.errorT;
+  String get currentError => _currentError;
 
   void setDistance({required double distanceValue}) {
     _filterData['distance'] = distanceValue;
@@ -208,8 +217,9 @@ class UserProvider with ChangeNotifier {
     userStream.fetchUserMatch(pagingData);
   }
 
-  void listenToUserChat() {
+  void listenToUserChat({required AppUser currentUser}) {
     UserServicesImpl().listenUserMessages(
+      currentUser: currentUser,
       onNewChat: (chats) {
         chats.forEach((e, v) {
           _chats[e] = List<Chat>.from(v.map((e) => Chat.fromjson(e)));
@@ -250,7 +260,6 @@ class UserProvider with ChangeNotifier {
       required String? uuid}) {
     UserServicesImpl().sendMessages(
         text: text,
-        senderId: senderId,
         currentUser: currentUser,
         uuid: uuid,
         secondUser: secondUser);
@@ -268,5 +277,62 @@ class UserProvider with ChangeNotifier {
 
   void setUnfinsihList() {
     _listFinish = false;
+    notifyListeners();
+  }
+
+  void setNewController({required AppinioSwiperController c}) {
+    _controller = c;
+    notifyListeners();
+  }
+
+  void likeUser({required String userId}) async {
+    _onLikingOrDisliking = Status.loading;
+    notifyListeners();
+    try {
+      await UserServicesImpl().likeUser(userId: userId);
+      _onLikingOrDisliking = Status.loaded;
+      notifyListeners();
+    } catch (e) {
+      _onLikingOrDisliking = Status.error;
+      _currentError = e.toString();
+      notifyListeners();
+    } finally {
+      _onLikingOrDisliking = Status.initial;
+      _currentError = AllText.errorT;
+      notifyListeners();
+    }
+  }
+
+  void disLikeUser({required String userId}) async {
+     _onLikingOrDisliking = Status.loading;
+    notifyListeners();
+    try {
+      await UserServicesImpl().dislikeUser(userId: userId);
+      _onLikingOrDisliking = Status.loaded;
+      notifyListeners();
+    } catch (e) {
+      _onLikingOrDisliking = Status.error;
+      _currentError = e.toString();
+      notifyListeners();
+    } finally {
+      _onLikingOrDisliking = Status.initial;
+      _currentError = AllText.errorT;
+      notifyListeners();
+    }
+  }
+
+  Future<void> getRoomId(
+      {required String secondUserId, required AppUser currentUser}) async {
+    _gettingUserId = Status.loading;
+    notifyListeners();
+    try {
+      _usersRoomid[secondUserId] = await UserServicesImpl()
+          .getRoomId(secondUserId: secondUserId, currentUser: currentUser);
+      _gettingUserId = Status.loaded;
+      notifyListeners();
+    } catch (e) {
+      _gettingUserId = Status.error;
+      notifyListeners();
+    }
   }
 }

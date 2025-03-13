@@ -37,11 +37,13 @@ class HistoryComponentMatched extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 10),
                 child: Wrap(
                   alignment: WrapAlignment.spaceBetween,
-                  runSpacing: 20,
+                  runSpacing: 10,
                   spacing: 10,
                   children: [
                     ...userProvider.potentialUserMatchsContent!.content
                         .map((e) => UserCardComponents(
+                          isMatched: true,
+                          user: e,
                               url: e.profileImage!,
                               userName: e.prenom!,
                               userAge:
